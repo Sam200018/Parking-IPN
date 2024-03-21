@@ -48,7 +48,6 @@ class cuentaController extends Controller
         $tempPassword = Str::random(12);
         $passwordHash = Hash::make($tempPassword);
 
-        Log::info("hola");
 
         $cuenta = cuenta::create([
             'id_usuario'=>$request->id_usuario,
@@ -56,7 +55,7 @@ class cuentaController extends Controller
             'id_prog_academico'=>$request->id_prog_academico,
             'correo'=>$request->correo,
             'activo'=>true,
-            'contrasena'=> $passwordHash,
+            'password'=> $passwordHash,
             'debe_cambiar_contrasena'=> true,
         ]);
 
