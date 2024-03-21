@@ -6,6 +6,7 @@ use App\Http\Controllers\usuarioController;
 use App\Http\Controllers\rolController;
 use App\Http\Controllers\ProgAcademController;
 use App\Http\Controllers\cuentaController;
+use App\Http\Controllers\authController;
 
 
 /*
@@ -20,22 +21,23 @@ use App\Http\Controllers\cuentaController;
 */
 
 // Rol
-Route::post('create_role', [rolController::class,'store']);
-Route::get('get_all_roles', [rolController::class,'getAllRoles']);
+Route::post('/create_role', [rolController::class,'store']);
+Route::get('/get_all_roles', [rolController::class,'getAllRoles']);
 // Programa academico
-Route::post('create_prog_academico', [progAcademController::class,'store']);
-Route::get('get_all_progs_academs', [progAcademController::class,'getAllProgsAcadems']);
+Route::post('/create_prog_academico', [progAcademController::class,'store']);
+Route::get('/get_all_progs_academs', [progAcademController::class,'getAllProgsAcadems']);
 // Usuarios
-Route::get('get_all_users', [usuarioController::class,'show']);
-Route::post('create_user', [usuarioController::class,'store']);
+Route::get('/get_all_users', [usuarioController::class,'show']);
+Route::post('/create_user', [usuarioController::class,'store']);
 // Cuenta
-Route::post('create_account', [cuentaController::class,'store']);
-Route::get('get_account/{id_cuenta}',[cuentaController::class,'getCuenta']);
+Route::post('/create_account', [cuentaController::class,'store']);
+Route::get('/get_account/{id_cuenta}',[cuentaController::class,'getCuenta']);
+// Auth
+Route::post('/login',[authController::class,'login']);
 
+Route::group(['middleware' => ['jwt.auth']], function () {
+    Route::post('/check-status', [authController::class, 'checkStatus']);
 
+});
 
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 

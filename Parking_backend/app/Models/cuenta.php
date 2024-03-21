@@ -4,10 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class cuenta extends Model
+
+class cuenta extends Authenticatable implements JWTSubject
 {
     use HasFactory;
+    use Notifiable;
 
     protected $table= 'cuenta';
 
@@ -20,15 +25,15 @@ class cuenta extends Model
         'id_prog_academico',
         'activo',
         'correo',
-        'contrasena',
+        'password',
         'debe_cambiar_contrasena'
     ];
     
     public $timestamps = false;
 
-    protected $hidden = [
-        'contrasena',
-    ];
+    // protected $hidden = [
+    //     'contrasena',
+    // ];
 
     public function rol(){
         return $this->belongsTo(Rol::class, 'id_rol');
@@ -44,4 +49,17 @@ class cuenta extends Model
         return $this->belongsTo(usuario::class,'id_usuario');
     }
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [
+            'correo'=>$this->correo,
+            'id_usuario'=>$this->id_usuario,
+            'id_rol'=>$this->id_rol
+        ];
+    }
 }
