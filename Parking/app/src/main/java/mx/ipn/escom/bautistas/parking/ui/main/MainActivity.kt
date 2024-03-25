@@ -1,4 +1,4 @@
-package mx.ipn.escom.bautistas.parking
+package mx.ipn.escom.bautistas.parking.ui.main
 
 import android.nfc.NfcAdapter
 import android.nfc.Tag
@@ -7,25 +7,35 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.lifecycle.lifecycleScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ConnectWithoutContact
-import androidx.compose.material.icons.filled.Nfc
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
+import mx.ipn.escom.bautistas.parking.services.Utils
+import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
+import mx.ipn.escom.bautistas.parking.ui.main.views.LoginScreen
 import mx.ipn.escom.bautistas.parking.ui.theme.ParkingTheme
 
+@ExperimentalMaterial3WindowSizeClassApi
+@AndroidEntryPoint
 class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
     private var mNfcAdapter: NfcAdapter? = null
 
@@ -43,14 +53,28 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
 
 
         setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
+            val authViewModel: AuthViewModel by viewModels()
+
+
             ParkingTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = Routes.LoginScreen.route
                 ) {
-                    Greeting("Esperando lectura")
+                    composable(Routes.SplashScreen.route) {
+
+                    }
+                    composable(Routes.LoginScreen.route) {
+                        LoginScreen(
+                            windowSizeClass = windowSizeClass,
+                            authViewModel = authViewModel
+                        )
+                    }
                 }
+
             }
         }
 
@@ -64,7 +88,7 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
 
         val status = Utils.toHex(response)
 
-        Log.i("Status", status.substring(0,2))
+        Log.i("Status", status.substring(0, 2))
 
         if (status.substring(0, 2) == "90") {
             val msgBytes = response.copyOfRange(2, response.size)
