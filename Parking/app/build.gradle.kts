@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -58,18 +60,37 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation(platform("androidx.compose:compose-bom:2024.02.02"))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.02"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.02"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.03.00"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("androidx.core:core-ktx:1.12.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
-
 //    HCE
     implementation ("com.google.android.gms:play-services-nearby:19.1.0")
+//    Window Size
+    implementation(platform("androidx.compose:compose-bom:2024.03.00"))
+    implementation("androidx.compose.material3:material3-window-size-class")
+//    Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    kapt("com.google.dagger:hilt-compiler:2.48.1")
+//    Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+//    Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.google.code.gson:gson:2.9.0")
+//    Retrofit with Scalar Converter
+    implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
+//    Serialization
+    implementation ("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+}
+
+kapt {
+    correctErrorTypes = true
 }
