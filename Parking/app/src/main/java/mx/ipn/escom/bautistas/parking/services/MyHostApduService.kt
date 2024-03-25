@@ -1,13 +1,8 @@
-package mx.ipn.escom.bautistas.parking
+package mx.ipn.escom.bautistas.parking.services
 
-import android.nfc.NdefMessage
-import android.nfc.NdefRecord
 import android.nfc.cardemulation.HostApduService
-import android.nfc.tech.NdefFormatable
 import android.os.Bundle
 import android.util.Log
-import java.nio.charset.Charset
-import java.util.Arrays
 
 class MyHostApduService : HostApduService() {
     companion object {
