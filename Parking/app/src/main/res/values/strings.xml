@@ -3,4 +3,10 @@
     <string name="servicedesc">Hola</string>
     <string name="aiddescription">Transaccion para estacionamiento\n</string>
     <string name="title_activity_ndefmessage">NDEFMessage</string>
+<!-- Login -->
+    <string name="labelLogin">¡Bienvenido!</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Contraseña</string>
+    <string name="login_button_label">Iniciar sesión</string>
+    <string name="system_label">Sistema de estacionamiento IPN</string>
 </resources>
