@@ -70,6 +70,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("androidx.core:core-ktx:1.12.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.3")
+//    lifecycle
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 //    HCE
     implementation ("com.google.android.gms:play-services-nearby:19.1.0")
 //    Window Size
