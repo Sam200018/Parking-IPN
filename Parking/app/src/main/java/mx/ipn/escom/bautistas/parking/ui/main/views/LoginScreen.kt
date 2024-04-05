@@ -58,7 +58,7 @@ fun LoginScreen(
                     authViewModel = authViewModel
                 )
 
-                else -> ExpandedLogin(
+                else -> CompactLogin(
                     loginViewModel = loginViewModel,
                     authViewModel = authViewModel
                 )
@@ -111,7 +111,7 @@ fun CompactLogin(
             modifier = modifier.width(250.dp),
             label = stringResource(id = R.string.login_button_label)
         ) {
-            Log.i("login S","hola")
+            Log.i("login S", "hola")
             authViewModel.doLogin(loginViewModel.emailInput, loginViewModel.passwordInput)
         }
     }
