@@ -10,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.lifecycle.lifecycleScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,15 +21,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import mx.ipn.escom.bautistas.parking.services.Utils
+import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthStatus
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
+import mx.ipn.escom.bautistas.parking.ui.main.views.HomeScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.LoginScreen
 import mx.ipn.escom.bautistas.parking.ui.theme.ParkingTheme
 
@@ -55,14 +58,23 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
             val authViewModel: AuthViewModel by viewModels()
+            val authState by authViewModel.authState.collectAsStateWithLifecycle()
 
 
             ParkingTheme {
                 val navController = rememberNavController()
 
+
+                val startDestination = when (authState.authStatus) {
+                    AuthStatus.Unauthenticated -> Routes.LoginScreen.route
+                    AuthStatus.Authenticated -> Routes.HomeScreen.route
+                    else -> Routes.LoginScreen.route
+                }
+
+
                 NavHost(
                     navController = navController,
-                    startDestination = Routes.LoginScreen.route
+                    startDestination = startDestination
                 ) {
                     composable(Routes.SplashScreen.route) {
 
@@ -70,8 +82,12 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                     composable(Routes.LoginScreen.route) {
                         LoginScreen(
                             windowSizeClass = windowSizeClass,
-                            authViewModel = authViewModel
+                            authViewModel = authViewModel,
                         )
+                    }
+                    composable(Routes.HomeScreen.route) {
+                        HomeScreen()
+
                     }
                 }
 
