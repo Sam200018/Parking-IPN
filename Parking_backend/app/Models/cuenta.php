@@ -18,6 +18,11 @@ class cuenta extends Authenticatable implements JWTSubject
 
     protected $primaryKey = 'id_cuenta';
 
+    protected $casts = [
+        'activo' => 'boolean',
+        'debe_cambiar_contrasena' => 'boolean'
+    ];
+
     protected $fillable = [
         'id_cuenta',
         'id_usuario',
@@ -31,9 +36,9 @@ class cuenta extends Authenticatable implements JWTSubject
     
     public $timestamps = false;
 
-    // protected $hidden = [
-    //     'contrasena',
-    // ];
+    protected $hidden = [
+        'password',
+    ];
 
     public function rol(){
         return $this->belongsTo(Rol::class, 'id_rol');
