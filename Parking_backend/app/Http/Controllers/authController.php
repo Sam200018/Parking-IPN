@@ -18,8 +18,10 @@ class authController extends Controller
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Credenciales no validas'], 401);
         }        
+            $cuenta = cuenta::with(['rol','prog_academico','usuario'])->where('correo',$request->correo)->first();
             return response()->json([
-                'token'=>$token
+                'token'=>$token,
+                'cuenta'=>$cuenta
             ],200);
     }
 
