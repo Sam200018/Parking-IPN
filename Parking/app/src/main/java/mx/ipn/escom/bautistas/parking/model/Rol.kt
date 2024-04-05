@@ -4,8 +4,9 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AuthResponse(
-    val token:String,
-    @SerializedName("cuenta")
-    val account: Cuenta,
+data class Rol (
+    @SerializedName("id_rol")
+    val idRol: Long,
+    @SerializedName("nombre_rol")
+    val nombreRol: String
 )
