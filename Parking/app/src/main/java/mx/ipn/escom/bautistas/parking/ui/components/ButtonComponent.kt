@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import mx.ipn.escom.bautistas.parking.R
 
@@ -16,6 +18,7 @@ fun ButtonComponent(
     modifier: Modifier = Modifier,
     label: String = "",
     isEnable: Boolean = true,
+    fontSize: TextUnit,
     action: () -> Unit,
 ) {
     OutlinedButton(
@@ -28,12 +31,12 @@ fun ButtonComponent(
             disabledContainerColor = colorResource(id = R.color.guinda_disbale),
         )
     ) {
-        Text(text = label, fontSize = 24.sp)
+        Text(text = label, fontSize = fontSize)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ButtonCompPrev() {
-    ButtonComponent(label = "Hola") {}
+    ButtonComponent(label = "Hola", fontSize = 24.sp) {}
 }
