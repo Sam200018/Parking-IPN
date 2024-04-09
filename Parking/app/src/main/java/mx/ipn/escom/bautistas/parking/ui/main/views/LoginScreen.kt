@@ -14,6 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Password
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -29,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mx.ipn.escom.bautistas.parking.R
+import mx.ipn.escom.bautistas.parking.ui.components.BalanceUI
 import mx.ipn.escom.bautistas.parking.ui.components.ButtonComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TextFieldComponent
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
@@ -82,6 +88,7 @@ fun CompactLogin(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = padding)
+            .verticalScroll(rememberScrollState()),
     ) {
 
         Text(
@@ -94,6 +101,7 @@ fun CompactLogin(
         Spacer(modifier = modifier.height(95.dp))
         TextFieldComponent(
             modifier.fillMaxWidth(),
+            icon = Icons.Outlined.Email,
             value = loginViewModel.emailInput,
             label = stringResource(id = R.string.email_label)
         ) {
@@ -101,6 +109,7 @@ fun CompactLogin(
         }
         TextFieldComponent(
             modifier.fillMaxWidth(),
+            icon = Icons.Filled.Password,
             value = loginViewModel.passwordInput,
             label = stringResource(id = R.string.password_label)
         ) {
@@ -109,7 +118,8 @@ fun CompactLogin(
         Spacer(modifier = modifier.height(90.dp))
         ButtonComponent(
             modifier = modifier.width(250.dp),
-            label = stringResource(id = R.string.login_button_label)
+            label = stringResource(id = R.string.login_button_label),
+            fontSize = 24.sp
         ) {
             Log.i("login S", "hola")
             authViewModel.doLogin(loginViewModel.emailInput, loginViewModel.passwordInput)
@@ -123,14 +133,8 @@ fun ExpandedLogin(
     loginViewModel: LoginViewModel,
     authViewModel: AuthViewModel
 ) {
-    Row(modifier = modifier.fillMaxSize()) {
-        Box(
-            modifier
-                .background(color = colorResource(id = R.color.grey_figma))
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
+    BalanceUI(
+        content1 = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -146,15 +150,11 @@ fun ExpandedLogin(
                     )
                 )
             }
-        }
-        Box(
-            modifier
-                .fillMaxHeight()
-                .weight(1f),
-        ) {
+
+        }, content2 = {
             CompactLogin(modifier, padding = 90.dp, loginViewModel = loginViewModel, authViewModel)
         }
-    }
+    )
 }
 
 
