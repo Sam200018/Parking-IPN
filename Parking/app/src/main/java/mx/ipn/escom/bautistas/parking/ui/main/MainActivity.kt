@@ -1,5 +1,6 @@
 package mx.ipn.escom.bautistas.parking.ui.main
 
+import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.IsoDep
@@ -35,6 +36,8 @@ import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthStatus
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
 import mx.ipn.escom.bautistas.parking.ui.main.views.HomeScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.LoginScreen
+import mx.ipn.escom.bautistas.parking.ui.main.views.NewUserScreen
+import mx.ipn.escom.bautistas.parking.ui.main.views.UserSelectScreen
 import mx.ipn.escom.bautistas.parking.ui.theme.ParkingTheme
 
 @ExperimentalMaterial3WindowSizeClassApi
@@ -53,6 +56,9 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
             NfcAdapter.FLAG_READER_NFC_A or NfcAdapter.FLAG_READER_NFC_B,
             null
         )
+
+        val packageManager = this.packageManager
+        val hasNFC = packageManager.hasSystemFeature(PackageManager.FEATURE_NFC)
 
 
         setContent {
@@ -86,9 +92,30 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                         )
                     }
                     composable(Routes.HomeScreen.route) {
-                        HomeScreen()
+                        HomeScreen(
+                            windowSizeClass = windowSizeClass,
+                            authState = authState,
+                            hasNFC = hasNFC, navSelectUser = {
+                                navController.navigate(Routes.UserSelect.route)
+                            }
+                        )
+                    }
+                    composable(Routes.UserSelect.route) {
+                        UserSelectScreen(backAction = {
+                            navController.popBackStack()
+                        }, navUserAvailable = {
+                            navController.navigate(Routes.UserAvailable.route)
+                        }, navNewUser = {
+                            navController.navigate(Routes.NewUser.route)
+                        })
+                    }
+                    composable(Routes.NewUser.route){
+                        NewUserScreen()
+                    }
+                    composable(Routes.UserAvailable.route){
 
                     }
+
                 }
 
             }
