@@ -3,10 +3,26 @@
     <string name="servicedesc">Hola</string>
     <string name="aiddescription">Transaccion para estacionamiento\n</string>
     <string name="title_activity_ndefmessage">NDEFMessage</string>
+    <string name="search_label">Buscar</string>
 <!-- Login -->
     <string name="labelLogin">¡Bienvenido!</string>
     <string name="email_label">Email</string>
     <string name="password_label">Contraseña</string>
     <string name="login_button_label">Iniciar sesión</string>
     <string name="system_label">Sistema de estacionamiento IPN</string>
+<!--    Navigation-->
+    <string name="pre_record_label">Pre-registros</string>
+    <string name="accounts_label">Cuentas</string>
+    <string name="incidents_label">Incidentes</string>
+    <string name="home_label">Inicio</string>
+    <string name="visit_label">Visitas</string>
+    <string name="scan_label">Scanner</string>
+    <string name="incidents_report_label">Incidentes</string>
+<!--    Selections-->
+    <string name="users_available_label">Usuarios disponibles</string>
+    <string name="new_user_label">Nuevo Usuario</string>
+<!--    New User-->
+    <string name="type_user_label">Tipo de Usuario</string>
+
+
 </resources>
