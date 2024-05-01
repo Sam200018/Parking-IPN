@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class programa_academico extends Model
+class Programas_Academicos extends Model
 {
     use HasFactory;
-    protected $table = 'Programa_Academico';
+    protected $table = 'Programas_Academicos';
 
     protected $primaryKey = 'id_prog_academico';
 
@@ -20,6 +20,6 @@ class programa_academico extends Model
     
     public function cuenta()
     {
-        return $this->hasMany(cuenta::class,"id_cuenta");
+        return $this->hasMany(Cuentas::class,"id_cuenta");
     }
 }

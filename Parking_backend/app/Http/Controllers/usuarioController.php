@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use App\Models\usuario;
+use App\Models\Personas;
 
 
 class usuarioController extends Controller
@@ -24,7 +24,6 @@ class usuarioController extends Controller
      */
     public function store(Request $request)
     {   
-        Log::info($request->all());
 
         $messages = [
             'id_ipn.unique'=>'La boleta o No. empleado ya ha sido registrado',
@@ -36,10 +35,10 @@ class usuarioController extends Controller
             ['nombre' => 'required',
             'a_paterno'=> 'required',
             'a_materno'=> 'required',
-            'id_ipn' => 'nullable|unique:usuario,id_ipn',
+            'id_ipn' => 'nullable',
             'identificacion' =>'required|file|image|mimes:png,jpg,max:2048',
             'fotografia'=>'required|file|image|mimes:png,jpg,max:2048',
-            'numero_contacto'=>'required|unique:usuario,numero_contacto']
+            'numero_contacto'=>'required']
         ,$messages);
 
         if($validator->fails()){
@@ -72,7 +71,7 @@ class usuarioController extends Controller
                 throw new \Exception("Archivo de fotografia no valido.");
             }
 
-            $usuario = usuario::create([
+            $usuario = Personas::create([
                 'nombre'=> $request->nombre,
                 'a_paterno'=> $request->a_paterno,
                 'a_materno'=> $request->a_materno,
@@ -96,7 +95,7 @@ class usuarioController extends Controller
      */
     public function show()
     {
-        $usuarios = usuario::all();
+        $usuarios = Personas::all();
         return response()->json([
             'usuarios'=> $usuarios
         ], 200

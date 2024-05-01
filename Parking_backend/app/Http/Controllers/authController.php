@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use App\Models\cuenta;
+use App\Models\Cuentas;
 
 class authController extends Controller
 {
@@ -18,7 +18,7 @@ class authController extends Controller
         if (! $token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Credenciales no validas'], 401);
         }        
-            $cuenta = cuenta::with(['rol','prog_academico','usuario'])->where('correo',$request->correo)->first();
+            $cuenta = Cuentas::with(['rol','prog_academico','persona'])->where('correo',$request->correo)->first();
             return response()->json([
                 'token'=>$token,
                 'cuenta'=>$cuenta

@@ -9,12 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
-class cuenta extends Authenticatable implements JWTSubject
+class Cuentas extends Authenticatable implements JWTSubject
 {
     use HasFactory;
     use Notifiable;
 
-    protected $table= 'cuenta';
+    protected $table= 'Cuentas';
 
     protected $primaryKey = 'id_cuenta';
 
@@ -25,13 +25,12 @@ class cuenta extends Authenticatable implements JWTSubject
 
     protected $fillable = [
         'id_cuenta',
-        'id_usuario',
+        'id_persona',
         'id_rol',
         'id_prog_academico',
         'activo',
         'correo',
         'password',
-        'debe_cambiar_contrasena'
     ];
     
     public $timestamps = false;
@@ -41,17 +40,17 @@ class cuenta extends Authenticatable implements JWTSubject
     ];
 
     public function rol(){
-        return $this->belongsTo(Rol::class, 'id_rol');
+        return $this->belongsTo(Roles::class, 'id_rol');
     }
 
     public function prog_academico()
     {
-        return $this->belongsTo(programa_academico::class,'id_prog_academico');
+        return $this->belongsTo(Programas_Academicos::class,'id_prog_academico');
     }
 
-    public function usuario()
+    public function persona()
     {
-        return $this->belongsTo(usuario::class,'id_usuario');
+        return $this->belongsTo(Personas::class,'id_persona');
     }
 
     public function getJWTIdentifier()
@@ -63,7 +62,7 @@ class cuenta extends Authenticatable implements JWTSubject
     {
         return [
             'correo'=>$this->correo,
-            'id_usuario'=>$this->id_usuario,
+            'id_persona'=>$this->id_persona,
             'id_rol'=>$this->id_rol
         ];
     }

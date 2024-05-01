@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use App\Models\cuenta;
+use App\Models\Cuentas;
 
 class cuentaController extends Controller
 {
@@ -25,18 +25,20 @@ class cuentaController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info($request->all());
+        
         $messages =[
-            'id_usuario.unique'=>'Este usuario ya tiene cuenta registrada',
-            'id_usuario.exists'=>'Este usuario no existe',
+            'id_persona.unique'=>'Este usuario ya tiene cuenta registrada',
+            'id_persona.exists'=>'Este usuario no existe',
             'id_role.exists'=>'El rol seleccionado no existe',
             'correo.unique'=>'El correo ya ha sido registrado'
         ];
 
         $validator = Validator::make($request->all(),[
-            'id_usuario'=>'required|unique:cuenta,id_usuario|exists:usuario,id_usuario',
-            'id_rol'=>'required|exists:Rol,id_rol',
-            'id_prog_academico'=>'nullable|exists:Programa_Academico,id_prog_academico',
-            'correo'=>'required|email|unique:cuenta,correo',
+            'id_persona'=>'required|unique:Cuentas,id_persona|exists:Personas,id_persona',
+            'id_rol'=>'required|exists:Roles,id_rol',
+            'id_prog_academico'=>'nullable|exists:Programas_Academicos,id_prog_academico',
+            'correo'=>'required|email|unique:Cuentas,correo',
         ],$messages);
         
         if($validator->fails()){
@@ -49,8 +51,8 @@ class cuentaController extends Controller
         $passwordHash = Hash::make($tempPassword);
 
 
-        $cuenta = cuenta::create([
-            'id_usuario'=>$request->id_usuario,
+        $cuenta = Cuentas::create([
+            'id_persona'=>$request->id_persona,
             'id_rol'=>$request->id_rol,
             'id_prog_academico'=>$request->id_prog_academico,
             'correo'=>$request->correo,
@@ -69,7 +71,7 @@ class cuentaController extends Controller
     public function getCuenta(String $id)
     {
         try{
-            $cuenta = cuenta::with(['rol','prog_academico','usuario'])->findOrFail($id);
+            $cuenta = Cuentas::with(['rol','prog_academico','persona'])->findOrFail($id);
             return response()->json([
                 'cuenta'=>$cuenta
             ],200); 

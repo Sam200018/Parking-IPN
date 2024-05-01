@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class usuario extends Model
+class Personas extends Model
 {
     use HasFactory;
 
-    protected $table= 'usuario';
+    protected $table= 'Personas';
 
-    protected $primaryKey= 'id_usuario';
+    protected $primaryKey= 'id_persona';
 
     protected $fillable = [
-        'id_usuario',
+        'id_persona',
         'nombre',
         'a_paterno',
         'a_materno',
@@ -28,7 +28,7 @@ class usuario extends Model
 
     public function cuenta()
     {
-        return $this->hasMany(cuenta::class, 'id_cuenta');
+        return $this->hasMany(Cuentas::class, 'id_cuenta');
     }
 
     public function visita()

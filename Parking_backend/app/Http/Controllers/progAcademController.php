@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\programa_academico;
+use App\Models\Programas_Academicos;
 
 class progAcademController extends Controller
 {
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_prog_academico'=> 'required|unique:Programa_Academico'
+            'nombre_prog_academico'=> 'required|unique:Programas_Academicos'
         ]);
             
-        $prog_academico = programa_academico::create([
+        $prog_academico = Programas_Academicos::create([
             'nombre_prog_academico'=> $request->nombre_prog_academico,
         ]);
         return response()->json([
@@ -25,7 +25,7 @@ class progAcademController extends Controller
 
     public function getAllProgsAcadems()
     {
-        $progs_academs = programa_academico::all();
+        $progs_academs = Programas_Academicos::all();
         return response()->json([
             'programas academicos' => $progs_academs
         ],200);

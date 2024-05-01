@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\rol;
+use App\Models\Roles;
 
 class rolController extends Controller
 {
@@ -11,10 +11,10 @@ class rolController extends Controller
     {
         
         $request->validate([
-            'nombre_rol' => 'required|unique:Rol'
+            'nombre_rol' => 'required|unique:Roles'
         ]);
 
-        $rol = Rol::create([
+        $rol = Roles::create([
             'nombre_rol'=> $request->nombre_rol,
         ]);
 
@@ -26,7 +26,7 @@ class rolController extends Controller
 
     public function getAllRoles()
     {
-        $roles = Rol::all();
+        $roles = Roles::all();
         return response()->json([
             'roles'=> $roles
         ],200);
