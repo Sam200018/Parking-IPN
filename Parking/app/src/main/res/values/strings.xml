@@ -4,6 +4,7 @@
     <string name="aiddescription">Transaccion para estacionamiento\n</string>
     <string name="title_activity_ndefmessage">NDEFMessage</string>
     <string name="search_label">Buscar</string>
+    <string name="cancel_label">Cancelar</string>
 <!-- Login -->
     <string name="labelLogin">¡Bienvenido!</string>
     <string name="email_label">Email</string>
@@ -23,6 +24,15 @@
     <string name="new_user_label">Nuevo Usuario</string>
 <!--    New User-->
     <string name="type_user_label">Tipo de Usuario</string>
+    <string name="ipn_id_label">Número IPN</string>
+    <string name="academ_prog_label">Programa académico</string>
+    <string name="name_label">Nombre/s</string>
+    <string name="last_name_p_label">Apellido paterno</string>
+    <string name="last_name_m_label">Apellido materno</string>
+    <string name="phone_label">Número de contacto</string>
+    <string name="photo_person_label">Fotografía del usuario</string>
+    <string name="photo_id_label">Fotografía de credencial</string>
+    <string name="crate_user_label">Crear usuario</string>
 
 
 </resources>
