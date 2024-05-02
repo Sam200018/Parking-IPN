@@ -28,8 +28,20 @@ class authController extends Controller
     public function checkStatus()
     {
         try {
+            $token = JWTAuth::getToken();
+
+            $payLoad = JWTAuth::getPayLoad($token);
+
+            $correo =$payLoad->get('correo');
+
+            $cuenta = Cuentas::with(['rol','prog_academico','persona'])->where('correo',$correo)->first();
+
+
             $newToken = JWTAuth::refresh();
-            return response()->json(['token' => $newToken]);
+            return response()->json([
+                'token' => $newToken,
+                'cuenta' =>$cuenta
+            ]);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
             return response()->json(['error' => 'Token no válido'], 401);
         }
