@@ -3,6 +3,8 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">192.168.10.111</domain>
         <domain includeSubdomains="true">172.100.90.117</domain>
+        <domain includeSubdomains="true">172.100.80.190</domain>
+        <domain includeSubdomains="true">192.168.10.184</domain>
         <domain includeSubdomains="true">10.0.2.2</domain>
 <!--        Add a new subdomain to run this app locally with services-->
 <!--        Using your own ip address -->
