@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import mx.ipn.escom.bautistas.parking.data.auth.AuthRepository
 import mx.ipn.escom.bautistas.parking.model.AuthResponse
 import mx.ipn.escom.bautistas.parking.model.LoginRequest
+import mx.ipn.escom.bautistas.parking.model.UserToken
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthState
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthStatus
 import retrofit2.HttpException
@@ -21,6 +22,13 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            checkStatus()
+        }
+    }
+
     private val _authState = MutableStateFlow(AuthState())
     val authState = _authState.asStateFlow()
 
@@ -39,6 +47,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun doLogin(email: String, password: String) {
+            Log.i("Hola","Login")
         viewModelScope.launch {
             val result = login(email, password)
             if (result.isSuccess) {
@@ -57,9 +66,26 @@ class AuthViewModel @Inject constructor(
         )
     }
 
+    private suspend fun checkStatus(){
+        val token = authRepository.getToken()
+        if(token == null){
+            logout()
+        }else{
+            try {
+                val response = authRepository.checkStatus("Bearer $token")
+                setLoggedUser(response)
+            }catch (e:Exception){
+                logout(e.message.toString())
+            }
+        }
+    }
 
-    private fun setLoggedUser(response: AuthResponse?) {
-//        TODO: Save token to check status
+
+    private suspend fun setLoggedUser(response: AuthResponse?) {
+        val token = response!!.token
+        Log.i("Token to save:", token)
+        val userToken = UserToken(token= token)
+        authRepository.saveToken(userToken)
 
         _authState.value = AuthState(
             message = "Inicio exitoso",
