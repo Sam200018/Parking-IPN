@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -101,7 +102,13 @@ fun CompactLogin(
         Spacer(modifier = modifier.height(95.dp))
         TextFieldComponent(
             modifier.fillMaxWidth(),
-            icon = Icons.Outlined.Email,
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Email,
+                    contentDescription = "",
+                    tint = colorResource(id = R.color.guinda)
+                )
+            },
             value = loginViewModel.emailInput,
             label = stringResource(id = R.string.email_label)
         ) {
@@ -109,7 +116,13 @@ fun CompactLogin(
         }
         TextFieldComponent(
             modifier.fillMaxWidth(),
-            icon = Icons.Filled.Password,
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.Password,
+                    contentDescription = "",
+                    tint = colorResource(id = R.color.guinda)
+                )
+            },
             value = loginViewModel.passwordInput,
             label = stringResource(id = R.string.password_label)
         ) {
@@ -121,7 +134,6 @@ fun CompactLogin(
             label = stringResource(id = R.string.login_button_label),
             fontSize = 24.sp
         ) {
-            Log.i("login S", "hola")
             authViewModel.doLogin(loginViewModel.emailInput, loginViewModel.passwordInput)
         }
     }
