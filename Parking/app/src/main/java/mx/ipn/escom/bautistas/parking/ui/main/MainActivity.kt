@@ -30,10 +30,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import mx.ipn.escom.bautistas.parking.services.Utils
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthStatus
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
+import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewUserViewModel
 import mx.ipn.escom.bautistas.parking.ui.main.views.HomeScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.LoginScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.NewUserScreen
@@ -109,10 +111,15 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                             navController.navigate(Routes.NewUser.route)
                         })
                     }
-                    composable(Routes.NewUser.route){
-                        NewUserScreen()
+                    composable(Routes.NewUser.route) {
+                        val newUserViewModel: NewUserViewModel by viewModels()
+
+
+                        NewUserScreen(newUserViewModel = newUserViewModel) {
+                            navController.popBackStack()
+                        }
                     }
-                    composable(Routes.UserAvailable.route){
+                    composable(Routes.UserAvailable.route) {
 
                     }
 
