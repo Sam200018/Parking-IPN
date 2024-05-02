@@ -4,16 +4,16 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Usuario (
-    @SerializedName("id_usuario")
-    val idUsuario: Long,
+data class Persona (
+    @SerializedName("id_persona")
+    val idPersona: Long = 0,
     val nombre: String,
     @SerializedName("a_paterno")
     val aPaterno: String,
     @SerializedName("a_materno")
     val aMaterno: String,
     @SerializedName("id_ipn")
-    val idIpn: String,
+    val idIpn: String?,
     @SerializedName("ruta_identificacion")
     val rutaIdentificacion: String,
     @SerializedName("ruta_fotografia")
