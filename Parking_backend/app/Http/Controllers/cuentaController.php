@@ -58,7 +58,6 @@ class cuentaController extends Controller
             'correo'=>$request->correo,
             'activo'=>true,
             'password'=> $passwordHash,
-            'debe_cambiar_contrasena'=> true,
         ]);
 
         return response()->json([

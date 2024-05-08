@@ -20,7 +20,6 @@ class Cuentas extends Authenticatable implements JWTSubject
 
     protected $casts = [
         'activo' => 'boolean',
-        'debe_cambiar_contrasena' => 'boolean'
     ];
 
     protected $fillable = [
