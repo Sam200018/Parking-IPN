@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -22,7 +23,7 @@ import mx.ipn.escom.bautistas.parking.ui.components.TextFieldComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 
 @Composable
-fun PrerecordView(
+fun AccessCardsView(
     modifier: Modifier = Modifier,
     navSelectUser: () -> Unit,
 
@@ -30,7 +31,7 @@ fun PrerecordView(
     Scaffold(
         topBar = {
 
-            TopBarComponent(title = stringResource(id = R.string.pre_record_label))
+            TopBarComponent(title = stringResource(id = R.string.access_cards))
         },
         floatingActionButton = {
             FloatingActionButtonComponent {
