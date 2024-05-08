@@ -16,6 +16,9 @@ import mx.ipn.escom.bautistas.parking.data.token.UserDao
 import mx.ipn.escom.bautistas.parking.data.user.UserDataSource
 import mx.ipn.escom.bautistas.parking.data.user.UserRepository
 import mx.ipn.escom.bautistas.parking.data.user.UserRepositoryImpl
+import mx.ipn.escom.bautistas.parking.data.vehicle.VehicleDataSource
+import mx.ipn.escom.bautistas.parking.data.vehicle.VehicleRepository
+import mx.ipn.escom.bautistas.parking.data.vehicle.VehicleRepositoryImpl
 import mx.ipn.escom.bautistas.parking.model.AppDatabase
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -46,19 +49,22 @@ object AppModule {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson)).baseUrl(baseUrl).build()
     }
+// remote data sources
+    @Provides
+    @Singleton
+    fun providesAuthDataSource(retrofit: Retrofit): AuthDataSource =
+    retrofit.create(AuthDataSource::class.java)
 
     @Provides
     @Singleton
-    fun providesAuthDataSource(retrofit: Retrofit): AuthDataSource {
-        return retrofit.create(AuthDataSource::class.java)
-    }
+    fun providesUserDataSource(retrofit: Retrofit): UserDataSource =
+        retrofit.create(UserDataSource::class.java)
 
     @Provides
     @Singleton
-    fun providesUserDataSource(retrofit: Retrofit): UserDataSource {
-        return retrofit.create(UserDataSource::class.java)
-    }
-
+    fun providesVehicleDataSource(retrofit: Retrofit): VehicleDataSource =
+        retrofit.create(VehicleDataSource::class.java)
+//Repos
     @Provides
     @Singleton
     fun providesAuthRepository(authDataSource: AuthDataSource, userDao: UserDao): AuthRepository =
@@ -67,10 +73,15 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesUserRepository(userDataSource: UserDataSource): UserRepository {
-        return UserRepositoryImpl(userDataSource)
-    }
+    fun providesUserRepository(userDataSource: UserDataSource): UserRepository =
+        UserRepositoryImpl(userDataSource)
 
+    @Provides
+    @Singleton
+    fun providesVehicleRepository(vehicleDataSource: VehicleDataSource): VehicleRepository =
+        VehicleRepositoryImpl(vehicleDataSource)
+
+// Room
 
     @Provides
     @Singleton
