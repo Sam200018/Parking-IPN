@@ -6,11 +6,17 @@ sealed class Routes(
     data object SplashScreen : Routes(route = "/")
     data object LoginScreen : Routes(route = "/login")
     data object HomeScreen : Routes(route = "/home")
-    data object UserSelect : Routes(route = "/user_select")
+    data object GenerateAccessCard : Routes(route = "/generate_access_card")
     data object NewUser : Routes(route = "/new_user")
-//  newUserScreen
+    data object NewVehicle : Routes(route = "/new_vehicle")
+
+    //  newUserScreen
     data object NewUserMainContent : Routes(route = "/new_user_main")
     data object NewUserCamaraP : Routes(route = "/camara_person")
-    data object NewUserCamaraI: Routes(route = "/camara_ID")
-    data object UserAvailable : Routes(route = "/user_available")
+    data object NewUserCamaraI : Routes(route = "/camara_ID")
+
+//    newVehicleScreen
+    data object NewVehicleMainContent : Routes(route = "/new_vehicle_main")
+
+
 }
