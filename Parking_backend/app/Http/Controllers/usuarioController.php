@@ -76,8 +76,8 @@ class usuarioController extends Controller
                 'a_paterno'=> $request->a_paterno,
                 'a_materno'=> $request->a_materno,
                 'id_ipn'=> $request->id_ipn,
-                'ruta_identificacion'=> $path_id_card,
-                'ruta_fotografia'=> $path_photo,
+                'ruta_identificacion'=> basename($path_id_card),
+                'ruta_fotografia'=> basename($path_photo),
                 'numero_contacto'=> $request->numero_contacto,
             ]);
             return response()->json([
@@ -93,13 +93,28 @@ class usuarioController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Request $request)
     {
-        $usuarios = Personas::all();
+
+        $query = Personas::query();
+
+        $input = $request->input('input');
+    
+        if ($input) {
+            $query->where(function($query) use ($input) {
+                $query->where('nombre', 'like', '%' . $input . '%')
+                      ->orWhere('a_paterno', 'like', '%' . $input . '%')
+                      ->orWhere('a_materno', 'like', '%' . $input . '%')
+                      ->orWhere('id_ipn', 'like', '%' . $input . '%')
+                      ->orWhere('numero_contacto', 'like', '%' . $input . '%');
+            });
+        }
+    
+        $usuarios = $query->get();
+    
         return response()->json([
-            'usuarios'=> $usuarios
-        ], 200
-        );
+            'usuarios' => $usuarios
+        ], 200);
     }
 
     /**
