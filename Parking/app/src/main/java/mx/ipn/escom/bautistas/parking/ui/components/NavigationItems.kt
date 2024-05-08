@@ -16,7 +16,7 @@ import mx.ipn.escom.bautistas.parking.ui.main.interactions.AdminNavState
 data class NavigationItem(val icon: ImageVector, @StringRes val title: Int, val adminNavState: AdminNavState? = null)
 
 val adminNavigationItems = listOf(
-    NavigationItem(Icons.Outlined.AppRegistration, R.string.pre_record_label, AdminNavState.Prerecord),
+    NavigationItem(Icons.Outlined.AppRegistration, R.string.access_cards, AdminNavState.Prerecord),
     NavigationItem(Icons.Outlined.SupervisorAccount, R.string.accounts_label, AdminNavState.Accounts),
     NavigationItem(Icons.Outlined.WarningAmber, R.string.incidents_label, AdminNavState.Incidents),
 )

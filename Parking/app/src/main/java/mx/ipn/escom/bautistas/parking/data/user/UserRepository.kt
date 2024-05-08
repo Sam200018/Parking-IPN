@@ -4,6 +4,7 @@ package mx.ipn.escom.bautistas.parking.data.user
 import mx.ipn.escom.bautistas.parking.model.CreateAccountRequest
 import mx.ipn.escom.bautistas.parking.model.CreateAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateUserResponse
+import mx.ipn.escom.bautistas.parking.model.GetPeopleResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
@@ -20,6 +21,8 @@ interface UserRepository {
     ): CreateUserResponse
 
     suspend fun createAccount(createAccountRequest: CreateAccountRequest): CreateAccountResponse
+
+    suspend fun getPeople(input: String? = null): GetPeopleResponse
 }
 
 class UserRepositoryImpl @Inject constructor(
@@ -46,5 +49,8 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun createAccount(createAccountRequest: CreateAccountRequest): CreateAccountResponse =
         userDataSource.createAccount(createAccountRequest)
+
+    override suspend fun getPeople(input: String?): GetPeopleResponse =
+        userDataSource.getPeople(input = input)
 
 }

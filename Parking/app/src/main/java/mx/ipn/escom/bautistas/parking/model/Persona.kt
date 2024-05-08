@@ -13,7 +13,7 @@ data class Persona (
     @SerializedName("a_materno")
     val aMaterno: String,
     @SerializedName("id_ipn")
-    val idIpn: String?,
+    val idIpn: String?="",
     @SerializedName("ruta_identificacion")
     val rutaIdentificacion: String,
     @SerializedName("ruta_fotografia")

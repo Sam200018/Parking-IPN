@@ -13,10 +13,11 @@ import mx.ipn.escom.bautistas.parking.R
 fun BitmapImage(
     modifier: Modifier = Modifier,
     bitmap: Bitmap? = null,
+    filename: String= "https://avatars.githubusercontent.com/u/49082936?v=4",
     contentScale: ContentScale = ContentScale.FillHeight
 ) {
     AsyncImage(
-        model = bitmap,
+        model = bitmap?: "http://192.168.10.113:8000/api/storage/${filename}",
         contentDescription = "",
         placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
         contentScale = contentScale,

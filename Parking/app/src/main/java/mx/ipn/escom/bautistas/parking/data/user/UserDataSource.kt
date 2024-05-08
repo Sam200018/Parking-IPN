@@ -4,14 +4,17 @@ import android.graphics.Bitmap
 import mx.ipn.escom.bautistas.parking.model.CreateAccountRequest
 import mx.ipn.escom.bautistas.parking.model.CreateAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateUserResponse
+import mx.ipn.escom.bautistas.parking.model.GetPeopleResponse
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 import java.io.ByteArrayOutputStream
 
 interface UserDataSource {
@@ -29,6 +32,9 @@ interface UserDataSource {
 
     @POST("create_account")
     suspend fun createAccount(@Body createAccountRequest: CreateAccountRequest): CreateAccountResponse
+
+    @GET("get_all_users")
+    suspend fun getPeople(@Query("input") input: String? = null): GetPeopleResponse
 
 }
 
