@@ -30,16 +30,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import mx.ipn.escom.bautistas.parking.services.Utils
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthStatus
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
-import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewUserViewModel
+import mx.ipn.escom.bautistas.parking.ui.main.views.GenAccessCardScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.HomeScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.LoginScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.NewUserScreen
-import mx.ipn.escom.bautistas.parking.ui.main.views.UserSelectScreen
+import mx.ipn.escom.bautistas.parking.ui.main.views.NewVehicleScreen
+import mx.ipn.escom.bautistas.parking.ui.main.views.SplashScreen
 import mx.ipn.escom.bautistas.parking.ui.theme.ParkingTheme
 
 @ExperimentalMaterial3WindowSizeClassApi
@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                 val startDestination = when (authState.authStatus) {
                     AuthStatus.Unauthenticated -> Routes.LoginScreen.route
                     AuthStatus.Authenticated -> Routes.HomeScreen.route
-                    else -> Routes.LoginScreen.route
+                    else -> Routes.SplashScreen.route
                 }
 
 
@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                     startDestination = startDestination
                 ) {
                     composable(Routes.SplashScreen.route) {
-
+                        SplashScreen()
                     }
                     composable(Routes.LoginScreen.route) {
                         LoginScreen(
@@ -98,31 +98,25 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                             windowSizeClass = windowSizeClass,
                             authState = authState,
                             hasNFC = hasNFC, navSelectUser = {
-                                navController.navigate(Routes.UserSelect.route)
+                                navController.navigate(Routes.GenerateAccessCard.route)
                             }
                         )
                     }
-                    composable(Routes.UserSelect.route) {
-                        UserSelectScreen(backAction = {
-                            navController.popBackStack()
-                        }, navUserAvailable = {
-                            navController.navigate(Routes.UserAvailable.route)
-                        }, navNewUser = {
-                            navController.navigate(Routes.NewUser.route)
-                        })
+
+                    composable(Routes.GenerateAccessCard.route) {
+                        GenAccessCardScreen(
+                            navToNewUser = { navController.navigate(Routes.NewUser.route) },
+                            navToNewVehicle = { navController.navigate(Routes.NewVehicle.route) },
+                        )
                     }
                     composable(Routes.NewUser.route) {
-                        val newUserViewModel: NewUserViewModel by viewModels()
-
-
-                        NewUserScreen(newUserViewModel = newUserViewModel) {
+                        NewUserScreen() {
                             navController.popBackStack()
                         }
                     }
-                    composable(Routes.UserAvailable.route) {
-
+                    composable(Routes.NewVehicle.route) {
+                        NewVehicleScreen()
                     }
-
                 }
 
             }
