@@ -133,7 +133,7 @@ fun MainContent(
                                         items = academProgOption, label = stringResource(
                                             id = R.string.academ_prog_label,
                                         ),
-                                        value = newUserViewModel.progAcademicoVal ?: 1
+                                        value = newUserViewModel.progAcademicoVal ?: 0
                                     ) {
 
                                         if (newUserViewModel.userTypeVal == 2) {

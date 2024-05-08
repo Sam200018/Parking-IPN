@@ -27,7 +27,7 @@ class NewUserViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    var userTypeVal: Int by mutableStateOf(1)
+    var userTypeVal: Int by mutableStateOf(0)
         private set
 
     var ipnIDVal: String? by mutableStateOf(null)
