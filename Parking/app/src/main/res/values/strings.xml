@@ -12,7 +12,7 @@
     <string name="login_button_label">Iniciar sesión</string>
     <string name="system_label">Sistema de estacionamiento IPN</string>
 <!--    Navigation-->
-    <string name="pre_record_label">Pre-registros</string>
+    <string name="access_cards">Tarjetas de accesso</string>
     <string name="accounts_label">Cuentas</string>
     <string name="incidents_label">Incidentes</string>
     <string name="home_label">Inicio</string>
@@ -22,8 +22,16 @@
 <!--    Selections-->
     <string name="users_available_label">Usuarios disponibles</string>
     <string name="new_user_label">Nuevo Usuario</string>
+<!--    Gen Access Card-->
+    <string name="gen_access_card_label">Generar tarjeta de acceso</string>
+    <string name="search_by_name_ipdId_phone">Buscar nombre, IPN ID, o teléfono</string>
+    <string name="search_by_plates">Buscar placas del vehículo</string>
+    <string name="gen_persona">Generar cuenta</string>
+    <string name="empty_personas_label">Lo siento, parece que no hay usuarios  que coincidan</string>
+    <string name="gen_vehicle">Generar vehiculo</string>
+    <string name="empty_vehicles_label">Lo siento, parece que no hay vehículos  que coincidan</string>
 <!--    New User-->
-    <string name="type_user_label">Tipo de Usuario</string>
+    <string name="type_user_label">Tipo de usuario</string>
     <string name="ipn_id_label">Número IPN</string>
     <string name="academ_prog_label">Programa académico</string>
     <string name="name_label">Nombre/s</string>
@@ -33,6 +41,15 @@
     <string name="photo_person_label">Fotografía del usuario</string>
     <string name="photo_id_label">Fotografía de credencial</string>
     <string name="crate_user_label">Crear usuario</string>
+<!--    New Vehicle-->
+    <string name="create_vehicle_label">Crear nuevo vehículo</string>
+    <string name="type_vehicle_label">Tipo de vehicle</string>
+    <string name="plate_label">Placa</string>
+    <string name="model_label">Modelo</string>
+    <string name="brand_label">Marca</string>
+    <string name="color_label">Color</string>
+    <string name="document_label">Documento</string>
+
 
 
 </resources>
