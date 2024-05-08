@@ -1,6 +1,5 @@
 package mx.ipn.escom.bautistas.parking.ui.main.views
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,24 +10,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,15 +38,15 @@ import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 import mx.ipn.escom.bautistas.parking.ui.components.academProgOption
 import mx.ipn.escom.bautistas.parking.ui.components.typeUserOptions
 import mx.ipn.escom.bautistas.parking.ui.main.Routes
-import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewUserViewModel
 
 @Composable
 fun NewUserScreen(
     modifier: Modifier = Modifier,
-    newUserViewModel: NewUserViewModel,
     backAction: () -> Unit,
 ) {
+
+    val newUserViewModel: NewUserViewModel = hiltViewModel()
 
 
     val navControllerNewUser = rememberNavController()
@@ -94,7 +89,7 @@ fun MainContent(
 
     Scaffold(
         topBar = {
-            TopBarComponent(title = stringResource(id = R.string.pre_record_label)) {
+            TopBarComponent(title = stringResource(id = R.string.gen_persona)) {
                 backAction()
             }
         }
@@ -226,8 +221,8 @@ fun MainContent(
                                 ) {
                                     newUserViewModel.onNewUserCreated()
                                 }
-                            })
-
+                            }
+                        )
                     }
                 }
             )
