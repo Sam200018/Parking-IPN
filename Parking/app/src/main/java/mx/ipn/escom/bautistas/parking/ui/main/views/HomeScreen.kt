@@ -70,7 +70,7 @@ fun ExpandedHome(
         )
         Box(modifier = modifier.weight(1f, fill = true)) {
             when (currentSection) {
-                AdminNavState.Prerecord -> PrerecordView(navSelectUser = navSelectUser)
+                AdminNavState.Prerecord -> AccessCardsView(navSelectUser = navSelectUser)
                 AdminNavState.Accounts -> AccountsView()
                 AdminNavState.Incidents -> IncidentsView()
             }
