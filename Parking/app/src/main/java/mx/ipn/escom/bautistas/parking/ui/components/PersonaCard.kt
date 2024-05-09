@@ -29,11 +29,9 @@ fun PersonaCard(
     selectAction: (Long) -> Unit
 ) {
     Card(
+        onClick = {selectAction(persona.idPersona)},
         modifier
-            .padding(10.dp)
-            .clickable {
-                selectAction(persona.idPersona)
-            },
+            .padding(10.dp),
         border = if (selectedItem == persona.idPersona) {
             BorderStroke(5.dp, colorResource(id = R.color.guinda))
 
