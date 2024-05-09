@@ -35,12 +35,11 @@ fun VehicleCard(
     selectedItem: Long = 0,
     selectAction: (Long) -> Unit
 ) {
+
     Card(
+        onClick = { selectAction(vehicle.idVehiculo) },
         modifier
-            .padding(10.dp)
-            .clickable {
-                selectAction(vehicle.idVehiculo)
-            },
+            .padding(10.dp),
         border = if (selectedItem == vehicle.idVehiculo) {
             BorderStroke(5.dp, colorResource(id = R.color.guinda))
 
@@ -49,8 +48,9 @@ fun VehicleCard(
         },
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.guinda_disbale + 9)
-        )
-    ) {
+        ),
+
+        ) {
         Row(
             modifier
                 .fillMaxWidth()
