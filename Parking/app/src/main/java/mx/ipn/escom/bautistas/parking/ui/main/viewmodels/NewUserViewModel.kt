@@ -2,12 +2,16 @@ package mx.ipn.escom.bautistas.parking.ui.main.viewmodels
 
 import android.graphics.Bitmap
 import android.util.Log
+import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mx.ipn.escom.bautistas.parking.data.user.UserRepository
 import mx.ipn.escom.bautistas.parking.data.user.createPartFromBitmap
@@ -16,6 +20,7 @@ import mx.ipn.escom.bautistas.parking.model.CreateAccountRequest
 import mx.ipn.escom.bautistas.parking.model.CreateAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateUserResponse
 import mx.ipn.escom.bautistas.parking.model.Persona
+import mx.ipn.escom.bautistas.parking.ui.main.interactions.NewUserState
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
@@ -26,6 +31,10 @@ import javax.inject.Inject
 class NewUserViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
+
+    private val _newUserUIState = MutableStateFlow(NewUserState())
+    val newUserUiState = _newUserUIState.asStateFlow()
+
 
     var userTypeVal: Int by mutableStateOf(0)
         private set
@@ -58,42 +67,108 @@ class NewUserViewModel @Inject constructor(
 
     fun onUserTypeChanged(type: Int) {
         userTypeVal = type
+        if (userTypeVal == 0) {
+            _newUserUIState.update {
+                it.copy(isError = false, isTypeUserSelected = false)
+            }
+
+        } else {
+            if (userTypeVal == 2) {
+
+                _newUserUIState.update {
+                    it.copy(
+                        isError = false,
+                        isTypeUserSelected = true,
+                        isAcademProgSelected = false
+                    )
+                }
+            } else {
+                if (userTypeVal == 5) {
+                    ipnIDVal = null
+                }
+                _newUserUIState.update {
+                    it.copy(isError = false, isTypeUserSelected = true, isAcademProgSelected = true)
+                }
+                progAcademicoVal = null
+            }
+        }
     }
 
     fun onIpnIDChanged(ipnIDval: String?) {
         ipnIDVal = ipnIDval
+        ipnIDval?.let {
+            _newUserUIState.update {
+                it.copy(
+                    isError = false,
+                    isIPNIdValid = ipnIDval.isNotEmpty().and(ipnIDval.length > 4)
+                )
+            }
+        }
     }
 
     fun onProgAcademicoChange(prog: Int?) {
         progAcademicoVal = prog
+        prog?.let {
+            _newUserUIState.update {
+                it.copy(isError = false, isAcademProgSelected = prog != 0)
+            }
+        }
     }
 
     fun onNameChange(name: String) {
         nameVal = name
+        _newUserUIState.update {
+            it.copy(isError = false, isNameValid = nameVal.isNotBlank())
+        }
     }
 
     fun onPLastNameChange(lastNameP: String) {
         pLastNameVal = lastNameP
+        _newUserUIState.update {
+            it.copy(isError = false, isPLastNameValid = pLastNameVal.isNotBlank())
+        }
     }
 
     fun onMLastNameChange(lastNameM: String) {
         mLastNameVal = lastNameM
+        _newUserUIState.update {
+            it.copy(isError = false, isMLastNameValid = mLastNameVal.isNotBlank())
+        }
     }
 
     fun onPhoneChange(phone: String) {
         phoneVal = phone
+        _newUserUIState.update {
+            it.copy(isError = false, isPhoneValid = Patterns.PHONE.matcher(phoneVal).matches())
+        }
     }
 
     fun onEmailChange(email: String) {
         emailVal = email
+        _newUserUIState.update {
+            it.copy(
+                isError = false,
+                isEmailValid = Patterns.EMAIL_ADDRESS.matcher(emailVal).matches()
+            )
+        }
     }
 
     fun onPersonPhotoChange(photo: Bitmap?) {
         personPhoto = photo
+        personPhoto?.let {
+            _newUserUIState.update {
+                it.copy(isError = false, isPersonPhotoTaken = true)
+            }
+        }
     }
 
     fun onIdentificationPhotoChange(photo: Bitmap?) {
         identificationPhoto = photo
+        identificationPhoto?.let {
+            _newUserUIState.update {
+                it.copy(isError = false, isIdentificationPhotoTaken = true)
+            }
+        }
     }
 
     private suspend fun createUser(
@@ -113,13 +188,27 @@ class NewUserViewModel @Inject constructor(
                 idIPN,
                 numeroContacto, identification, photography,
             )
+
             Result.success(response)
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            Result.failure(RuntimeException(errorBody ?: "Error desconocido"))
+            _newUserUIState.update {
+                it.copy(
+                    isError = true,
+                    message = errorBody ?: "Error desconocido"
+                )
+            }
+            Result.failure(e)
         } catch (e: IOException) {
-            Result.failure(RuntimeException("Error desconocido"))
+            _newUserUIState.update {
+                it.copy(
+                    isError = true,
+                    message = e.message ?: "Error desconocido"
+                )
+            }
+            Result.failure(e)
         }
+
     }
 
     private suspend fun createAccount(
@@ -130,15 +219,33 @@ class NewUserViewModel @Inject constructor(
             Result.success(response)
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
-            Result.failure(RuntimeException(errorBody ?: "Error desconocido"))
+            _newUserUIState.update {
+                it.copy(
+                    isError = true,
+                    message = errorBody ?: "Error desconocido"
+                )
+            }
+            Result.failure(e)
         } catch (e: IOException) {
-            Result.failure(RuntimeException("Error desconocido"))
+
+            _newUserUIState.update {
+                it.copy(
+                    isError = true,
+                    message = e.message ?: "Error desconocido"
+                )
+            }
+            Result.failure(e)
         }
     }
 
 
     fun onNewUserCreated() {
+        _newUserUIState.update {
+            it.copy(isLoading = true)
+        }
+
         viewModelScope.launch {
+
             val usuarioData = Persona(
                 nombre = nameVal,
                 aPaterno = pLastNameVal,
@@ -148,7 +255,7 @@ class NewUserViewModel @Inject constructor(
                 rutaIdentificacion = nameVal + phoneVal,
                 numeroContacto = phoneVal,
 
-            )
+                )
 
 
             val nombre = createPartFromString(usuarioData.nombre)
@@ -171,7 +278,6 @@ class NewUserViewModel @Inject constructor(
                 numeroContacto!!, identification, photography
             )
             if (result.isSuccess) {
-                Log.i("Exito", "exito")
                 val response = result.getOrDefault(null)
                 val createAccountRequest = CreateAccountRequest(
                     response!!.user.idPersona,
@@ -181,20 +287,18 @@ class NewUserViewModel @Inject constructor(
                 )
                 val resultCreateAccount = createAccount(createAccountRequest)
                 if (resultCreateAccount.isSuccess) {
-                    Log.i("Exitoso", "Crate Account")
                     val resp = resultCreateAccount.getOrDefault(null)
-                    resp?.tempPassword?.let { Log.i("Temp password", it) }
-                } else {
-                    val error = result.exceptionOrNull()?.message ?: "jeje"
-                    Log.e("NO Exito", error)
+                    resp?.tempPassword?.let { pass ->
+                        Log.i("Temp password", pass)
+                        _newUserUIState.update {
+                            it.copy(
+                                isSuccess = true,
+                                message = "Contraseña: $pass"
+                            )
+                        }
+                    }
                 }
-            } else {
-                val error = result.exceptionOrNull()?.message ?: "jeje"
-                Log.e("NO Exito", error)
-
             }
         }
     }
-
-
 }

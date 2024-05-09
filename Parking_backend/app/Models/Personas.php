@@ -28,7 +28,7 @@ class Personas extends Model
 
     public function cuenta()
     {
-        return $this->hasMany(Cuentas::class, 'id_cuenta');
+        return $this->hasOne(Cuentas::class, 'id_cuenta');
     }
 
     public function visita()

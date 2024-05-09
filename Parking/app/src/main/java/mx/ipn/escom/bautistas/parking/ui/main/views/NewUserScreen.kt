@@ -15,15 +15,22 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,13 +38,16 @@ import androidx.navigation.compose.rememberNavController
 import mx.ipn.escom.bautistas.parking.R
 import mx.ipn.escom.bautistas.parking.ui.components.BalanceUI
 import mx.ipn.escom.bautistas.parking.ui.components.ButtonComponent
+import mx.ipn.escom.bautistas.parking.ui.components.DialogComponent
 import mx.ipn.escom.bautistas.parking.ui.components.DropDownComponent
+import mx.ipn.escom.bautistas.parking.ui.components.LoadingDialogComponent
 import mx.ipn.escom.bautistas.parking.ui.components.PhotoButton
 import mx.ipn.escom.bautistas.parking.ui.components.TextFieldComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 import mx.ipn.escom.bautistas.parking.ui.components.academProgOption
 import mx.ipn.escom.bautistas.parking.ui.components.typeUserOptions
 import mx.ipn.escom.bautistas.parking.ui.main.Routes
+import mx.ipn.escom.bautistas.parking.ui.main.interactions.NewUserState
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewUserViewModel
 
 @Composable
@@ -47,9 +57,12 @@ fun NewUserScreen(
 ) {
 
     val newUserViewModel: NewUserViewModel = hiltViewModel()
-
+    val newUserUiState by newUserViewModel.newUserUiState.collectAsStateWithLifecycle()
 
     val navControllerNewUser = rememberNavController()
+
+
+
 
     NavHost(
         navController = navControllerNewUser,
@@ -58,8 +71,11 @@ fun NewUserScreen(
         composable(Routes.NewUserMainContent.route) {
             MainContent(
                 navController = navControllerNewUser,
-                newUserViewModel = newUserViewModel, backAction = backAction
-            )
+                newUserViewModel = newUserViewModel,
+                newUserState = newUserUiState
+            ) {
+                backAction()
+            }
         }
         composable(Routes.NewUserCamaraP.route) {
             CamaraScreen(photo = newUserViewModel.personPhoto) {
@@ -83,6 +99,7 @@ fun MainContent(
     modifier: Modifier = Modifier,
     navController: NavController,
     newUserViewModel: NewUserViewModel,
+    newUserState: NewUserState,
     backAction: () -> Unit,
 ) {
     val scrollStateNU = rememberScrollState()
@@ -106,7 +123,9 @@ fun MainContent(
                         DropDownComponent(
                             items = typeUserOptions,
                             label = stringResource(id = R.string.type_user_label),
-                            value = newUserViewModel.userTypeVal
+                            value = newUserViewModel.userTypeVal,
+                            isError = newUserState.isTypeUserSelected.not(),
+                            errorMessage = "Debe seleccionarse el tipo de usuario"
                         ) {
                             newUserViewModel.onUserTypeChanged(it)
                         }
@@ -118,7 +137,9 @@ fun MainContent(
                             ) {
                                 TextFieldComponent(
                                     label = stringResource(id = R.string.ipn_id_label),
-                                    value = newUserViewModel.ipnIDVal ?: ""
+                                    value = newUserViewModel.ipnIDVal ?: "",
+                                    isError = newUserState.isIPNIdValid.not(),
+                                    errorMessage = "Favor de ingresar numero de empleado o boleta"
                                 ) {
                                     if (newUserViewModel.userTypeVal != 5) {
                                         newUserViewModel.onIpnIDChanged(it)
@@ -133,7 +154,8 @@ fun MainContent(
                                         items = academProgOption, label = stringResource(
                                             id = R.string.academ_prog_label,
                                         ),
-                                        value = newUserViewModel.progAcademicoVal ?: 0
+                                        value = newUserViewModel.progAcademicoVal ?: 0,
+                                        isError = newUserState.isAcademProgSelected.not()
                                     ) {
 
                                         if (newUserViewModel.userTypeVal == 2) {
@@ -148,21 +170,27 @@ fun MainContent(
                         TextFieldComponent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.name_label),
-                            value = newUserViewModel.nameVal
+                            value = newUserViewModel.nameVal,
+                            isError = newUserState.isNameValid.not(),
+                            errorMessage = "Este campo no puede ir vacio"
                         ) {
                             newUserViewModel.onNameChange(it)
                         }
                         TextFieldComponent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.last_name_p_label),
-                            value = newUserViewModel.pLastNameVal
+                            value = newUserViewModel.pLastNameVal,
+                            isError = newUserState.isPLastNameValid.not(),
+                            errorMessage = "Este campo no puede ir vacio"
                         ) {
                             newUserViewModel.onPLastNameChange(it)
                         }
                         TextFieldComponent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.last_name_m_label),
-                            value = newUserViewModel.mLastNameVal
+                            value = newUserViewModel.mLastNameVal,
+                            isError = newUserState.isMLastNameValid.not(),
+                            errorMessage = "Este campo no puede ir vacio"
                         ) {
                             newUserViewModel.onMLastNameChange(it)
                         }
@@ -170,7 +198,9 @@ fun MainContent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.phone_label),
                             value = newUserViewModel.phoneVal,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                            isError = newUserState.isPhoneValid.not(),
+                            errorMessage = "El valor ingresado no es valido"
                         ) {
                             newUserViewModel.onPhoneChange(it)
                         }
@@ -178,7 +208,9 @@ fun MainContent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.email_label),
                             value = newUserViewModel.emailVal,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                            isError = newUserState.isEmailValid.not(),
+                            errorMessage = "El valor ingresado no es valido"
                         ) {
                             newUserViewModel.onEmailChange(it)
                         }
@@ -186,9 +218,11 @@ fun MainContent(
                 }, content2 = {
                     Column(
                         modifier
-                            .fillMaxSize()
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         PhotoButton(
+                            modifier = modifier.height(250.dp),
                             label = stringResource(id = R.string.photo_person_label),
                             icon = Icons.Filled.AddAPhoto,
                             value = newUserViewModel.personPhoto
@@ -196,6 +230,7 @@ fun MainContent(
                             navController.navigate(Routes.NewUserCamaraP.route)
                         }
                         PhotoButton(
+                            modifier = modifier.height(250.dp),
                             label = stringResource(id = R.string.photo_id_label),
                             width = 380.dp,
                             icon = Icons.Filled.AddAPhoto,
@@ -203,6 +238,14 @@ fun MainContent(
                             contentScale = ContentScale.FillWidth
                         ) {
                             navController.navigate(Routes.NewUserCamaraI.route)
+                        }
+                        if (newUserState.isError && newUserState.message.isNotEmpty()) {
+                            Text(text = newUserState.message, color = Color.Red, fontSize = 20.sp)
+                            Text(
+                                text = "Corregir y volver a intentar",
+                                color = Color.Red,
+                                fontSize = 20.sp
+                            )
                         }
                         BalanceUI(modifier = modifier.height(240.dp),
                             content1 = {
@@ -217,7 +260,8 @@ fun MainContent(
                                 ButtonComponent(
                                     modifier = modifier,
                                     fontSize = 24.sp,
-                                    label = stringResource(id = R.string.crate_user_label)
+                                    label = stringResource(id = R.string.crate_user_label),
+                                    isEnable = isButtonEnable(newUserState)
                                 ) {
                                     newUserViewModel.onNewUserCreated()
                                 }
@@ -226,6 +270,22 @@ fun MainContent(
                     }
                 }
             )
+            if (newUserState.isLoading) {
+                LoadingDialogComponent()
+            }
+            if (newUserState.isSuccess) {
+                DialogComponent(message = newUserState.message, icon = Icons.Filled.CheckCircle) {
+                    backAction()
+                }
+            }
         }
     }
 }
+
+fun isButtonEnable(newUserState: NewUserState): Boolean =
+    newUserState.isTypeUserSelected && newUserState.isIPNIdValid
+            && newUserState.isAcademProgSelected && newUserState.isNameValid
+            && newUserState.isPLastNameValid && newUserState.isMLastNameValid
+            && newUserState.isPhoneValid && newUserState.isEmailValid
+            && newUserState.isPersonPhotoTaken && newUserState.isIdentificationPhotoTaken
+            && newUserState.isError.not()
