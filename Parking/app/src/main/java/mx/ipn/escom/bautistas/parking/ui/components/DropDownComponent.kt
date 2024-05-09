@@ -27,6 +27,8 @@ fun DropDownComponent(
     items: List<String>,
     label: String,
     value: Int = 0,
+    isError: Boolean = false,
+    errorMessage: String = "",
     onChange: (Int) -> Unit,
 ) {
 
@@ -43,6 +45,12 @@ fun DropDownComponent(
             value = items.get(value),
             label = {
                 Text(text = label, color = colorResource(id = R.color.guinda))
+            },
+            isError = isError,
+            supportingText = {
+                if (isError) {
+                    Text(text = errorMessage)
+                }
             },
             onValueChange = {}, readOnly = true,
             trailingIcon = {
