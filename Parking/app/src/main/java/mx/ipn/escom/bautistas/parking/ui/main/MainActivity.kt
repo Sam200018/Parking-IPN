@@ -115,7 +115,9 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                         }
                     }
                     composable(Routes.NewVehicle.route) {
-                        NewVehicleScreen()
+                        NewVehicleScreen(){
+                            navController.popBackStack()
+                        }
                     }
                 }
 
