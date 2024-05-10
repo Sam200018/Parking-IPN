@@ -49,7 +49,8 @@
     <string name="brand_label">Marca</string>
     <string name="color_label">Color</string>
     <string name="document_label">Documento</string>
-
+<!--Dialog-->
+    <string name="close_button_label">Cerrar</string>
 
 
 </resources>

@@ -57,7 +57,7 @@ fun VehicleCard(
                 .padding(10.dp)
         ) {
             Box(modifier.size(100.dp, 100.dp)) {
-                if (vehicle.tipoVehiculo.equals(1.toLong())) {
+                if (vehicle.tipoVehiculo.equals(2.toLong())) {
                     Icon(
                         Icons.Filled.DirectionsCar,
                         contentDescription = "",
