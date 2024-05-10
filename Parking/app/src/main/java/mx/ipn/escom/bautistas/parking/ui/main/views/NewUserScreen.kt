@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -171,6 +172,7 @@ fun MainContent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.name_label),
                             value = newUserViewModel.nameVal,
+                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                             isError = newUserState.isNameValid.not(),
                             errorMessage = "Este campo no puede ir vacio"
                         ) {
@@ -180,6 +182,7 @@ fun MainContent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.last_name_p_label),
                             value = newUserViewModel.pLastNameVal,
+                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                             isError = newUserState.isPLastNameValid.not(),
                             errorMessage = "Este campo no puede ir vacio"
                         ) {
@@ -189,6 +192,7 @@ fun MainContent(
                             modifier.fillMaxWidth(),
                             label = stringResource(id = R.string.last_name_m_label),
                             value = newUserViewModel.mLastNameVal,
+                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                             isError = newUserState.isMLastNameValid.not(),
                             errorMessage = "Este campo no puede ir vacio"
                         ) {
