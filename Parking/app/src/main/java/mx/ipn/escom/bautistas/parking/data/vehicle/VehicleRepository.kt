@@ -15,12 +15,12 @@ interface VehicleRepository {
     ): GetVehiclesResponse
 
     suspend fun createVehicle(
-        @Part("tipo_vehiculo") vehicleType: RequestBody,
-        @Part("marca") brand: RequestBody,
-        @Part("modelo") model: RequestBody,
-        @Part("plate") placa: RequestBody,
-        @Part("color") color: RequestBody,
-        @Part documento: MultipartBody.Part,
+        vehicleType: RequestBody,
+        brand: RequestBody,
+        model: RequestBody,
+        placa: RequestBody,
+        color: RequestBody,
+        documento: MultipartBody.Part,
     ): CreateVehicleResponse
 
 }

@@ -25,7 +25,7 @@ interface VehicleDataSource {
         @Part("tipo_vehiculo") vehicleType: RequestBody,
         @Part("marca") brand: RequestBody,
         @Part("modelo") model: RequestBody,
-        @Part("plate") placa: RequestBody,
+        @Part("placa") placa: RequestBody,
         @Part("color") color: RequestBody,
         @Part documento: MultipartBody.Part,
     ):CreateVehicleResponse

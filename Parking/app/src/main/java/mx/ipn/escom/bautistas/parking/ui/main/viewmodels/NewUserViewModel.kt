@@ -195,6 +195,7 @@ class NewUserViewModel @Inject constructor(
             _newUserUIState.update {
                 it.copy(
                     isError = true,
+                    isLoading = false,
                     message = errorBody ?: "Error desconocido"
                 )
             }
@@ -203,6 +204,7 @@ class NewUserViewModel @Inject constructor(
             _newUserUIState.update {
                 it.copy(
                     isError = true,
+                    isLoading = false,
                     message = e.message ?: "Error desconocido"
                 )
             }
@@ -222,6 +224,7 @@ class NewUserViewModel @Inject constructor(
             _newUserUIState.update {
                 it.copy(
                     isError = true,
+                    isLoading = false,
                     message = errorBody ?: "Error desconocido"
                 )
             }
@@ -231,6 +234,7 @@ class NewUserViewModel @Inject constructor(
             _newUserUIState.update {
                 it.copy(
                     isError = true,
+                    isLoading = false,
                     message = e.message ?: "Error desconocido"
                 )
             }
@@ -293,6 +297,7 @@ class NewUserViewModel @Inject constructor(
                         _newUserUIState.update {
                             it.copy(
                                 isSuccess = true,
+                                isLoading = false,
                                 message = "Contraseña: $pass"
                             )
                         }
