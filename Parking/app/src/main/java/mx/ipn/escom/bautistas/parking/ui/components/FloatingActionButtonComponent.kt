@@ -8,6 +8,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import mx.ipn.escom.bautistas.parking.R
@@ -15,6 +16,7 @@ import mx.ipn.escom.bautistas.parking.R
 @Composable
 fun FloatingActionButtonComponent(
     modifier: Modifier = Modifier,
+    icon: ImageVector = Icons.Outlined.Add,
     onClick: () -> Unit
 ) {
     LargeFloatingActionButton(
@@ -23,7 +25,7 @@ fun FloatingActionButtonComponent(
         )
     ) {
         Icon(
-            imageVector = Icons.Outlined.Add, contentDescription = "",
+            imageVector = icon, contentDescription = "",
             tint = colorResource(
                 id = R.color.white
             ),
