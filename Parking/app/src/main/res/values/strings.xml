@@ -40,7 +40,7 @@
     <string name="phone_label">Número de contacto</string>
     <string name="photo_person_label">Fotografía del usuario</string>
     <string name="photo_id_label">Fotografía de credencial</string>
-    <string name="crate_user_label">Crear usuario</string>
+    <string name="crate_user_label">Crear cuenta</string>
 <!--    New Vehicle-->
     <string name="create_vehicle_label">Crear nuevo vehículo</string>
     <string name="type_vehicle_label">Tipo de vehicle</string>
