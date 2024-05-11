@@ -65,6 +65,10 @@ class NewUserViewModel @Inject constructor(
     var identificationPhoto: Bitmap? by mutableStateOf(null)
         private set
 
+    var personPhotoRoute: String by mutableStateOf("")
+
+    var identificationPhotoRoute: String by mutableStateOf("")
+
     fun onUserTypeChanged(type: Int) {
         userTypeVal = type
         if (userTypeVal == 0) {
@@ -139,7 +143,10 @@ class NewUserViewModel @Inject constructor(
     fun onPhoneChange(phone: String) {
         phoneVal = phone
         _newUserUIState.update {
-            it.copy(isError = false, isPhoneValid = Patterns.PHONE.matcher(phoneVal).matches())
+            it.copy(
+                isError = false,
+                isPhoneValid = Patterns.PHONE.matcher(phoneVal).matches().and(phoneVal.length >= 10)
+            )
         }
     }
 
@@ -304,6 +311,60 @@ class NewUserViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun loadPersonaInfo(idPersona: Long) {
+        Log.i("Persona id",idPersona.toString())
+        _newUserUIState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+        viewModelScope.launch {
+
+            getInfoById(idPersona).onSuccess { resp ->
+                val persona = resp.user
+
+                ipnIDVal = persona.idIpn
+                nameVal = persona.nombre
+                pLastNameVal = persona.aPaterno
+                mLastNameVal = persona.aMaterno
+                phoneVal = persona.numeroContacto
+                personPhotoRoute = persona.rutaFotografia
+                identificationPhotoRoute = persona.rutaIdentificacion
+
+                _newUserUIState.update {
+                    NewUserState(
+                        isEmailValid = false,
+                        isPersonPhotoTaken = true,
+                        isIdentificationPhotoTaken = true,
+                    )
+                }
+
+
+            }.onFailure { error ->
+                _newUserUIState.update {
+                    NewUserState(
+                        isError = true,
+                        message = error.message ?: "Error desconocido"
+                    )
+                }
+            }
+
+        }
+
+    }
+
+
+    private suspend fun getInfoById(idPersona: Long): Result<CreateUserResponse> {
+        return try {
+            val resp = userRepository.getPersonaById(idPersona)
+            Result.success(resp)
+        } catch (e: HttpException) {
+            Result.failure(e)
+        } catch (e: IOException) {
+            Result.failure(e)
         }
     }
 }

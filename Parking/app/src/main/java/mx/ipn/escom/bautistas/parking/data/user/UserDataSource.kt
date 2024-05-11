@@ -1,6 +1,7 @@
 package mx.ipn.escom.bautistas.parking.data.user
 
 import android.graphics.Bitmap
+import mx.ipn.escom.bautistas.parking.model.CheckAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateAccountRequest
 import mx.ipn.escom.bautistas.parking.model.CreateAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateUserResponse
@@ -14,6 +15,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.ByteArrayOutputStream
 
@@ -35,6 +37,12 @@ interface UserDataSource {
 
     @GET("get_all_users")
     suspend fun getPeople(@Query("input") input: String? = null): GetPeopleResponse
+
+    @GET("check_account_by_person/{id_persona}")
+    suspend fun checkAccountByPersona(@Path("id_persona") idPersonaLong: Long): CheckAccountResponse
+
+    @GET("get_persona_by_id/{id_persona}")
+    suspend fun getPersonaById(@Path("id_persona") idPersonaLong: Long): CreateUserResponse
 
 }
 

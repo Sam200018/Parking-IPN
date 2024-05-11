@@ -12,6 +12,9 @@ import mx.ipn.escom.bautistas.parking.config.PropertiesManager
 import mx.ipn.escom.bautistas.parking.data.auth.AuthDataSource
 import mx.ipn.escom.bautistas.parking.data.auth.AuthRepository
 import mx.ipn.escom.bautistas.parking.data.auth.AuthRepositoryImpl
+import mx.ipn.escom.bautistas.parking.data.card.AccessCardDataSource
+import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepository
+import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepositoryImpl
 import mx.ipn.escom.bautistas.parking.data.token.UserDao
 import mx.ipn.escom.bautistas.parking.data.user.UserDataSource
 import mx.ipn.escom.bautistas.parking.data.user.UserRepository
@@ -22,7 +25,6 @@ import mx.ipn.escom.bautistas.parking.data.vehicle.VehicleRepositoryImpl
 import mx.ipn.escom.bautistas.parking.model.AppDatabase
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 
@@ -64,6 +66,12 @@ object AppModule {
     @Singleton
     fun providesVehicleDataSource(retrofit: Retrofit): VehicleDataSource =
         retrofit.create(VehicleDataSource::class.java)
+
+    @Provides
+    @Singleton
+    fun providesAccessCardDataSource(retrofit: Retrofit): AccessCardDataSource =
+        retrofit.create(AccessCardDataSource::class.java)
+
 //Repos
     @Provides
     @Singleton
@@ -80,6 +88,11 @@ object AppModule {
     @Singleton
     fun providesVehicleRepository(vehicleDataSource: VehicleDataSource): VehicleRepository =
         VehicleRepositoryImpl(vehicleDataSource)
+
+    @Provides
+    @Singleton
+    fun providesAccessCardRepository(accessCardDataSource: AccessCardDataSource): AccessCardRepository =
+        AccessCardRepositoryImpl(accessCardDataSource)
 
 // Room
 

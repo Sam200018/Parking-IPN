@@ -107,7 +107,9 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                         GenAccessCardScreen(
                             navToNewUser = { navController.navigate(Routes.NewUser.route) },
                             navToNewVehicle = { navController.navigate(Routes.NewVehicle.route) },
-                        )
+                        ){
+                            navController.popBackStack()
+                        }
                     }
                     composable(Routes.NewUser.route) {
                         NewUserScreen() {

@@ -54,6 +54,7 @@ import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewUserViewModel
 @Composable
 fun NewUserScreen(
     modifier: Modifier = Modifier,
+    idPersona: Long? = null,
     backAction: () -> Unit,
 ) {
 
@@ -62,6 +63,9 @@ fun NewUserScreen(
 
     val navControllerNewUser = rememberNavController()
 
+    if(idPersona!=null){
+        newUserViewModel.loadPersonaInfo(idPersona)
+    }
 
 
 
@@ -71,6 +75,7 @@ fun NewUserScreen(
     ) {
         composable(Routes.NewUserMainContent.route) {
             MainContent(
+                idPersona = idPersona,
                 navController = navControllerNewUser,
                 newUserViewModel = newUserViewModel,
                 newUserState = newUserUiState
@@ -98,6 +103,7 @@ fun NewUserScreen(
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
+    idPersona: Long? = null,
     navController: NavController,
     newUserViewModel: NewUserViewModel,
     newUserState: NewUserState,
@@ -225,23 +231,45 @@ fun MainContent(
                             .fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        PhotoButton(
-                            modifier = modifier.height(250.dp),
-                            label = stringResource(id = R.string.photo_person_label),
-                            icon = Icons.Filled.AddAPhoto,
-                            value = newUserViewModel.personPhoto
-                        ) {
-                            navController.navigate(Routes.NewUserCamaraP.route)
-                        }
-                        PhotoButton(
-                            modifier = modifier.height(250.dp),
-                            label = stringResource(id = R.string.photo_id_label),
-                            width = 380.dp,
-                            icon = Icons.Filled.AddAPhoto,
-                            value = newUserViewModel.identificationPhoto,
-                            contentScale = ContentScale.FillWidth
-                        ) {
-                            navController.navigate(Routes.NewUserCamaraI.route)
+
+                        if (idPersona!=null){
+                            PhotoButton(
+                                modifier = modifier.height(250.dp),
+                                label = stringResource(id = R.string.photo_person_label),
+                                icon = Icons.Filled.AddAPhoto,
+                                filename = newUserViewModel.personPhotoRoute
+                            ) {
+                                navController.navigate(Routes.NewUserCamaraP.route)
+                            }
+                            PhotoButton(
+                                modifier = modifier.height(250.dp),
+                                label = stringResource(id = R.string.photo_id_label),
+                                width = 380.dp,
+                                icon = Icons.Filled.AddAPhoto,
+                                filename = newUserViewModel.identificationPhotoRoute,
+                                contentScale = ContentScale.FillWidth
+                            ) {
+                                navController.navigate(Routes.NewUserCamaraI.route)
+                            }
+                        }else{
+                            PhotoButton(
+                                modifier = modifier.height(250.dp),
+                                label = stringResource(id = R.string.photo_person_label),
+                                icon = Icons.Filled.AddAPhoto,
+                                value = newUserViewModel.personPhoto
+                            ) {
+                                navController.navigate(Routes.NewUserCamaraP.route)
+                            }
+                            PhotoButton(
+                                modifier = modifier.height(250.dp),
+                                label = stringResource(id = R.string.photo_id_label),
+                                width = 380.dp,
+                                icon = Icons.Filled.AddAPhoto,
+                                value = newUserViewModel.identificationPhoto,
+                                contentScale = ContentScale.FillWidth
+                            ) {
+                                navController.navigate(Routes.NewUserCamaraI.route)
+                            }
                         }
                         if (newUserState.isError && newUserState.message.isNotEmpty()) {
                             Text(text = newUserState.message, color = Color.Red, fontSize = 20.sp)

@@ -15,8 +15,11 @@ sealed class Routes(
     data object NewUserCamaraP : Routes(route = "/camara_person")
     data object NewUserCamaraI : Routes(route = "/camara_ID")
 
-//    newVehicleScreen
+    //    newVehicleScreen
     data object NewVehicleMainContent : Routes(route = "/new_vehicle_main")
 
+    //    generateAccessCard
+    data object GenAccessCardMain : Routes(route = "/generate_access_card_main")
+    data object CompleteUserInfo : Routes(route = "/completeUser")
 
 }
