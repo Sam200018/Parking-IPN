@@ -35,6 +35,7 @@ fun PhotoButton(
     icon: ImageVector,
     width: Dp = 217.dp,
     value: Bitmap? = null,
+    filename: String = "",
     contentScale: ContentScale = ContentScale.FillHeight,
     goCamera: () -> Unit,
 ) {
@@ -59,7 +60,7 @@ fun PhotoButton(
                     .background(color = colorResource(id = R.color.white)),
                 contentAlignment = Alignment.Center,
             ) {
-                BitmapImage(bitmap = value, contentScale = contentScale)
+                BitmapImage(bitmap = value, contentScale = contentScale, filename = filename)
                 IconButton(onClick = {
                     if (cameraPermission.status.isGranted) {
                         goCamera()
