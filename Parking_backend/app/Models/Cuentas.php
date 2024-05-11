@@ -52,6 +52,11 @@ class Cuentas extends Authenticatable implements JWTSubject
         return $this->belongsTo(Personas::class,'id_persona');
     }
 
+    public function tarjetaAcceso()
+    {
+        return $this->hasMany(Tarjetas_Acceso::class,'id_tarjeta_acceso');
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

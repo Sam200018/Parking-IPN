@@ -29,10 +29,10 @@ class Vehiculo extends Model
 
     public $timestamps = false;
 
-    // public function tarjetaAcceso()
-    // {
-    //     return $this->hasMany()
-    // }
+    public function tarjetaAcceso()
+    {
+        return $this->hasMany(Tarjetas_Acceso::class,'id_tarjeta_acceso');
+    }
 
     public function visita()
     {

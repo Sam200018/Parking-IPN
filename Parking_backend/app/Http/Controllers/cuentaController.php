@@ -15,9 +15,14 @@ class cuentaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function indexByPersona(String $id)
     {
-        //
+        $cuenta = Cuentas::where('id_persona', $id)->first();
+        if ($cuenta) {
+            return response()->json(['verified' => true, 'message' => 'Persona verificada']);
+        } else {
+            return response()->json(['verified' => false, 'message' => 'Persona no verificada, cree una cuenta']);
+        }
     }
 
     /**
@@ -81,28 +86,4 @@ class cuentaController extends Controller
         }
     }
 
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
