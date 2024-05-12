@@ -14,9 +14,17 @@ class usuarioController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(String $id)
     {
-        //
+        $persona = Personas::where('id_persona', $id)->first();
+        if ($persona) {
+            return response()->json([
+                'message' => 'Persona encontrada',
+                'usuario' => $persona
+            ]);
+        } else {
+            return response()->json(['error' => 'Persona no encontrada'], 404);
+        }
     }
 
     /**
