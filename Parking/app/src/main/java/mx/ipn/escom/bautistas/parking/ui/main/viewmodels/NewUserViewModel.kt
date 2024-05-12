@@ -315,7 +315,7 @@ class NewUserViewModel @Inject constructor(
     }
 
     fun loadPersonaInfo(idPersona: Long) {
-        Log.i("Persona id",idPersona.toString())
+        Log.i("Persona id", idPersona.toString())
         _newUserUIState.update {
             it.copy(
                 isLoading = true
@@ -356,7 +356,6 @@ class NewUserViewModel @Inject constructor(
 
     }
 
-
     private suspend fun getInfoById(idPersona: Long): Result<CreateUserResponse> {
         return try {
             val resp = userRepository.getPersonaById(idPersona)
@@ -365,6 +364,33 @@ class NewUserViewModel @Inject constructor(
             Result.failure(e)
         } catch (e: IOException) {
             Result.failure(e)
+        }
+    }
+
+    fun onCreateAccount(idPersona: Long) {
+        _newUserUIState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+        viewModelScope.launch {
+            val createAccountRequest = CreateAccountRequest(
+                idPersona,
+                userTypeVal,
+                progAcademicoVal,
+                emailVal
+            )
+            val resultCreateAccount = createAccount(createAccountRequest)
+            resultCreateAccount.onSuccess { resp ->
+
+                _newUserUIState.update {
+                    it.copy(
+                        isSuccess = true,
+                        isLoading = false,
+                        message = "Contraseña: ${resp.tempPassword}"
+                    )
+                }
+            }
         }
     }
 }

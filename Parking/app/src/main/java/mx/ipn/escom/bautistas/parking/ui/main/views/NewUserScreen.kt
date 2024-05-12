@@ -63,7 +63,7 @@ fun NewUserScreen(
 
     val navControllerNewUser = rememberNavController()
 
-    if(idPersona!=null){
+    if (idPersona != null) {
         newUserViewModel.loadPersonaInfo(idPersona)
     }
 
@@ -232,7 +232,7 @@ fun MainContent(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        if (idPersona!=null){
+                        if (idPersona != null) {
                             PhotoButton(
                                 modifier = modifier.height(250.dp),
                                 label = stringResource(id = R.string.photo_person_label),
@@ -251,7 +251,7 @@ fun MainContent(
                             ) {
                                 navController.navigate(Routes.NewUserCamaraI.route)
                             }
-                        }else{
+                        } else {
                             PhotoButton(
                                 modifier = modifier.height(250.dp),
                                 label = stringResource(id = R.string.photo_person_label),
@@ -279,6 +279,13 @@ fun MainContent(
                                 fontSize = 20.sp
                             )
                         }
+                        if (idPersona != null) {
+                            Text(
+                                text = "Completa los datos faltantes para continuar con la tarjeta de acceso",
+                                color = Color.Red,
+                                fontSize = 20.sp
+                            )
+                        }
                         BalanceUI(modifier = modifier.height(240.dp),
                             content1 = {
                                 ButtonComponent(
@@ -295,7 +302,11 @@ fun MainContent(
                                     label = stringResource(id = R.string.crate_user_label),
                                     isEnable = isButtonEnable(newUserState)
                                 ) {
-                                    newUserViewModel.onNewUserCreated()
+                                    if (idPersona != null) {
+                                        newUserViewModel.onCreateAccount(idPersona)
+                                    } else {
+                                        newUserViewModel.onNewUserCreated()
+                                    }
                                 }
                             }
                         )
