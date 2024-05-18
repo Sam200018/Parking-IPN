@@ -12,7 +12,7 @@ data class Cuenta (
     @SerializedName("id_rol")
     val idRol: Long,
     @SerializedName("id_prog_academico")
-    val idProgAcademico: Long,
+    val idProgAcademico: Long?= null,
     val activo: Boolean,
     val correo: String,
     val rol: Rol,

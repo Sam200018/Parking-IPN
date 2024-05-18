@@ -1,17 +1,17 @@
 <resources>
     <string name="app_name">Parking</string>
-    <string name="servicedesc">Hola</string>
+    <string name="servicedesc">Parking IPN</string>
     <string name="aiddescription">Transaccion para estacionamiento\n</string>
     <string name="title_activity_ndefmessage">NDEFMessage</string>
     <string name="search_label">Buscar</string>
     <string name="cancel_label">Cancelar</string>
-<!-- Login -->
+    <!-- Login -->
     <string name="labelLogin">¡Bienvenido!</string>
     <string name="email_label">Email</string>
     <string name="password_label">Contraseña</string>
     <string name="login_button_label">Iniciar sesión</string>
     <string name="system_label">Sistema de estacionamiento IPN</string>
-<!--    Navigation-->
+    <!--    Navigation-->
     <string name="access_cards">Tarjetas de accesso</string>
     <string name="accounts_label">Cuentas</string>
     <string name="incidents_label">Incidentes</string>
@@ -19,10 +19,10 @@
     <string name="visit_label">Visitas</string>
     <string name="scan_label">Scanner</string>
     <string name="incidents_report_label">Incidentes</string>
-<!--    Selections-->
+    <!--    Selections-->
     <string name="users_available_label">Usuarios disponibles</string>
     <string name="new_user_label">Nuevo Usuario</string>
-<!--    Gen Access Card-->
+    <!--    Gen Access Card-->
     <string name="gen_access_card_label">Generar tarjeta de acceso</string>
     <string name="search_by_name_ipdId_phone">Buscar nombre, IPN ID, o teléfono</string>
     <string name="search_by_plates">Buscar placas del vehículo</string>
@@ -30,7 +30,7 @@
     <string name="empty_personas_label">Lo siento, parece que no hay usuarios  que coincidan</string>
     <string name="gen_vehicle">Generar vehiculo</string>
     <string name="empty_vehicles_label">Lo siento, parece que no hay vehículos  que coincidan</string>
-<!--    New User-->
+    <!--    New User-->
     <string name="type_user_label">Tipo de usuario</string>
     <string name="ipn_id_label">Número IPN</string>
     <string name="academ_prog_label">Programa académico</string>
@@ -41,7 +41,7 @@
     <string name="photo_person_label">Fotografía del usuario</string>
     <string name="photo_id_label">Fotografía de credencial</string>
     <string name="crate_user_label">Crear cuenta</string>
-<!--    New Vehicle-->
+    <!--    New Vehicle-->
     <string name="create_vehicle_label">Crear nuevo vehículo</string>
     <string name="type_vehicle_label">Tipo de vehicle</string>
     <string name="plate_label">Placa</string>
@@ -49,8 +49,12 @@
     <string name="brand_label">Marca</string>
     <string name="color_label">Color</string>
     <string name="document_label">Documento</string>
-<!--Dialog-->
+    <!--Dialog-->
     <string name="close_button_label">Cerrar</string>
+    <!--    UE Home-->
+    <string name="top_title">Estacionamiento del IPN</string>
+<!--    Scanner -->
+    <string name="nfc_scanner_label">Acercar al ingresante</string>
 
 
 </resources>

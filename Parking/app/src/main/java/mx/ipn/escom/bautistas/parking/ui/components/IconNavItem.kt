@@ -26,7 +26,6 @@ fun IconNavItem(
 ) {
     Column(
         modifier
-            .size(width = 100.dp, height = 80.dp)
             .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
