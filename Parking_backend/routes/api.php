@@ -46,6 +46,8 @@ Route::post('/create_vehicle', [vehiculosController::class,'store']);
 Route::get('/get_all_vehicles', [vehiculosController::class,'show']);
 // Tarjetas acceso
 Route::post('/gen_access_card',[tarjetasAccesoController::class,'store']);
+Route::get('/get_access_cards',[tarjetasAccesoController::class,'getAll']);
+Route::get('/new_hash_by_id/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'newHash']);
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/check-status', [authController::class, 'checkStatus']);

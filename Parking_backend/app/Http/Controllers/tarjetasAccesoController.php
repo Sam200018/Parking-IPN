@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Cuentas;
 use App\Models\Vehiculo;
 use App\Models\Tarjetas_Acceso;
@@ -37,9 +38,12 @@ class tarjetasAccesoController extends Controller
             $vehiculo = Vehiculo::findOrFail($request->id_vehiculo);
             $cuenta = Cuentas::findOrFail($request->id_cuenta);
 
+            $token = $this->createCompositeHash($cuenta->id_cuenta,$vehiculo->id_vehiculo,"");
+
             $tarjeta = Tarjetas_Acceso::create([
                 'id_cuenta'=> $cuenta->id_cuenta,
                 'id_vehiculo'=> $vehiculo->id_vehiculo,
+                'token'=>token
             ]);
 
             $vehiculo->asignado = true;
@@ -62,17 +66,28 @@ class tarjetasAccesoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function getAll(Request $request)
     {
-        //
+
+        $query = Tarjetas_Acceso::with(['cuenta.persona', 'vehiculo']);
+
+        if ($request->has('id_cuenta')) {
+            $query->whereHas('cuenta', function ($query) use ($request) {
+                $query->where('id_cuenta', $request->id_cuenta);
+            });
+        }
+
+        $tarjetasAcceso = $query->get();
+
+        return response()->json([
+            'tarjetas_acceso'=> $tarjetasAcceso
+        ],200);
+        
     }
 
     /**
@@ -81,5 +96,34 @@ class tarjetasAccesoController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function newHash(String $id)
+    {
+        $tarjetaAcceso = Tarjetas_Acceso::where('id_tarjeta_acceso',$id)->first();
+
+        if($tarjetaAcceso){
+            $token = $this->createCompositeHash($tarjetaAcceso->id_tarjeta_acceso, $tarjetaAcceso->id_cuenta, $tarjetaAcceso->id_vehiculo);
+
+            $tarjetaAcceso->token = $token;
+            $tarjetaAcceso->save();
+            return response()->json([
+                    'message'=>'Token actulizado correctamente',
+                'tarjeta_acceso'=>$tarjetaAcceso
+                ],200);
+        }else{
+            return response()->json([
+                'error'=>'Tarjeta de acceso no encontrada'
+            ],404);
+        }
+    }
+
+    public function createCompositeHash($field1, $field2, $field3)
+    {
+        $inputString = $field1 . '|' . $field2 . '|' . $field3;
+
+        $hash = Hash::make($inputString);
+
+        return $hash;
     }
 }
