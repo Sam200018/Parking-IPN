@@ -47,7 +47,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun doLogin(email: String, password: String) {
-            Log.i("Hola","Login")
+        Log.i("Hola", "Login")
         viewModelScope.launch {
             val result = login(email, password)
             if (result.isSuccess) {
@@ -60,21 +60,25 @@ class AuthViewModel @Inject constructor(
     }
 
     fun logout(message: String? = null) {
+        viewModelScope.launch {
+            authRepository.logout()
+        }
+
         _authState.value = AuthState(
             AuthStatus.Unauthenticated,
             message = message
         )
     }
 
-    private suspend fun checkStatus(){
-        val token = authRepository.getToken()
-        if(token == null){
+    private suspend fun checkStatus() {
+        val userToken = authRepository.getToken()
+        if (userToken == null) {
             logout()
-        }else{
+        } else {
             try {
-                val response = authRepository.checkStatus("Bearer $token")
+                val response = authRepository.checkStatus("Bearer ${userToken.token}")
                 setLoggedUser(response)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 logout(e.message.toString())
             }
         }
@@ -84,13 +88,13 @@ class AuthViewModel @Inject constructor(
     private suspend fun setLoggedUser(response: AuthResponse?) {
         val token = response!!.token
         Log.i("Token to save:", token)
-        val userToken = UserToken(token= token)
+        val userToken = UserToken(token = token, account = response.account.idCuenta)
         authRepository.saveToken(userToken)
 
         _authState.value = AuthState(
             message = "Inicio exitoso",
             authStatus = AuthStatus.Authenticated,
-            account = response?.account
+            account = response.account
         )
     }
 }

@@ -8,9 +8,10 @@ import javax.inject.Inject
 
 interface AuthRepository {
     suspend fun login(loginRequest: LoginRequest): AuthResponse
-    suspend fun getToken(): String?
+    suspend fun getToken(): UserToken?
     suspend fun saveToken(userToken: UserToken)
-    suspend fun checkStatus(token:String): AuthResponse
+    suspend fun checkStatus(token: String): AuthResponse
+    suspend fun logout()
 }
 
 
@@ -24,6 +25,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun getToken() = userDao.getToken()
     override suspend fun saveToken(userToken: UserToken) = userDao.insertToken(userToken)
     override suspend fun checkStatus(token: String) = authDataSource.checkStatus(token)
+    override suspend fun logout() = userDao.deleteAllTokens()
 
 
 }
