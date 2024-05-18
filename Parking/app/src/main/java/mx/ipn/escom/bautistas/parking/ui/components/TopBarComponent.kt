@@ -1,5 +1,6 @@
 package mx.ipn.escom.bautistas.parking.ui.components
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +20,7 @@ import mx.ipn.escom.bautistas.parking.R
 fun TopBarComponent(
     modifier: Modifier = Modifier,
     title: String,
+    actions: @Composable() (RowScope.() -> Unit) = {},
     backAction: (() -> Unit)? = null
 ) {
     TopAppBar(
@@ -39,6 +41,7 @@ fun TopBarComponent(
                 }
         },
         title = { Text(text = title) },
+        actions = actions,
     )
 }
 

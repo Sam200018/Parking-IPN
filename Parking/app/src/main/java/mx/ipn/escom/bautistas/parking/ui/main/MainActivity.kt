@@ -97,6 +97,9 @@ class MainActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                         HomeScreen(
                             windowSizeClass = windowSizeClass,
                             authState = authState,
+                            logout = {
+                                     authViewModel.logout()
+                            },
                             hasNFC = hasNFC, navSelectUser = {
                                 navController.navigate(Routes.GenerateAccessCard.route)
                             }

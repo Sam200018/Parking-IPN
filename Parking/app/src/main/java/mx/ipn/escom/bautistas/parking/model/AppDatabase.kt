@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import mx.ipn.escom.bautistas.parking.data.token.UserDao
 
 
-@Database(entities = [UserToken::class], version = 2, exportSchema = false)
+@Database(entities = [UserToken::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 }

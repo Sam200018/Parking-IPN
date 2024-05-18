@@ -15,6 +15,7 @@ import mx.ipn.escom.bautistas.parking.data.auth.AuthRepositoryImpl
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardDataSource
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepository
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepositoryImpl
+import mx.ipn.escom.bautistas.parking.data.card.CardLocalSource
 import mx.ipn.escom.bautistas.parking.data.token.UserDao
 import mx.ipn.escom.bautistas.parking.data.user.UserDataSource
 import mx.ipn.escom.bautistas.parking.data.user.UserRepository
@@ -51,11 +52,12 @@ object AppModule {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson)).baseUrl(baseUrl).build()
     }
-// remote data sources
+
+    // remote data sources
     @Provides
     @Singleton
     fun providesAuthDataSource(retrofit: Retrofit): AuthDataSource =
-    retrofit.create(AuthDataSource::class.java)
+        retrofit.create(AuthDataSource::class.java)
 
     @Provides
     @Singleton
@@ -72,11 +74,11 @@ object AppModule {
     fun providesAccessCardDataSource(retrofit: Retrofit): AccessCardDataSource =
         retrofit.create(AccessCardDataSource::class.java)
 
-//Repos
+    //Repos
     @Provides
     @Singleton
     fun providesAuthRepository(authDataSource: AuthDataSource, userDao: UserDao): AuthRepository =
-        AuthRepositoryImpl(authDataSource,userDao)
+        AuthRepositoryImpl(authDataSource, userDao)
 
 
     @Provides
@@ -91,8 +93,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesAccessCardRepository(accessCardDataSource: AccessCardDataSource): AccessCardRepository =
-        AccessCardRepositoryImpl(accessCardDataSource)
+    fun providesAccessCardRepository(
+        accessCardDataSource: AccessCardDataSource,
+        cardLocalSource: CardLocalSource
+    ): AccessCardRepository =
+        AccessCardRepositoryImpl(accessCardDataSource, cardLocalSource)
 
 // Room
 
@@ -106,4 +111,11 @@ object AppModule {
     @Provides
     @Singleton
     fun providesNotesDao(appDatabase: AppDatabase): UserDao = appDatabase.userDao()
+
+    //    Shared Preferences
+    @Provides
+    @Singleton
+    fun providePreferencesManager(@ApplicationContext context: Context): CardLocalSource {
+        return CardLocalSource(context)
+    }
 }
