@@ -4,7 +4,6 @@ import mx.ipn.escom.bautistas.parking.model.CreateVehicleResponse
 import mx.ipn.escom.bautistas.parking.model.GetVehiclesResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.http.Part
 import javax.inject.Inject
 
 interface VehicleRepository {
@@ -29,7 +28,7 @@ class VehicleRepositoryImpl @Inject constructor(
     private val vehicleDataSource: VehicleDataSource
 ) : VehicleRepository {
     override suspend fun getAllVehicles(asignado: Boolean?, placa: String?): GetVehiclesResponse =
-        vehicleDataSource.getUsers(asignado, placa)
+        vehicleDataSource.getVehicles(asignado, placa)
 
     override suspend fun createVehicle(
         vehicleType: RequestBody,

@@ -1,5 +1,6 @@
 package mx.ipn.escom.bautistas.parking.services
 
+import android.content.Context
 import android.nfc.cardemulation.HostApduService
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,6 @@ class MyHostApduService : HostApduService() {
         val SELECT_INS = "A4"
         val DEFAULT_CLA = "00"
         val MIN_APDU_LENGTH = 12
-        val TEST_RESPONSE = "Hola mundo".toByteArray()
     }
 
     override fun onCreate() {
@@ -24,6 +24,8 @@ class MyHostApduService : HostApduService() {
     }
 
     override fun processCommandApdu(commandApdu: ByteArray?, extras: Bundle?): ByteArray {
+
+        val hash = getHash(this)
 
         if (commandApdu == null) {
             return Utils.hexStringToByteArray(STATUS_FAILED)
@@ -42,12 +44,12 @@ class MyHostApduService : HostApduService() {
             return Utils.hexStringToByteArray(INS_NOT_SUPPORTED)
         }
 
-        if (hexCommandApdu.substring(10, 24) == AID) {
+        if (hexCommandApdu.substring(10, 24) == AID && hash != null) {
             Log.i(
                 "response",
-                String(TEST_RESPONSE)
+                hash
             )
-            return Utils.hexStringToByteArray(STATUS_SUCCESS) + TEST_RESPONSE
+            return Utils.hexStringToByteArray(STATUS_SUCCESS) + hash.toByteArray()
         } else {
             return Utils.hexStringToByteArray(STATUS_FAILED)
         }
@@ -57,4 +59,9 @@ class MyHostApduService : HostApduService() {
         Log.d(TAG, "HCE desactivado, razón: $p0")
     }
 
+}
+
+fun getHash(context: Context): String? {
+    val sharedPreferences = context.getSharedPreferences("HCEPrefs", Context.MODE_PRIVATE)
+    return sharedPreferences.getString("hash", null)
 }

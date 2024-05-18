@@ -14,7 +14,7 @@ import retrofit2.http.Query
 
 interface VehicleDataSource {
     @GET("get_all_vehicles")
-    suspend fun getUsers(
+    suspend fun getVehicles(
         @Query("asignado") asignado: Boolean? = null,
         @Query("placa") placa: String? = null,
     ): GetVehiclesResponse
