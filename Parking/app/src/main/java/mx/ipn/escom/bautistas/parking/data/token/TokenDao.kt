@@ -11,8 +11,8 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToken(userToken: UserToken)
 
-    @Query("SELECT token FROM user_data WHERE id = 1")
-    suspend fun getToken(): String?
+    @Query("SELECT token, account,id FROM user_data WHERE id = 1")
+    suspend fun getToken(): UserToken
 
     @Query("DELETE FROM user_data")
     suspend fun deleteAllTokens()
