@@ -15,7 +15,7 @@ class cuentaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function isVerifyPersona(String $id)
+    public function isVerifiedPersona(String $id)
     {
         $cuenta = Cuentas::where('id_persona', $id)->first();
         if ($cuenta) {
