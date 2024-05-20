@@ -57,10 +57,14 @@ fun AccessCardComponent(
                                 .currentPageOffsetFraction
                             ).absoluteValue
                     alpha = lerp(
-                        start = 0.5f,
+                        start = 0.3f,
                         stop = 1f,
                         fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                    )
+                    ).also {
+                        scale->
+                        scaleX= scale
+                        scaleY = scale
+                    }
                 }
                 .height(160.dp)
         ) {

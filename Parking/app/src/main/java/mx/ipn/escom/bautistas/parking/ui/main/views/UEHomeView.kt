@@ -38,7 +38,7 @@ fun UEHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
 
 
     val pagerState = rememberPagerState(
-        initialPage = 1,
+        initialPage = 0,
         pageCount = {
             ueUiState.accessCards.size
         })
@@ -70,7 +70,7 @@ fun UEHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
                         state = pagerState,
                         contentPadding = PaddingValues(10.dp),
                         modifier = modifier
-                            .fillMaxSize()
+                            .fillMaxSize().padding(5.dp)
                     ) { cardIndex ->
                         AccessCardComponent(
                             accessCard = ueUiState.accessCards[cardIndex],
@@ -84,7 +84,7 @@ fun UEHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
 
                 }
                 Box(modifier = modifier.fillMaxSize()) {
-                    Text(text = "hola")
+                    Text(text = "Conductores Alternos")
                 }
             }
         }
