@@ -43,7 +43,7 @@ class tarjetasAccesoController extends Controller
             $tarjeta = Tarjetas_Acceso::create([
                 'id_cuenta'=> $cuenta->id_cuenta,
                 'id_vehiculo'=> $vehiculo->id_vehiculo,
-                'token'=>token
+                'token'=> $token
             ]);
 
             $vehiculo->asignado = true;
@@ -68,18 +68,52 @@ class tarjetasAccesoController extends Controller
      */
     public function show(Request $request)
     {
-        
+        $token = $request->card_token;
+
+        $token = $request->card_token;
+
+    try {
+        $tarjetaAcceso = Tarjetas_Acceso::with(['cuenta.persona', 'vehiculo'])
+                            ->where('token', $token)
+                            ->first();
+
+        if (!$tarjetaAcceso) {
+            return response()->json(['mensaje' => 'Tarjeta de acceso no encontrada'], 404);
+        }
+
+        return response()->json([
+            'tarjeta_acceso' => $tarjetaAcceso
+        ], 200);
+
+    } catch (ModelNotFoundException $e) {
+        return response()->json(['mensaje' => 'Modelo no encontrado'], 404);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
     }
 
     public function getAll(Request $request)
     {
 
-        $query = Tarjetas_Acceso::with(['cuenta.persona', 'vehiculo']);
+        $query = Tarjetas_Acceso::with([
+            'cuenta.persona',
+            'cuenta.rol',
+            'cuenta.prog_academico',
+             'vehiculo',
+            ]);
 
         if ($request->has('id_cuenta')) {
             $query->whereHas('cuenta', function ($query) use ($request) {
                 $query->where('id_cuenta', $request->id_cuenta);
             });
+        }
+
+        if($request->has('card_token')){
+            $tarjetaAcceso = $query->where('token',$request->card_token)->first();
+
+            return response()->json([
+                'tarjeta_acceso'=> $tarjetaAcceso
+            ],200);
         }
 
         $tarjetasAcceso = $query->get();

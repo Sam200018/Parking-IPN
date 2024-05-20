@@ -18,6 +18,7 @@ class Tarjetas_Acceso extends Model
         'id_tarjeta_acceso',
         'id_cuenta',
         'id_vehiculo',
+        'token'
     ];
 
     public $timestamps = false;
