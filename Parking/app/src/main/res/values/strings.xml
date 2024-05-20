@@ -2,7 +2,7 @@
     <string name="app_name">Parking</string>
     <string name="servicedesc">Parking IPN</string>
     <string name="aiddescription">Transaccion para estacionamiento\n</string>
-    <string name="title_activity_ndefmessage">NDEFMessage</string>
+    <string name="title_activity_ndefmessage">Reader</string>
     <string name="search_label">Buscar</string>
     <string name="cancel_label">Cancelar</string>
     <!-- Login -->
@@ -55,6 +55,7 @@
     <string name="top_title">Estacionamiento del IPN</string>
 <!--    Scanner -->
     <string name="nfc_scanner_label">Acercar al ingresante</string>
+    <string name="data_label">Datos del ingresante</string>
 
 
 </resources>

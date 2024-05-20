@@ -110,9 +110,8 @@ class GenAccessCardViewModel @Inject constructor(
         }
         viewModelScope.launch(Dispatchers.IO) {
             isVerifyUser().onSuccess { check ->
-
-                if (check.verified) {
-                    genAccessCard().onSuccess { resp: SimpleResponse ->
+                if (check.verified && check.cuenta != null) {
+                    genAccessCard(check.cuenta.idCuenta).onSuccess { resp: SimpleResponse ->
 
                         _genAccessCardState.update {
                             it.copy(
@@ -132,7 +131,7 @@ class GenAccessCardViewModel @Inject constructor(
                         }
                     }
                 } else {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         _genAccessCardState.update {
                             it.copy(
                                 isLoading = false,
@@ -170,11 +169,11 @@ class GenAccessCardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun genAccessCard(): Result<SimpleResponse> {
+    private suspend fun genAccessCard(accountId: Long): Result<SimpleResponse> {
         return try {
 
             val accessCardRequest = GenAccessCardRequest(
-                personIdSelected,
+                accountId,
                 vehicleIdSelected
             )
             val res = accessCardRepository.genAccessCard(accessCardRequest)

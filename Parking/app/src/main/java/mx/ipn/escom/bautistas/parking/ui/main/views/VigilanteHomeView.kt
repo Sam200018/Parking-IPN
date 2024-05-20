@@ -26,7 +26,7 @@ import mx.ipn.escom.bautistas.parking.ui.components.IconNavItem
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 import mx.ipn.escom.bautistas.parking.ui.components.vigilantNavigationItems
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.VigilantNavState
-import mx.ipn.escom.bautistas.parking.ui.reader.NDEFMessage
+import mx.ipn.escom.bautistas.parking.ui.reader.ReaderActivity
 
 
 @Composable
@@ -45,7 +45,7 @@ fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
                         selected = item.vigilantNavState == currentSection,
                         onClick = {
                             if (item.vigilantNavState == VigilantNavState.Scanner) {
-                                val intent = Intent(context, NDEFMessage::class.java)
+                                val intent = Intent(context, ReaderActivity::class.java)
                                 context.startActivity(intent)
                             } else {
                                 currentSection = item.vigilantNavState!!
