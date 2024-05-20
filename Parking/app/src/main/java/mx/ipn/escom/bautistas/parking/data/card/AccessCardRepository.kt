@@ -1,6 +1,8 @@
 package mx.ipn.escom.bautistas.parking.data.card
 
+import mx.ipn.escom.bautistas.parking.model.AccessCard
 import mx.ipn.escom.bautistas.parking.model.AccessCardResponse
+import mx.ipn.escom.bautistas.parking.model.CardInfoTokeResponse
 import mx.ipn.escom.bautistas.parking.model.GenAccessCardRequest
 import mx.ipn.escom.bautistas.parking.model.SimpleResponse
 import javax.inject.Inject
@@ -14,6 +16,8 @@ interface AccessCardRepository {
     fun getCardHash(): String?
 
     fun saveHash(hash: String)
+
+    suspend fun getInfoCard(cardToken: String): CardInfoTokeResponse
 
 
 }
@@ -29,4 +33,6 @@ class AccessCardRepositoryImpl @Inject constructor(
     override suspend fun getAllCards(idCuenta: Long?) = accessCardDataSource.getAllCards(idCuenta)
     override fun getCardHash(): String? = cardLocalSource.getHash()
     override fun saveHash(hash: String) = cardLocalSource.saveHash(hash)
+    override suspend fun getInfoCard(cardToken: String): CardInfoTokeResponse =
+        accessCardDataSource.getCardInfo(cardToken)
 }

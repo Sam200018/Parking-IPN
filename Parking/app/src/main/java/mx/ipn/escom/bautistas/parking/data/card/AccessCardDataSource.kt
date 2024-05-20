@@ -1,6 +1,8 @@
 package mx.ipn.escom.bautistas.parking.data.card
 
+import mx.ipn.escom.bautistas.parking.model.AccessCard
 import mx.ipn.escom.bautistas.parking.model.AccessCardResponse
+import mx.ipn.escom.bautistas.parking.model.CardInfoTokeResponse
 import mx.ipn.escom.bautistas.parking.model.GenAccessCardRequest
 import mx.ipn.escom.bautistas.parking.model.SimpleResponse
 import retrofit2.http.Body
@@ -15,6 +17,12 @@ interface AccessCardDataSource {
 
     @GET("get_access_cards")
     suspend fun getAllCards(
-        @Query("id_cuenta") idCuenta: Long? = null
-    ):AccessCardResponse
+        @Query("id_cuenta") idCuenta: Long? = null,
+    ): AccessCardResponse
+
+
+    @GET("get_access_cards")
+    suspend fun getCardInfo(
+        @Query("card_token") cardToken: String? = null
+    ): CardInfoTokeResponse
 }

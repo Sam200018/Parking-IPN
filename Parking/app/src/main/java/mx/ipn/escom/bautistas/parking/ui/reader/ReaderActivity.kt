@@ -21,17 +21,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import mx.ipn.escom.bautistas.parking.services.Utils
-import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.ScannerViewModel
-import mx.ipn.escom.bautistas.parking.ui.main.views.ScannerScreen
+import mx.ipn.escom.bautistas.parking.ui.reader.viewmodels.ScannerViewModel
+import mx.ipn.escom.bautistas.parking.ui.reader.views.ScannedCardScreen
+import mx.ipn.escom.bautistas.parking.ui.reader.views.ScannerScreen
 import mx.ipn.escom.bautistas.parking.ui.theme.ParkingTheme
 
 @AndroidEntryPoint
-class NDEFMessage : ComponentActivity(), NfcAdapter.ReaderCallback {
+class ReaderActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
     private val scannerViewModel: ScannerViewModel by viewModels()
 
     private var mNfcAdapter: NfcAdapter? = null
@@ -77,13 +80,17 @@ class NDEFMessage : ComponentActivity(), NfcAdapter.ReaderCallback {
 
 
 
-            runOnUiThread {
-                scannerViewModel.scannerCardToken(cardToken)
+            scannerViewModel.scannerCardToken(cardToken)
 
-                setContent {
-                    Greeting(name = String(cardTokenBytes))
-                }
+
+            setContent {
+                val scannerUiState by scannerViewModel.scannerUiState.collectAsStateWithLifecycle()
+                ScannedCardScreen(
+                    scannerViewModel = scannerViewModel,
+                    scannerCardState = scannerUiState
+                )
             }
+
         } else {
 
             setContent {
