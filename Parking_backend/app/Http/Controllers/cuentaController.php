@@ -15,11 +15,15 @@ class cuentaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function indexByPersona(String $id)
+    public function isVerifyPersona(String $id)
     {
         $cuenta = Cuentas::where('id_persona', $id)->first();
         if ($cuenta) {
-            return response()->json(['verified' => true, 'message' => 'Persona verificada']);
+            return response()->json([
+                'verified' => true,
+                'message' => 'Persona verificada',
+                'account'=>$cuenta
+            ]);
         } else {
             return response()->json(['verified' => false, 'message' => 'Persona no verificada, cree una cuenta']);
         }

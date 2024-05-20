@@ -38,7 +38,7 @@ Route::get('/storage/{filename}',[ImageController::class,'getImage']);
 // Cuenta
 Route::post('/create_account', [cuentaController::class,'store']);
 Route::get('/get_account/{id_cuenta}',[cuentaController::class,'getCuenta']);
-Route::get('/check_account_by_person/{id_persona}',[cuentaController::class,'indexByPersona']);
+Route::get('/check_account_by_person/{id_persona}',[cuentaController::class,'isVerifiedPersona']);
 // Auth
 Route::post('/login',[authController::class,'login']);
 // Vehiculo
@@ -48,6 +48,7 @@ Route::get('/get_all_vehicles', [vehiculosController::class,'show']);
 Route::post('/gen_access_card',[tarjetasAccesoController::class,'store']);
 Route::get('/get_access_cards',[tarjetasAccesoController::class,'getAll']);
 Route::get('/new_hash_by_id/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'newHash']);
+Route::post('/get_info_card',[tarjetasAccesoController::class,'show']);
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/check-status', [authController::class, 'checkStatus']);
