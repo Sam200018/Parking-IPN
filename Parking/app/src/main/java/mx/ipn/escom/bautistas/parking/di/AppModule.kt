@@ -16,6 +16,10 @@ import mx.ipn.escom.bautistas.parking.data.card.AccessCardDataSource
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepository
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepositoryImpl
 import mx.ipn.escom.bautistas.parking.data.card.CardLocalSource
+import mx.ipn.escom.bautistas.parking.data.pusher.PusherManager
+import mx.ipn.escom.bautistas.parking.data.records.RecordsDataSource
+import mx.ipn.escom.bautistas.parking.data.records.RecordsRepository
+import mx.ipn.escom.bautistas.parking.data.records.RecordsRepositoryImpl
 import mx.ipn.escom.bautistas.parking.data.token.UserDao
 import mx.ipn.escom.bautistas.parking.data.user.UserDataSource
 import mx.ipn.escom.bautistas.parking.data.user.UserRepository
@@ -74,6 +78,11 @@ object AppModule {
     fun providesAccessCardDataSource(retrofit: Retrofit): AccessCardDataSource =
         retrofit.create(AccessCardDataSource::class.java)
 
+    @Provides
+    @Singleton
+    fun providesRecordsDataSource(retrofit: Retrofit): RecordsDataSource =
+        retrofit.create(RecordsDataSource::class.java)
+
     //Repos
     @Provides
     @Singleton
@@ -95,9 +104,17 @@ object AppModule {
     @Singleton
     fun providesAccessCardRepository(
         accessCardDataSource: AccessCardDataSource,
-        cardLocalSource: CardLocalSource
+        cardLocalSource: CardLocalSource,
+        pusherManager: PusherManager
     ): AccessCardRepository =
-        AccessCardRepositoryImpl(accessCardDataSource, cardLocalSource)
+        AccessCardRepositoryImpl(accessCardDataSource, cardLocalSource, pusherManager)
+
+    @Provides
+    @Singleton
+    fun providesRecordsRepository(
+        recordsDataSource: RecordsDataSource,
+        pusherManager: PusherManager
+    ): RecordsRepository = RecordsRepositoryImpl(recordsDataSource, pusherManager)
 
 // Room
 
@@ -117,5 +134,14 @@ object AppModule {
     @Singleton
     fun providePreferencesManager(@ApplicationContext context: Context): CardLocalSource {
         return CardLocalSource(context)
+    }
+
+    //    Pusher
+    @Provides
+    @Singleton
+    fun providesPusherManager(propertiesManager: PropertiesManager): PusherManager {
+        val pusherKey = propertiesManager.getString("PUSHER_APP_KEY") ?: ""
+        val pusherCluster = propertiesManager.getString("PUSHER_APP_CLUSTER") ?: ""
+        return PusherManager(pusherKey, pusherCluster)
     }
 }

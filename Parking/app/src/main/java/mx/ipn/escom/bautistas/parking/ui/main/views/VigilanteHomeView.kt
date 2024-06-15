@@ -21,16 +21,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mx.ipn.escom.bautistas.parking.R
 import mx.ipn.escom.bautistas.parking.ui.components.IconNavItem
+import mx.ipn.escom.bautistas.parking.ui.components.LoadingDialogComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 import mx.ipn.escom.bautistas.parking.ui.components.vigilantNavigationItems
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.VigilantNavState
+import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.VigilanteViewModel
 import mx.ipn.escom.bautistas.parking.ui.reader.ReaderActivity
 
 
 @Composable
 fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
+    val vigilanteViewModel: VigilanteViewModel = hiltViewModel()
+    val vigilanteUiState by vigilanteViewModel.vigilanteUiState.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
 
     var currentSection by remember {
@@ -78,7 +85,15 @@ fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
         }
     ) {
         Box(modifier.padding(it), contentAlignment = Alignment.Center) {
+            when(currentSection){
+                VigilantNavState.Home -> RecordsView(vigilanteUiState = vigilanteUiState)
+                VigilantNavState.Scanner -> TODO()
+                VigilantNavState.Incidents -> TODO()
+            }
         }
 
+        if (vigilanteUiState.isLoading) {
+            LoadingDialogComponent()
+        }
     }
 }
