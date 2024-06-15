@@ -87,8 +87,10 @@ class ReaderActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
                 val scannerUiState by scannerViewModel.scannerUiState.collectAsStateWithLifecycle()
                 ScannedCardScreen(
                     scannerViewModel = scannerViewModel,
-                    scannerCardState = scannerUiState
-                )
+                    scannerCardState = scannerUiState,
+                ){
+                    finish()
+                }
             }
 
         } else {
@@ -99,15 +101,6 @@ class ReaderActivity : ComponentActivity(), NfcAdapter.ReaderCallback {
         }
 
         isoDep.close()
-    }
-}
-
-@Composable
-fun MessageScreen(name: String, modifier: Modifier = Modifier) {
-    Scaffold {
-        Box(modifier = modifier.padding(it), contentAlignment = Alignment.Center) {
-            Text(text = "Read NFC")
-        }
     }
 }
 

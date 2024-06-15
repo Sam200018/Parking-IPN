@@ -63,7 +63,7 @@ fun ScannedPersonaComponent(modifier: Modifier = Modifier, persona: Persona, cue
                     })
                 if (persona.idIpn != null)
                     Text(text = "IPN ID: ${persona.idIpn}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                if (cuenta.idProgAcademico != null && cuenta.progAcademico != null)
+                if (cuenta.idProgAcademico != null)
                     Text(text = "Prog. Académico: ${cuenta.progAcademico.nombreProgAcademico}", fontSize = 20.sp)
             }
         }

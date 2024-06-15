@@ -10,6 +10,8 @@ use App\Http\Controllers\authController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\vehiculosController;
 use App\Http\Controllers\tarjetasAccesoController;
+use App\Http\Controllers\registrosController;
+use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 
 
 /*
@@ -46,13 +48,16 @@ Route::post('/create_vehicle', [vehiculosController::class,'store']);
 Route::get('/get_all_vehicles', [vehiculosController::class,'show']);
 // Tarjetas acceso
 Route::post('/gen_access_card',[tarjetasAccesoController::class,'store']);
-Route::get('/get_access_cards',[tarjetasAccesoController::class,'getAll']);
+Route::get('/get_access_cards_list',[tarjetasAccesoController::class,'getAllAccessCardList']);
+
 Route::get('/new_hash_by_id/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'newHash']);
-Route::post('/get_info_card',[tarjetasAccesoController::class,'show']);
+Route::get('/get_info_card',[tarjetasAccesoController::class,'getCardInfo']);
+// Registros
+Route::post('/register_mov',[registrosController::class,'store']);
+Route::get('/get_all_records',[registrosController::class,'getAllRecordsList']);
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/check-status', [authController::class, 'checkStatus']);
-
 });
 
 
