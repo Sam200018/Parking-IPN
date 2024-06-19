@@ -38,7 +38,7 @@ fun HomeScreen(
             )
 
             windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Expanded -> ExpandedHome(
-                navSelectUser = navSelectUser
+                navSelectUser = navSelectUser, logout = logout
             )
 
             else -> compactHome(hasNFC = hasNFC, authState = authState, logout = logout)
@@ -54,7 +54,8 @@ fun HomeScreen(
 @Composable
 fun ExpandedHome(
     modifier: Modifier = Modifier,
-    navSelectUser: () -> Unit
+    navSelectUser: () -> Unit,
+    logout: () -> Unit
 ) {
 
     var currentSection by remember {
@@ -74,7 +75,7 @@ fun ExpandedHome(
         )
         Box(modifier = modifier.weight(1f, fill = true)) {
             when (currentSection) {
-                AdminNavState.Prerecord -> AccessCardsView(navSelectUser = navSelectUser)
+                AdminNavState.Prerecord -> AccessCardsView(navSelectUser = navSelectUser, logout = logout)
                 AdminNavState.Accounts -> AccountsView()
                 AdminNavState.Incidents -> IncidentsView()
             }

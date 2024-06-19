@@ -48,6 +48,7 @@ Route::post('/create_vehicle', [vehiculosController::class,'store']);
 Route::get('/get_all_vehicles', [vehiculosController::class,'show']);
 // Tarjetas acceso
 Route::post('/gen_access_card',[tarjetasAccesoController::class,'store']);
+Route::get('/get_access_cards',[tarjetasAccesoController::class,'getAll']);
 Route::get('/get_access_cards_list',[tarjetasAccesoController::class,'getAllAccessCardList']);
 
 Route::get('/new_hash_by_id/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'newHash']);

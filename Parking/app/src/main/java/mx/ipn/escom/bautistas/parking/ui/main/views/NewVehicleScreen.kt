@@ -189,7 +189,7 @@ fun MainContentNewVehicle(
                                 ButtonComponent(
                                     modifier = modifier,
                                     fontSize = 24.sp,
-                                    label = stringResource(id = R.string.crate_user_label),
+                                    label = stringResource(id = R.string.create_vehicle_button),
                                     isEnable = isButtonNewVehicleEnable(vehicleState)
                                 ) {
                                     newVehicleViewModel.onNewVehicleCreated()
