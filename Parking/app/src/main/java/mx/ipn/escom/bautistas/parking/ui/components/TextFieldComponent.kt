@@ -12,28 +12,35 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import mx.ipn.escom.bautistas.parking.R
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun TextFieldComponent(
     modifier: Modifier = Modifier,
-    icon: @Composable (()->Unit)? = null,
+    singleLine: Boolean = true,
+    icon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     value: String = "",
     label: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     readOnly: Boolean = false,
     isError: Boolean = false,
     errorMessage: String = "",
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     onChanged: (String) -> Unit
 ) {
 
     Column {
         OutlinedTextField(
             leadingIcon = icon,
+            singleLine = singleLine,
             value = value,
+            trailingIcon = trailingIcon,
             onValueChange = onChanged,
             label = {
                 Text(text = label, color = colorResource(id = R.color.guinda))
             },
+            visualTransformation = visualTransformation ,
             readOnly = readOnly,
             modifier = modifier,
             keyboardOptions = keyboardOptions,

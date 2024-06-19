@@ -14,4 +14,6 @@ data class AuthState(
     val message: String? = null,
     val token: String? = null,
     val account: Cuenta? = null,
+    val isError: Boolean = false,
+    val isLoading: Boolean = false,
 )

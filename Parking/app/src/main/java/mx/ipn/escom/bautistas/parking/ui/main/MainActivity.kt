@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             windowSizeClass = windowSizeClass,
                             authViewModel = authViewModel,
+                            authState = authState,
                         )
                     }
                     composable(Routes.HomeScreen.route) {

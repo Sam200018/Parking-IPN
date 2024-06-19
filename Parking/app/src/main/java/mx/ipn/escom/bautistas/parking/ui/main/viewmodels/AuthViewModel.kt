@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mx.ipn.escom.bautistas.parking.data.auth.AuthRepository
 import mx.ipn.escom.bautistas.parking.model.AuthResponse
@@ -48,13 +49,17 @@ class AuthViewModel @Inject constructor(
 
     fun doLogin(email: String, password: String) {
         Log.i("Hola", "Login")
+        _authState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
         viewModelScope.launch {
-            val result = login(email, password)
-            if (result.isSuccess) {
-                setLoggedUser(result.getOrDefault(null))
-            } else {
-                val errorMessage = result.exceptionOrNull()?.message ?: "Error desconocido"
-                logout(message = errorMessage)
+            login(email, password).onSuccess { res ->
+                setLoggedUser(res)
+            }.onFailure { err ->
+                Log.e("error login", err.message.toString())
+                logout(message = err.message)
             }
         }
     }
@@ -66,7 +71,8 @@ class AuthViewModel @Inject constructor(
 
         _authState.value = AuthState(
             AuthStatus.Unauthenticated,
-            message = message
+            message = message,
+            isError = true
         )
     }
 

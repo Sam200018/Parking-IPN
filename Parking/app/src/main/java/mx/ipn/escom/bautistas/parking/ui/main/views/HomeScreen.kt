@@ -3,7 +3,6 @@ package mx.ipn.escom.bautistas.parking.ui.main.views
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -12,9 +11,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mx.ipn.escom.bautistas.parking.ui.components.AdminNavRail
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AdminNavState
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthState
+import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AdminViewModel
 
 
 @Composable
@@ -58,6 +60,10 @@ fun ExpandedHome(
     var currentSection by remember {
         mutableStateOf(AdminNavState.Prerecord)
     }
+
+    val adminViewModel: AdminViewModel = hiltViewModel()
+    val adminUiState by adminViewModel.adminUiState.collectAsStateWithLifecycle()
+
 
     Row(modifier.fillMaxSize()) {
         AdminNavRail(
