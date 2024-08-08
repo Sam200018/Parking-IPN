@@ -21,7 +21,7 @@ interface AccessCardDataSource {
     ): AccessCardResponse
 
 
-    @GET("get_access_cards")
+    @GET("get_info_card")
     suspend fun getCardInfo(
         @Query("card_token") cardToken: String? = null
     ): CardInfoTokeResponse

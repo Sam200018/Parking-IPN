@@ -6,5 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CardInfoTokeResponse(
     @SerializedName("tarjeta_acceso")
-    val accessCard: AccessCard
+    val accessCard: AccessCard,
+    @SerializedName("movimiento")
+    val movement: Int
 )
