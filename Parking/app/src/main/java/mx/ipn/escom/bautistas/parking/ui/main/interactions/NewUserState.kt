@@ -1,10 +1,6 @@
 package mx.ipn.escom.bautistas.parking.ui.main.interactions
 
-
 data class NewUserState(
-    val isTypeUserSelected: Boolean = false,
-    val isAcademProgSelected: Boolean = true,
-    val isIPNIdValid: Boolean = true,
     val isNameValid: Boolean = true,
     val isPLastNameValid: Boolean = true,
     val isMLastNameValid: Boolean = true,

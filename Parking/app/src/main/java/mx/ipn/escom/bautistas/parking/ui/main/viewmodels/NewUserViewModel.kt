@@ -1,7 +1,6 @@
 package mx.ipn.escom.bautistas.parking.ui.main.viewmodels
 
 import android.graphics.Bitmap
-import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,8 +15,6 @@ import kotlinx.coroutines.launch
 import mx.ipn.escom.bautistas.parking.data.user.UserRepository
 import mx.ipn.escom.bautistas.parking.data.user.createPartFromBitmap
 import mx.ipn.escom.bautistas.parking.data.user.createPartFromString
-import mx.ipn.escom.bautistas.parking.model.CreateAccountRequest
-import mx.ipn.escom.bautistas.parking.model.CreateAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateUserResponse
 import mx.ipn.escom.bautistas.parking.model.Persona
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.NewUserState
@@ -33,17 +30,7 @@ class NewUserViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _newUserUIState = MutableStateFlow(NewUserState())
-    val newUserUiState = _newUserUIState.asStateFlow()
-
-
-    var userTypeVal: Int by mutableStateOf(0)
-        private set
-
-    var ipnIDVal: String? by mutableStateOf(null)
-        private set
-
-    var progAcademicoVal: Int? by mutableStateOf(null)
-        private set
+    val newUserUIState = _newUserUIState.asStateFlow()
 
     var nameVal: String by mutableStateOf("")
         private set
@@ -57,67 +44,15 @@ class NewUserViewModel @Inject constructor(
     var phoneVal: String by mutableStateOf("")
         private set
 
-    var emailVal: String by mutableStateOf("")
-        private set
-
     var personPhoto: Bitmap? by mutableStateOf(null)
         private set
+
     var identificationPhoto: Bitmap? by mutableStateOf(null)
         private set
 
     var personPhotoRoute: String by mutableStateOf("")
 
     var identificationPhotoRoute: String by mutableStateOf("")
-
-    fun onUserTypeChanged(type: Int) {
-        userTypeVal = type
-        if (userTypeVal == 0) {
-            _newUserUIState.update {
-                it.copy(isError = false, isTypeUserSelected = false)
-            }
-
-        } else {
-            if (userTypeVal == 2) {
-
-                _newUserUIState.update {
-                    it.copy(
-                        isError = false,
-                        isTypeUserSelected = true,
-                        isAcademProgSelected = false
-                    )
-                }
-            } else {
-                if (userTypeVal == 5) {
-                    ipnIDVal = null
-                }
-                _newUserUIState.update {
-                    it.copy(isError = false, isTypeUserSelected = true, isAcademProgSelected = true)
-                }
-                progAcademicoVal = null
-            }
-        }
-    }
-
-    fun onIpnIDChanged(ipnIDval: String?) {
-        ipnIDVal = ipnIDval
-        ipnIDval?.let {
-            _newUserUIState.update {
-                it.copy(
-                    isError = false,
-                    isIPNIdValid = ipnIDval.isNotEmpty().and(ipnIDval.length > 4)
-                )
-            }
-        }
-    }
-
-    fun onProgAcademicoChange(prog: Int?) {
-        progAcademicoVal = prog
-        prog?.let {
-            _newUserUIState.update {
-                it.copy(isError = false, isAcademProgSelected = prog != 0)
-            }
-        }
-    }
 
     fun onNameChange(name: String) {
         nameVal = name
@@ -150,16 +85,6 @@ class NewUserViewModel @Inject constructor(
         }
     }
 
-    fun onEmailChange(email: String) {
-        emailVal = email
-        _newUserUIState.update {
-            it.copy(
-                isError = false,
-                isEmailValid = Patterns.EMAIL_ADDRESS.matcher(emailVal).matches()
-            )
-        }
-    }
-
     fun onPersonPhotoChange(photo: Bitmap?) {
         personPhoto = photo
         personPhoto?.let {
@@ -182,18 +107,19 @@ class NewUserViewModel @Inject constructor(
         nombre: RequestBody,
         aPaterno: RequestBody,
         aMaterno: RequestBody,
-        idIPN: RequestBody?,
         numeroContacto: RequestBody,
         identification: MultipartBody.Part,
         photography: MultipartBody.Part
     ): Result<CreateUserResponse> {
         return try {
             val response = userRepository.createUser(
-                nombre,
-                aPaterno,
-                aMaterno,
-                idIPN,
-                numeroContacto, identification, photography,
+                nombre = nombre,
+                aPaterno = aPaterno,
+                aMaterno = aMaterno,
+                numeroContacto = numeroContacto,
+                identification = identification,
+                photography = photography,
+                idIPN = null
             )
 
             Result.success(response)
@@ -217,180 +143,53 @@ class NewUserViewModel @Inject constructor(
             }
             Result.failure(e)
         }
-
     }
 
-    private suspend fun createAccount(
-        createAccountRequest: CreateAccountRequest
-    ): Result<CreateAccountResponse> {
-        return try {
-            val response = userRepository.createAccount(createAccountRequest)
-            Result.success(response)
-        } catch (e: HttpException) {
-            val errorBody = e.response()?.errorBody()?.string()
-            _newUserUIState.update {
-                it.copy(
-                    isError = true,
-                    isLoading = false,
-                    message = errorBody ?: "Error desconocido"
-                )
-            }
-            Result.failure(e)
-        } catch (e: IOException) {
-
-            _newUserUIState.update {
-                it.copy(
-                    isError = true,
-                    isLoading = false,
-                    message = e.message ?: "Error desconocido"
-                )
-            }
-            Result.failure(e)
-        }
-    }
-
-
-    fun onNewUserCreated() {
+    fun onCreateNewUser() {
         _newUserUIState.update {
-            it.copy(isLoading = true)
+            it.copy(
+                isLoading = true
+            )
         }
+
 
         viewModelScope.launch {
-
             val usuarioData = Persona(
                 nombre = nameVal,
                 aPaterno = pLastNameVal,
                 aMaterno = mLastNameVal,
-                idIpn = ipnIDVal,
+                idIpn = null,
                 rutaFotografia = nameVal + phoneVal,
                 rutaIdentificacion = nameVal + phoneVal,
-                numeroContacto = phoneVal,
-
-                )
-
+                numeroContacto = phoneVal
+            )
 
             val nombre = createPartFromString(usuarioData.nombre)
             val aPaterno = createPartFromString(usuarioData.aPaterno)
             val aMaterno = createPartFromString(usuarioData.aMaterno)
-            val idIpn = createPartFromString(usuarioData.idIpn)
             val numeroContacto = createPartFromString(usuarioData.numeroContacto)
-
             val identification =
                 createPartFromBitmap(identificationPhoto!!, "identificacion")
             val photography =
                 createPartFromBitmap(personPhoto!!, "fotografia")
 
-
             val result = createUser(
                 nombre!!,
                 aPaterno!!,
                 aMaterno!!,
-                idIpn,
-                numeroContacto!!, identification, photography
+                numeroContacto!!, identification, photography,
             )
+
             if (result.isSuccess) {
-                val response = result.getOrDefault(null)
-                val createAccountRequest = CreateAccountRequest(
-                    response!!.user.idPersona,
-                    userTypeVal,
-                    progAcademicoVal,
-                    emailVal
-                )
-                val resultCreateAccount = createAccount(createAccountRequest)
-                if (resultCreateAccount.isSuccess) {
-                    val resp = resultCreateAccount.getOrDefault(null)
-                    resp?.tempPassword?.let { pass ->
-                        Log.i("Temp password", pass)
-                        _newUserUIState.update {
-                            it.copy(
-                                isSuccess = true,
-                                isLoading = false,
-                                message = "Contraseña: $pass"
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun loadPersonaInfo(idPersona: Long) {
-        Log.i("Persona id", idPersona.toString())
-        _newUserUIState.update {
-            it.copy(
-                isLoading = true
-            )
-        }
-        viewModelScope.launch {
-
-            getInfoById(idPersona).onSuccess { resp ->
-                val persona = resp.user
-
-                ipnIDVal = persona.idIpn
-                nameVal = persona.nombre
-                pLastNameVal = persona.aPaterno
-                mLastNameVal = persona.aMaterno
-                phoneVal = persona.numeroContacto
-                personPhotoRoute = persona.rutaFotografia
-                identificationPhotoRoute = persona.rutaIdentificacion
-
-                _newUserUIState.update {
-                    NewUserState(
-                        isEmailValid = false,
-                        isPersonPhotoTaken = true,
-                        isIdentificationPhotoTaken = true,
-                    )
-                }
-
-
-            }.onFailure { error ->
-                _newUserUIState.update {
-                    NewUserState(
-                        isError = true,
-                        message = error.message ?: "Error desconocido"
-                    )
-                }
-            }
-
-        }
-
-    }
-
-    private suspend fun getInfoById(idPersona: Long): Result<CreateUserResponse> {
-        return try {
-            val resp = userRepository.getPersonaById(idPersona)
-            Result.success(resp)
-        } catch (e: HttpException) {
-            Result.failure(e)
-        } catch (e: IOException) {
-            Result.failure(e)
-        }
-    }
-
-    fun onCreateAccount(idPersona: Long) {
-        _newUserUIState.update {
-            it.copy(
-                isLoading = true
-            )
-        }
-        viewModelScope.launch {
-            val createAccountRequest = CreateAccountRequest(
-                idPersona,
-                userTypeVal,
-                progAcademicoVal,
-                emailVal
-            )
-            val resultCreateAccount = createAccount(createAccountRequest)
-            resultCreateAccount.onSuccess { resp ->
-
                 _newUserUIState.update {
                     it.copy(
                         isSuccess = true,
                         isLoading = false,
-                        message = "Contraseña: ${resp.tempPassword}"
+                        message = "¡Usuario creado exitosamente!"
                     )
                 }
             }
         }
     }
+
 }
