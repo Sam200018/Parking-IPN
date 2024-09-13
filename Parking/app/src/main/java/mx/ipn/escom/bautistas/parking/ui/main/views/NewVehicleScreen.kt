@@ -181,6 +181,7 @@ fun MainContentNewVehicle(
                             content1 = {
                                 ButtonComponent(
                                     fontSize = 24.sp,
+                                    isCancelBtn = true,
                                     label = stringResource(id = R.string.cancel_label)
                                 ) {
                                 }

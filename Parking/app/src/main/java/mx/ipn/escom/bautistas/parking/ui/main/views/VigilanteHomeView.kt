@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import mx.ipn.escom.bautistas.parking.R
+import mx.ipn.escom.bautistas.parking.ui.components.CompactFloatingActionButton
 import mx.ipn.escom.bautistas.parking.ui.components.IconNavItem
 import mx.ipn.escom.bautistas.parking.ui.components.LoadingDialogComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
@@ -34,7 +36,7 @@ import mx.ipn.escom.bautistas.parking.ui.reader.ReaderActivity
 
 
 @Composable
-fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
+fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit, navToManualRegistration: ()-> Unit) {
     val vigilanteViewModel: VigilanteViewModel = hiltViewModel()
     val vigilanteUiState by vigilanteViewModel.vigilanteUiState.collectAsStateWithLifecycle()
 
@@ -70,6 +72,13 @@ fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
                 }
             }
         },
+        floatingActionButton = {
+            CompactFloatingActionButton (
+                icon = Icons.Filled.Add
+            ){
+                navToManualRegistration()
+            }
+        },
         topBar = {
             TopBarComponent(title = stringResource(id = R.string.top_title),
                 actions = {
@@ -87,8 +96,9 @@ fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit) {
         Box(modifier.padding(it), contentAlignment = Alignment.Center) {
             when(currentSection){
                 VigilantNavState.Home -> RecordsView(vigilanteUiState = vigilanteUiState)
-                VigilantNavState.Scanner -> TODO()
                 VigilantNavState.Incidents -> TODO()
+//                NOTE: This parte was moved to reader activity
+                VigilantNavState.Scanner -> TODO()
             }
         }
 
