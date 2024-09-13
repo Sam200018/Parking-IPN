@@ -18,6 +18,8 @@ import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
 import mx.ipn.escom.bautistas.parking.ui.main.views.GenAccessCardScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.HomeScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.LoginScreen
+import mx.ipn.escom.bautistas.parking.ui.main.views.ManualRegistrationScreen
+import mx.ipn.escom.bautistas.parking.ui.main.views.NewAccountUserScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.NewUserScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.NewVehicleScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.SplashScreen
@@ -70,24 +72,28 @@ class MainActivity : ComponentActivity() {
                             windowSizeClass = windowSizeClass,
                             authState = authState,
                             logout = {
-                                     authViewModel.logout()
+                                authViewModel.logout()
                             },
-                            hasNFC = hasNFC, navSelectUser = {
+                            hasNFC = hasNFC,
+                            navSelectUser = {
                                 navController.navigate(Routes.GenerateAccessCard.route)
+                            },
+                            navToManualRegistration = {
+                                navController.navigate(Routes.ManualRegistration.route)
                             }
                         )
                     }
 
                     composable(Routes.GenerateAccessCard.route) {
                         GenAccessCardScreen(
-                            navToNewUser = { navController.navigate(Routes.NewUser.route) },
+                            navToNewUser = { navController.navigate(Routes.NewAccountUser.route) },
                             navToNewVehicle = { navController.navigate(Routes.NewVehicle.route) },
                         ){
                             navController.popBackStack()
                         }
                     }
-                    composable(Routes.NewUser.route) {
-                        NewUserScreen() {
+                    composable(Routes.NewAccountUser.route) {
+                        NewAccountUserScreen() {
                             navController.popBackStack()
                         }
                     }
@@ -96,6 +102,19 @@ class MainActivity : ComponentActivity() {
                             navController.popBackStack()
                         }
                     }
+                    composable(Routes.NewUser.route) {
+                        NewUserScreen(){
+                            navController.popBackStack()
+                        }
+                    }
+                    composable(Routes.ManualRegistration.route){
+                        ManualRegistrationScreen(
+                            navToNewUser = { navController.navigate(Routes.NewUser.route) },
+                        ){
+                            navController.popBackStack()
+                        }
+                    }
+
                 }
             }
         }

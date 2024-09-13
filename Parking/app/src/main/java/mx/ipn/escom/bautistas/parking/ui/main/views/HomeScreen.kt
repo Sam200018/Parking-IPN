@@ -25,6 +25,7 @@ fun HomeScreen(
     windowSizeClass: WindowSizeClass,
     authState: AuthState,
     hasNFC: Boolean,
+    navToManualRegistration: () -> Unit,
     logout: () -> Unit,
     navSelectUser: () -> Unit,
 ) {
@@ -34,17 +35,27 @@ fun HomeScreen(
             windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> compactHome(
                 hasNFC = hasNFC,
                 authState = authState,
-                logout = logout
+                logout = logout, navToManualRegistration = navToManualRegistration
             )
 
             windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Expanded -> ExpandedHome(
                 navSelectUser = navSelectUser, logout = logout
             )
 
-            else -> compactHome(hasNFC = hasNFC, authState = authState, logout = logout)
+            else -> compactHome(
+                hasNFC = hasNFC,
+                authState = authState,
+                logout = logout,
+                navToManualRegistration = navToManualRegistration
+            )
         }
     } else {
-        compactHome(hasNFC = hasNFC, authState = authState, logout = logout)
+        compactHome(
+            hasNFC = hasNFC,
+            authState = authState,
+            logout = logout,
+            navToManualRegistration = navToManualRegistration
+        )
     }
 
 
@@ -75,7 +86,11 @@ fun ExpandedHome(
         )
         Box(modifier = modifier.weight(1f, fill = true)) {
             when (currentSection) {
-                AdminNavState.Prerecord -> AccessCardsView(navSelectUser = navSelectUser, logout = logout)
+                AdminNavState.Prerecord -> AccessCardsView(
+                    navSelectUser = navSelectUser,
+                    logout = logout
+                )
+
                 AdminNavState.Accounts -> AccountsView()
                 AdminNavState.Incidents -> IncidentsView()
             }
@@ -89,11 +104,12 @@ fun compactHome(
     modifier: Modifier = Modifier,
     logout: () -> Unit,
     hasNFC: Boolean,
+    navToManualRegistration: () -> Unit,
     authState: AuthState
 ) {
     authState.account?.let { cuenta ->
         if (cuenta.idRol == 6.toLong()) {
-            VigilanteHomeView(logout = logout)
+            VigilanteHomeView(logout = logout, navToManualRegistration = navToManualRegistration)
         } else {
             UEHomeView(logout = logout)
         }
