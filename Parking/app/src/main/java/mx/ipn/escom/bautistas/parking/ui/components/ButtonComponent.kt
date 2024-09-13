@@ -18,6 +18,7 @@ fun ButtonComponent(
     modifier: Modifier = Modifier,
     label: String = "",
     isEnable: Boolean = true,
+    isCancelBtn: Boolean = false,
     fontSize: TextUnit,
     action: () -> Unit,
 ) {
@@ -26,8 +27,8 @@ fun ButtonComponent(
         modifier.fillMaxWidth(),
         enabled = isEnable,
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = colorResource(id = R.color.guinda),
-            contentColor = colorResource(id = R.color.white),
+            containerColor = if (isCancelBtn) colorResource(id = R.color.cancel) else colorResource(id = R.color.guinda),
+            contentColor = if (isCancelBtn) colorResource(R.color.black) else colorResource(id = R.color.white),
             disabledContainerColor = colorResource(id = R.color.guinda_disbale),
         )
     ) {

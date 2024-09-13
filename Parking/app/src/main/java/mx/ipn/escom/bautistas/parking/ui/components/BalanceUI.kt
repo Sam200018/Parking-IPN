@@ -22,18 +22,16 @@ fun BalanceUI(
     Row(modifier.fillMaxSize()) {
         Box(
             modifier
-                .background(color = colorResource(id = R.color.grey_figma))
                 .fillMaxHeight()
-                .weight(1f).padding(20.dp),
+                .weight(1f).padding(5.dp),
             contentAlignment = Alignment.Center
         ) {
            content1()
         }
         Box(
             modifier
-                .background(color = colorResource(id = R.color.grey_figma))
                 .fillMaxHeight()
-                .weight(1f).padding(20.dp),
+                .weight(1f).padding(5.dp),
             contentAlignment = Alignment.Center
         ) {
             content2()
