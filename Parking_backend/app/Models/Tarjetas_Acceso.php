@@ -32,4 +32,9 @@ class Tarjetas_Acceso extends Model
     {
         return $this->belongsTo(Vehiculo::class,'id_vehiculo');
     }
+
+    public function incidentesVehiculo()
+    {
+        return $this->hasMany(IncidentesVehiculo::class, 'id_incidente');
+    }
 }
