@@ -22,15 +22,10 @@ jobs:
           php-version: '8.3'
           tools: composer # Instala Composer
 
-      - name: Change to Laravel app directory
-        run: |
-          cd Parking-IPN/Parking_backend
-
-      - name: Install Composer Dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
-
       - name: Zip artifact for deployment
-        run: zip -r release.zip ./* 
+        run: |
+          cd Parking_backend
+          zip -r ../release.zip ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
