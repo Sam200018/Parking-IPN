@@ -20,6 +20,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+          
+      - name: Change to Laravel app directory
+        run: cd Parking-IPN/Parking_backend
 
       - name: Check if composer.json exists
         id: check_files
