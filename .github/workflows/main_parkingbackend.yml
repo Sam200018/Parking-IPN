@@ -67,7 +67,7 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4FB10FA962994EC3865D5E37A6496FB6 }}
 
       - name: Change to Laravel app directory
-        run: cd Parking-IPN/Parking_backend
+        run: cd Parking_backend
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
