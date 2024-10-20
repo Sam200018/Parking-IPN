@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('Registros', function (Blueprint $table) {
             $table->id('id_registro');
-            $table->foreignId('id_tarjeta_acceso')->nullable()->constrained('tarjetas_acceso')->onDelete('cascade');
-            $table->foreignId('id_token')->nullable()->constrained('tokens')->onDelete('cascade');
-            $table->foreignId('id_visita')->nullable()->constrained('visitas')->onDelete('cascade');
-            $table->foreignId('id_cuenta')->constrained('cuentas')->onDelete('cascade');
+            $table->foreignId('id_tarjeta_acceso')->nullable()->constrained('Tarjetas_Acceso', 'id_tarjeta_acceso')->onDelete('cascade');
+            $table->foreignId('id_token')->nullable()->constrained('Tokens', 'id_token')->onDelete('cascade');
+            $table->foreignId('id_visita')->nullable()->constrained('Visitas', 'id_visita')->onDelete('cascade');
+            $table->foreignId('id_cuenta')->constrained('Cuentas', 'id_cuenta')->onDelete('cascade');
         });
     }
 

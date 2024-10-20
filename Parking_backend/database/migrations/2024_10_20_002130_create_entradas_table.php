@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('Entradas', function (Blueprint $table) {
             $table->id('id_entrada');
-            $table->foreignId('id_registro')->constrained('registros')->onDelete('cascade');
-            $table->foreignId('id_cuenta')->constrained('cuentas')->onDelete('cascade');
+            $table->foreignId('id_registro')->constrained('Registros', 'id_registro')->onDelete('cascade');
+            $table->foreignId('id_cuenta')->constrained('Cuentas', 'id_cuenta')->onDelete('cascade');
             $table->timestamp('check');
             $table->string('observaciones')->nullable();
         });

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('Incidentes_Vehiculo', function (Blueprint $table) {
             $table->id('id_incidente');
-            $table->foreignId('id_tarjeta_acceso')->constrained('tarjetas_acceso')->onDelete('cascade');
+            $table->foreignId('id_tarjeta_acceso')->constrained('Tarjetas_Acceso','id_tarjeta_acceso')->onDelete('cascade');
             $table->string('titulo', 100);
             $table->string('detalles', 255);
             $table->boolean('cerrado');
