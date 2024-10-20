@@ -41,6 +41,7 @@ Route::get('/storage/{filename}',[ImageController::class,'getImage']);
 // Cuenta
 Route::post('/create_account', [cuentaController::class,'store']);
 Route::get('/get_account/{id_cuenta}',[cuentaController::class,'getCuenta']);
+Route::get('/get_all_accounts',[cuentaController::class,'getAllAccounts']);
 Route::get('/check_account_by_person/{id_persona}',[cuentaController::class,'isVerifiedPersona']);
 // Auth
 Route::post('/login',[authController::class,'login']);
@@ -57,11 +58,15 @@ Route::get('/get_info_card',[tarjetasAccesoController::class,'getCardInfo']);
 // Registros
 Route::post('/register_mov',[registrosController::class,'store']);
 Route::get('/get_all_records',[registrosController::class,'getAllRecordsList']);
+Route::get('/get_all_records_sync',[registrosController::class,'getAllRecordsListSync']);
+Route::post('/get_info_to_record',[registrosController::class,'getInfoCardToRegistration']);
+Route::post('/manual_registration',[registrosController::class,'manualRegistration']);
 // Incidentes
+Route::get('/get_all_incidents_sync',[IncidentesVehiculoController::class,'getAllIncidentsSync']);
 Route::get('/get_all_incidents',[IncidentesVehiculoController::class,'getAllIncidents']);
-Route::get('/creat_incident',[IncidentesVehiculoController::class,'postIncident']);
+Route::post('/creat_incident',[IncidentesVehiculoController::class,'postIncident']);
 Route::get('/show_incident',[IncidentesVehiculoController::class,'showIncident']);
-Route::get('/update_incident',[IncidentesVehiculoController::class,'updateIncident']);
+Route::post('/update_incident',[IncidentesVehiculoController::class,'updateIncident']);
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/check-status', [authController::class, 'checkStatus']);

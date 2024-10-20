@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Events\IncidentCreated;
 use Illuminate\Validation\ValidationException;
 use App\Models\IncidentesVehiculo;
 
@@ -55,11 +56,14 @@ class IncidentesVehiculoController extends Controller
     /**
      * 
      */
-    public function getAllIncidents()
+    public function getAllIncidentsSync()
     {
-        $incidentesVeh = IncidentesVehiculo::all();
+        $incidentesVeh = IncidentesVehiculo::orderBy('id_incidente', 'desc')->get();
+
+        event(new IncidentCreated($incidentesVeh));
+
         return response()->json([
-            'incidentes'=> $incidentesVeh
+            'message' => 'Incidentes enviados'
         ],200);
     }
 
@@ -88,7 +92,7 @@ class IncidentesVehiculoController extends Controller
         $incidente = Incidente::with([
             'tarjetaAcceso.cuenta.persona',
             'tarjetaAcceso.cuenta.id_rol',
-            'tarjetaAcceso.vehiculo']) 
+            'tarjetaAcceso.vehiculo'])
                               ->where('id_incidente', $id)
                               ->first();
 
@@ -101,4 +105,15 @@ class IncidentesVehiculoController extends Controller
         ], 200);
     }
 
+    public function getAllIncidents()
+    {
+        $incidentesVeh = IncidentesVehiculo::with([
+            'tarjetaAcceso.cuenta.persona',
+            'tarjetaAcceso.vehiculo',
+        ])->orderBy('id_incidente', 'desc')->get();
+
+        return response()->json([
+            'incidentes'=> $incidentesVeh
+        ],200);
+    }
 }

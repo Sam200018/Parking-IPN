@@ -25,7 +25,7 @@ class Registros extends Model
 
     public function tarjetaAcceso()
     {
-        return $this->belongsTo(TarjetasAcceso::class,'id_tarjeta_acceso');
+        return $this->belongsTo(Tarjetas_Acceso::class,'id_tarjeta_acceso');
     }
 
     public function cuenta()
@@ -33,8 +33,38 @@ class Registros extends Model
         return $this->belongsTo(Cuentas::class,'id_cuenta');
     }
 
-    public function token(Type $var = null)
+    public function token()
     {
         return $this->belongsTo(Token::class,'id_token');
     }
+
+    /**
+     * Get the visita that owns the Registros
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function visita()
+    {
+        return $this->belongsTo(Visita::class, 'id_visita');
+    }
+
+    /**
+     * Get the Entrada associated with the Registros
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function Entrada(){
+        return $this->hasOne(Entrada::class,'id_entrada');
+    }
+
+    /**
+     * Get the Salida associated with the Registros
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function Salida()
+    {
+        return $this->hasOne(Salida::class, 'id_salida');
+    }
+
 }

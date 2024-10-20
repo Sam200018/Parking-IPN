@@ -90,4 +90,15 @@ class cuentaController extends Controller
         }
     }
 
+    public function getAllAccounts()
+    {
+        $cuentas = Cuentas::with([
+            'rol','prog_academico','persona'
+        ])->orderBy('id_cuenta', 'desc')->get();
+
+        return response()->json([
+            'cuentas'=> $cuentas
+        ],200);
+    }
+
 }

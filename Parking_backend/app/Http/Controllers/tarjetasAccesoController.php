@@ -11,6 +11,7 @@ use App\Models\Cuentas;
 use App\Models\Vehiculo;
 use App\Models\Tarjetas_Acceso;
 use App\Models\Registros;
+use App\Models\Tokens;
 use App\Events\AccessCardCreated;
 
 class tarjetasAccesoController extends Controller
@@ -44,6 +45,15 @@ class tarjetasAccesoController extends Controller
 
             $vehiculo->save();
 
+            $tarjetaAcceso = Tarjetas_Acceso::with([
+                'cuenta.persona',
+                'cuenta.rol',
+                'cuenta.prog_academico',
+                 'vehiculo',
+                ])->get();
+
+            event(new AccessCardCreated($tarjetasAcceso));
+
             return response()->json([
                 'message'=> 'Tarjeta acceso creada con exito'
             ]);
@@ -71,16 +81,27 @@ class tarjetasAccesoController extends Controller
                 'cuenta.rol',
                 'cuenta.prog_academico',
                 'vehiculo'])
-                                ->where('token', $token)
-                                ->first();
+                ->where('token', $token)
+                ->first();
+                
 
             if (!$tarjetaAcceso) {
                 return response()->json(['mensaje' => 'Tarjeta de acceso no valida'], 404);
             }
+            
+            $ultimoRegistro = Registros::where('id_tarjeta_acceso', $tarjetaAcceso->id_tarjeta_acceso)
+            ->orderBy('id_registro', 'desc')
+            ->first();
+            
+            if(!$ultimoRegistro){
+                return response()->json([
+                    'tarjeta_acceso' => $tarjetaAcceso,
+                    'movimiento' => 1
+                ], 200);
+            }
 
-            $isCardInUse = Registros::where('id_tarjeta_acceso', $tarjetaAcceso->id_tarjeta_acceso)
-                                     ->where('id_token', 1)
-                                     ->exists();
+            $isCardInUse = Tokens::where('id_token', $ultimoRegistro->id_token)->exists();
+            
             if(!$isCardInUse){
                 return response()->json([
                     'tarjeta_acceso' => $tarjetaAcceso,
@@ -164,24 +185,19 @@ class tarjetasAccesoController extends Controller
     public function getAllAccessCardList(Request $request)
     {
         $query = Tarjetas_Acceso::with([
-            'cuenta.persona',
-            'cuenta.rol',
-            'cuenta.prog_academico',
-             'vehiculo',
-            ]);
-
-        if ($request->has('id_cuenta')) {
-            $query->whereHas('cuenta', function ($query) use ($request) {
-                $query->where('id_cuenta', $request->id_cuenta);
-            });
-        }
-
+        ]);
+    
         $tarjetasAcceso = $query->get();
-
-        event(new AccessCardCreated($tarjetasAcceso));
-
+    
+        
+        $data = json_encode($tarjetasAcceso);
+        
+        // Disparar el evento con la colección completa de tarjetas de acceso
+        event(new AccessCardCreated($data));
+        // AccessCardCreated::dispatch($tarjetasAcceso);
+    
         return response()->json([
-            'message'=> 'Actualizando tarjetas de acceso...'
-        ],200);
+            'message' => 'Actualizando tarjetas de acceso...'
+        ], 200);
     }
 }
