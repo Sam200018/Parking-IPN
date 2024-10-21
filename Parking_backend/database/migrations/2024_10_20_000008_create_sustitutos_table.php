@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('Sustitutos', function (Blueprint $table) {
             $table->id('id_sustitucion');
             $table->foreignId('id_tarjeta_acceso')->constrained('tarjetas_acceso','id_tarjeta_acceso')->onDelete('cascade');
-            $table->foreignId('id_cuenta')->constrained('cuentas')->onDelete('cascade');
+            $table->foreignId('id_cuenta')->constrained('cuentas','id_cuenta')->onDelete('cascade');
             $table->timestamps();
         });
     }
