@@ -12,11 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('Sustitutos', function (Blueprint $table) {
-            $table->id('id_salida');
-            $table->foreignId('id_registro')->constrained('Registros', 'id_registro')->onDelete('cascade');
-            $table->foreignId('id_cuenta')->constrained('Cuentas', 'id_cuenta')->onDelete('cascade');
-            $table->timestamp('check');
-            $table->string('observaciones')->nullable();
+            $table->id('id_sustitucion');
+            $table->foreignId('id_tarjeta_acceso')->constrained('tarjetas_acceso')->onDelete('cascade');
+            $table->foreignId('id_cuenta')->constrained('cuentas')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
