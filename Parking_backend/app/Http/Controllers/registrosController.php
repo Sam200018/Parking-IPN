@@ -191,7 +191,7 @@ class registrosController extends Controller
         $registros = $resultados->sortBy('check');
 
         return response()->json([
-            'registros' => $registros
+            'transactions' => $registros
         ],200);
     }
 
