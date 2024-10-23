@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Cuentas;
+use App\Models\Tarjetas_Acceso;
 
 class cuentaController extends Controller
 {
@@ -93,12 +94,19 @@ class cuentaController extends Controller
     public function getAllAccounts()
     {
         $cuentas = Cuentas::with([
-            'rol','prog_academico','persona'
-        ])->orderBy('id_cuenta', 'desc')->get();
-
+            'rol',
+            'prog_academico',
+            'persona',// Asegúrate de cargar las tarjetas de acceso
+        ])->get();
+    
+        // Agregar la cuenta de tarjetas de acceso a cada cuenta
+        $cuentas->each(function($cuenta) {
+            $cuenta->no_vehiculos = Tarjetas_Acceso::where('id_cuenta', $cuenta->id_cuenta)->count();
+        });
+    
         return response()->json([
-            'cuentas'=> $cuentas
-        ],200);
+            'cuentas' => $cuentas
+        ], 200);
     }
 
 }
