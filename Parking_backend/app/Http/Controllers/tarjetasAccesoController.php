@@ -52,7 +52,7 @@ class tarjetasAccesoController extends Controller
                  'vehiculo',
                 ])->get();
 
-            event(new AccessCardCreated($tarjetasAcceso));
+            event(new AccessCardCreated($tarjetaAcceso));
 
             return response()->json([
                 'message'=> 'Tarjeta acceso creada con exito'
