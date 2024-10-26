@@ -17,7 +17,7 @@ fun BitmapImage(
     contentScale: ContentScale = ContentScale.FillHeight
 ) {
     AsyncImage(
-        model = bitmap?: "http://192.168.10.113:8000/api/storage/${filename}",
+        model = bitmap?: "https://parkingbackend-b2hmfuh4gkftabhk.centralus-01.azurewebsites.net/api/storage/${filename}",
         contentDescription = "",
         placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
         contentScale = contentScale,
