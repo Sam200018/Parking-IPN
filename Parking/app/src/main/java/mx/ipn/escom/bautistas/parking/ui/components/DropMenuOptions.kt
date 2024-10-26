@@ -3,9 +3,9 @@ package mx.ipn.escom.bautistas.parking.ui.components
 val typeUserOptions = listOf(
     "Selecciona un tipo de usuario",
     "Admin",
-    "Alumno",
     "Empleado",
     "Empleado Temp",
+    "Estudiante",
     "Externo",
     "Vigilante",
 )
