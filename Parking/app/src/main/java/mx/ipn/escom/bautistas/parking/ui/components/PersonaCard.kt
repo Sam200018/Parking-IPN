@@ -1,7 +1,6 @@
 package mx.ipn.escom.bautistas.parking.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +32,7 @@ fun PersonaCard(
     selectAction: (Long) -> Unit
 ) {
     Card(
-        onClick = {selectAction(persona.idPersona)},
+        onClick = { selectAction(persona.idPersona) },
         modifier
             .padding(10.dp),
         border = if (selectedItem == persona.idPersona) {
@@ -57,7 +60,15 @@ fun PersonaCard(
                     .padding(10.dp), verticalArrangement = Arrangement.SpaceAround
             ) {
                 Text(text = "Nombre: ${persona.nombre} ${persona.aPaterno} ${persona.aMaterno}")
-                Text(text = "IPN ID: ${persona.idIpn}")
+                if (persona.idIpn != null)
+                    Row(
+                        modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "IPN ID: ${persona.idIpn}")
+                        Icon(Icons.Filled.Verified, "")
+                    }
                 Text(text = "Teléfono: ${persona.numeroContacto}")
             }
         }
@@ -72,6 +83,7 @@ private fun PersonaCardPrev() {
     PersonaCard(
         persona = Persona(
             nombre = "Sam",
+            idIpn = "hola",
             aPaterno = "BAu",
             aMaterno = "bas",
             rutaIdentificacion = "https://avatars.githubusercontent.com/u/49082936?v=4",

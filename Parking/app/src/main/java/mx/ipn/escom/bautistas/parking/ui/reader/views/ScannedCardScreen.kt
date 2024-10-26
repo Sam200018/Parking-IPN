@@ -1,6 +1,5 @@
 package mx.ipn.escom.bautistas.parking.ui.reader.views
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -205,7 +204,7 @@ fun ScannedCardScreen(
                 LoadingDialogComponent()
             }
 
-            if (scannerCardState.isSuccess) {
+            if (scannerCardState.isSuccess && scannerCardState.message.isNotEmpty()) {
                 DialogComponent(
                     message = scannerCardState.message,
                     icon = Icons.Filled.CheckCircle

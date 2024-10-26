@@ -112,7 +112,7 @@ class ScannerViewModel @Inject constructor(
             }
             viewModelScope.launch {
                 val authInfo = authRepository.getToken()
-                val idAccount = authInfo!!.id
+                val idAccount = authInfo!!.account
                 val movement = when (scannerUiState.value.movement) {
                     Movement.Unknown -> 2
                     Movement.CheckIn -> 1

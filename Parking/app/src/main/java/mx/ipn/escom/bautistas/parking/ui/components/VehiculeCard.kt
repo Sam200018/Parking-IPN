@@ -1,9 +1,6 @@
 package mx.ipn.escom.bautistas.parking.ui.components
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,11 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Motorcycle
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,7 +80,18 @@ fun VehicleCard(
                     .height(100.dp)
                     .padding(10.dp), verticalArrangement = Arrangement.SpaceAround
             ) {
-                Text(text = "Placa: ${vehicle.placa} ")
+                if (vehicle.asignado) {
+                    Row(
+                        modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Placa: ${vehicle.placa} ")
+                        Icon(Icons.Filled.Verified, "")
+                    }
+                } else {
+                    Text(text = "Placa: ${vehicle.placa} ")
+                }
                 Text(text = "Marca: ${vehicle.marca}")
                 Text(text = "Modelo: ${vehicle.modelo}")
             }

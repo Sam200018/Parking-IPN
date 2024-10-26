@@ -13,23 +13,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mx.ipn.escom.bautistas.parking.R
 import mx.ipn.escom.bautistas.parking.model.Cuenta
 import mx.ipn.escom.bautistas.parking.model.Persona
 import mx.ipn.escom.bautistas.parking.ui.components.BalanceUI
 import mx.ipn.escom.bautistas.parking.ui.components.BitmapImage
 
 @Composable
-fun ScannedPersonaComponent(modifier: Modifier = Modifier, persona: Persona, cuenta: Cuenta) {
+fun ScannedPersonaComponent(
+    modifier: Modifier = Modifier,
+    persona: Persona,
+    cuenta: Cuenta? = null,
+) {
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier,
         colors = CardColors(
-            containerColor = colorResource(id = R.color.grey_figma),
+            containerColor = Color.Transparent,
             contentColor = Color.Black,
             disabledContentColor = Color.White,
             disabledContainerColor = Color.Red
@@ -55,16 +57,27 @@ fun ScannedPersonaComponent(modifier: Modifier = Modifier, persona: Persona, cue
                                 .padding(5.dp),
                             verticalArrangement = Arrangement.SpaceAround
                         ) {
-                            Text(text = persona.nombre, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = persona.nombre,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                             Text(text = persona.aPaterno, fontSize = 20.sp)
                             Text(text = persona.aMaterno, fontSize = 20.sp)
                             Text(text = persona.numeroContacto, fontSize = 20.sp)
                         }
                     })
                 if (persona.idIpn != null)
-                    Text(text = "IPN ID: ${persona.idIpn}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                if (cuenta.idProgAcademico != null)
-                    Text(text = "Prog. Académico: ${cuenta.progAcademico.nombreProgAcademico}", fontSize = 20.sp)
+                    Text(
+                        text = "IPN ID: ${persona.idIpn}",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                if (cuenta?.idProgAcademico != null)
+                    Text(
+                        text = "Prog. Académico: ${cuenta.progAcademico.nombreProgAcademico}",
+                        fontSize = 20.sp
+                    )
             }
         }
     }

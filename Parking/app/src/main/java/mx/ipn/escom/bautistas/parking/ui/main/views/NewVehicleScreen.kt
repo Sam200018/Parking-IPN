@@ -9,12 +9,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -24,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,7 +52,11 @@ import mx.ipn.escom.bautistas.parking.ui.main.interactions.VehicleState
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewVehicleViewModel
 
 @Composable
-fun NewVehicleScreen(modifier: Modifier = Modifier, backAction: () -> Unit) {
+fun NewVehicleScreen(
+    modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass,
+    backAction: () -> Unit
+) {
 
     val newVehicleViewModel: NewVehicleViewModel = hiltViewModel()
     val newVehicleUiState by newVehicleViewModel.newVehicleUiState.collectAsStateWithLifecycle()
@@ -62,7 +71,8 @@ fun NewVehicleScreen(modifier: Modifier = Modifier, backAction: () -> Unit) {
             MainContentNewVehicle(
                 navController = navControllerNewVehicle,
                 newVehicleViewModel = newVehicleViewModel,
-                vehicleState = newVehicleUiState
+                vehicleState = newVehicleUiState,
+                windowSizeClass = windowSizeClass,
             ) {
                 backAction()
             }
@@ -85,6 +95,7 @@ fun MainContentNewVehicle(
     navController: NavController,
     newVehicleViewModel: NewVehicleViewModel,
     vehicleState: VehicleState,
+    windowSizeClass: WindowSizeClass,
     backAction: () -> Unit,
 ) {
     Scaffold(topBar = {
@@ -93,114 +104,30 @@ fun MainContentNewVehicle(
         }
     }) {
         Box(modifier = modifier.padding(it)) {
-            BalanceUI(
-                content1 = {
-                    Column(modifier.fillMaxHeight()) {
-                        DropDownComponent(
-                            items = vehicleTypeOption,
-                            label = stringResource(id = R.string.type_vehicle_label),
-                            value = newVehicleViewModel.vehicleTypeVal,
-                            isError = vehicleState.isTypeVehicleSelected.not(),
-                            errorMessage = "Debe seleccionarse el tipo de vehiculo"
-                        ) {
-                            newVehicleViewModel.onVehicleTypeChange(it)
-                        }
-                        Row(
-                            modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextFieldComponent(
-                                label = stringResource(id = R.string.plate_label),
-                                value = newVehicleViewModel.plateVal,
-                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
-                                isError = vehicleState.isPlateValid.not(),
-                                errorMessage = "Ingresa una placa valida"
-                            ) {
-                                newVehicleViewModel.onPlateChange(it)
-                            }
-                            TextFieldComponent(
-                                label = stringResource(id = R.string.model_label),
-                                value = newVehicleViewModel.modelVal,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                isError = vehicleState.isModelValid.not(),
-                                errorMessage = "Ingresa un modelo valido"
-                            ) {
-                                newVehicleViewModel.onModelChange(it)
-                            }
-                        }
-                        Row(
-                            modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            TextFieldComponent(
-                                label = stringResource(id = R.string.brand_label),
-                                value = newVehicleViewModel.brandVal,
-                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                                isError = vehicleState.isBrandValid.not(),
-                                errorMessage = "Ingresa una marca valida"
-                            ) {
-                                newVehicleViewModel.onBrandChange(it)
-                            }
-                            TextFieldComponent(
-                                label = stringResource(id = R.string.color_label),
-                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                                value = newVehicleViewModel.colorVal,
-                                isError = vehicleState.isColorValid.not(),
-                                errorMessage = "Ingresa un color valido"
-                            ) {
-                                newVehicleViewModel.onColorChange(it)
-                            }
-                        }
-                    }
-                },
-                content2 = {
-                    Column(
-                        modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        PhotoButton(
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .height(400.dp),
-                            label = stringResource(id = R.string.document_label),
-                            icon = Icons.Filled.Description,
-                            value = newVehicleViewModel.documentPhoto,
-                            contentScale = ContentScale.FillHeight
-                        ) {
-                            navController.navigate(Routes.NewUserCamaraP.route)
-                        }
-                        if (vehicleState.isError && vehicleState.message.isNotEmpty()) {
-                            Text(text = vehicleState.message, color = Color.Red, fontSize = 20.sp)
-                            Text(
-                                text = "Corregir y volver a intentar",
-                                color = Color.Red,
-                                fontSize = 20.sp
-                            )
-                        }
-                        BalanceUI(modifier = modifier.height(240.dp),
-                            content1 = {
-                                ButtonComponent(
-                                    fontSize = 24.sp,
-                                    isCancelBtn = true,
-                                    label = stringResource(id = R.string.cancel_label)
-                                ) {
-                                }
+            when {
+                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> NewVehicleCompactView(
+                    newVehicleViewModel = newVehicleViewModel,
+                    vehicleState = vehicleState,
+                    navController = navController,
+                    backAction = backAction
+                )
 
-                            }, content2 = {
-                                ButtonComponent(
-                                    modifier = modifier,
-                                    fontSize = 24.sp,
-                                    label = stringResource(id = R.string.create_vehicle_button),
-                                    isEnable = isButtonNewVehicleEnable(vehicleState)
-                                ) {
-                                    newVehicleViewModel.onNewVehicleCreated()
-                                }
-                            }
-                        )
-                    }
+                windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Expanded -> NewVehicleExpandedView(
+                    modifier = modifier,
+                    newVehicleViewModel = newVehicleViewModel,
+                    vehicleState = vehicleState,
+                    navController = navController,
+                    backAction = backAction
+                )
 
-                }
-            )
+                else -> NewVehicleCompactView(
+                    newVehicleViewModel = newVehicleViewModel,
+                    vehicleState = vehicleState,
+                    navController = navController,
+                    backAction = backAction
+                )
+            }
+
             if (vehicleState.isLoading) {
                 LoadingDialogComponent()
             }
@@ -210,6 +137,233 @@ fun MainContentNewVehicle(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NewVehicleExpandedView(
+    modifier: Modifier,
+    newVehicleViewModel: NewVehicleViewModel,
+    vehicleState: VehicleState,
+    navController: NavController,
+    backAction: () -> Unit
+) {
+    BalanceUI(
+        content1 = {
+            Column(modifier.fillMaxHeight()) {
+                DropDownComponent(
+                    items = vehicleTypeOption,
+                    label = stringResource(id = R.string.type_vehicle_label),
+                    value = newVehicleViewModel.vehicleTypeVal,
+                    isError = vehicleState.isTypeVehicleSelected.not(),
+                    errorMessage = "Debe seleccionarse el tipo de vehiculo"
+                ) {
+                    newVehicleViewModel.onVehicleTypeChange(it)
+                }
+                Row(
+                    modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextFieldComponent(
+                        label = stringResource(id = R.string.plate_label),
+                        value = newVehicleViewModel.plateVal,
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
+                        isError = vehicleState.isPlateValid.not(),
+                        errorMessage = "Ingresa una placa valida"
+                    ) {
+                        newVehicleViewModel.onPlateChange(it)
+                    }
+                    TextFieldComponent(
+                        label = stringResource(id = R.string.model_label),
+                        value = newVehicleViewModel.modelVal,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = vehicleState.isModelValid.not(),
+                        errorMessage = "Ingresa un modelo valido"
+                    ) {
+                        newVehicleViewModel.onModelChange(it)
+                    }
+                }
+                Row(
+                    modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TextFieldComponent(
+                        label = stringResource(id = R.string.brand_label),
+                        value = newVehicleViewModel.brandVal,
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                        isError = vehicleState.isBrandValid.not(),
+                        errorMessage = "Ingresa una marca valida"
+                    ) {
+                        newVehicleViewModel.onBrandChange(it)
+                    }
+                    TextFieldComponent(
+                        label = stringResource(id = R.string.color_label),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                        value = newVehicleViewModel.colorVal,
+                        isError = vehicleState.isColorValid.not(),
+                        errorMessage = "Ingresa un color valido"
+                    ) {
+                        newVehicleViewModel.onColorChange(it)
+                    }
+                }
+            }
+        },
+        content2 = {
+            Column(
+                modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                PhotoButton(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(400.dp),
+                    label = stringResource(id = R.string.document_label),
+                    icon = Icons.Filled.Description,
+                    value = newVehicleViewModel.documentPhoto,
+                    contentScale = ContentScale.FillHeight
+                ) {
+                    navController.navigate(Routes.NewUserCamaraP.route)
+                }
+                if (vehicleState.isError && vehicleState.message.isNotEmpty()) {
+                    Text(text = vehicleState.message, color = Color.Red, fontSize = 20.sp)
+                    Text(
+                        text = "Corregir y volver a intentar",
+                        color = Color.Red,
+                        fontSize = 20.sp
+                    )
+                }
+                BalanceUI(modifier = modifier.height(240.dp),
+                    content1 = {
+                        ButtonComponent(
+                            fontSize = 24.sp,
+                            isCancelBtn = true,
+                            label = stringResource(id = R.string.cancel_label)
+                        ) {
+                            backAction()
+                        }
+
+                    }, content2 = {
+                        ButtonComponent(
+                            modifier = modifier,
+                            fontSize = 24.sp,
+                            label = stringResource(id = R.string.create_vehicle_button),
+                            isEnable = isButtonNewVehicleEnable(vehicleState)
+                        ) {
+                            newVehicleViewModel.onNewVehicleCreated()
+                        }
+                    }
+                )
+            }
+        }
+    )
+}
+
+@Composable
+fun NewVehicleCompactView(
+    modifier: Modifier = Modifier,
+    padding: Dp = 25.dp,
+    newVehicleViewModel: NewVehicleViewModel,
+    vehicleState: VehicleState,
+    navController: NavController,
+    backAction: () -> Unit,
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(padding)
+            .verticalScroll(rememberScrollState()),
+    ) {
+        DropDownComponent(
+            items = vehicleTypeOption,
+            label = stringResource(id = R.string.type_vehicle_label),
+            value = newVehicleViewModel.vehicleTypeVal,
+            isError = vehicleState.isTypeVehicleSelected.not(),
+            errorMessage = "Debe seleccionarse el tipo de vehiculo"
+        ) {
+            newVehicleViewModel.onVehicleTypeChange(it)
+        }
+        TextFieldComponent(
+            modifier = modifier.fillMaxWidth(),
+            label = stringResource(id = R.string.plate_label),
+            value = newVehicleViewModel.plateVal,
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
+            isError = vehicleState.isPlateValid.not(),
+            errorMessage = "Ingresa una placa valida"
+        ) {
+            newVehicleViewModel.onPlateChange(it)
+        }
+        TextFieldComponent(
+            modifier = modifier.fillMaxWidth(),
+            label = stringResource(id = R.string.model_label),
+            value = newVehicleViewModel.modelVal,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = vehicleState.isModelValid.not(),
+            errorMessage = "Ingresa un modelo valido"
+        ) {
+            newVehicleViewModel.onModelChange(it)
+        }
+
+        TextFieldComponent(
+            modifier = modifier.fillMaxWidth(),
+            label = stringResource(id = R.string.brand_label),
+            value = newVehicleViewModel.brandVal,
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            isError = vehicleState.isBrandValid.not(),
+            errorMessage = "Ingresa una marca valida"
+        ) {
+            newVehicleViewModel.onBrandChange(it)
+        }
+        TextFieldComponent(
+            modifier = modifier.fillMaxWidth(),
+            label = stringResource(id = R.string.color_label),
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+            value = newVehicleViewModel.colorVal,
+            isError = vehicleState.isColorValid.not(),
+            errorMessage = "Ingresa un color valido"
+        ) {
+            newVehicleViewModel.onColorChange(it)
+        }
+        PhotoButton(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(400.dp),
+            label = stringResource(id = R.string.document_label),
+            icon = Icons.Filled.Description,
+            value = newVehicleViewModel.documentPhoto,
+            contentScale = ContentScale.FillHeight
+        ) {
+            navController.navigate(Routes.NewUserCamaraP.route)
+        }
+        if (vehicleState.isError && vehicleState.message.isNotEmpty()) {
+            Text(text = vehicleState.message, color = Color.Red, fontSize = 20.sp)
+            Text(
+                text = "Corregir y volver a intentar",
+                color = Color.Red,
+                fontSize = 20.sp
+            )
+        }
+        BalanceUI(modifier = modifier.height(240.dp),
+            content1 = {
+                ButtonComponent(
+                    fontSize = 18.sp,
+                    isCancelBtn = true,
+                    label = stringResource(id = R.string.cancel_label)
+                ) {
+                }
+
+            }, content2 = {
+                ButtonComponent(
+                    modifier = modifier,
+                    fontSize = 18.sp,
+                    label = stringResource(id = R.string.create_vehicle_button),
+                    isEnable = isButtonNewVehicleEnable(vehicleState)
+                ) {
+                    newVehicleViewModel.onNewVehicleCreated()
+                }
+            }
+        )
     }
 }
 

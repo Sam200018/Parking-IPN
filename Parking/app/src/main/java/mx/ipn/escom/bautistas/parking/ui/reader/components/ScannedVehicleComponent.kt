@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DirectionsCar
@@ -31,7 +32,7 @@ fun ScannedVehicleComponent(
     Card(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
-            .height(160.dp)
+            .height(160.dp).padding(10.dp)
     ) {
         Box(
             modifier = modifier

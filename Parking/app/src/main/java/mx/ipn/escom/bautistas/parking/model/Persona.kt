@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Persona (
+data class Persona(
     @SerializedName("id_persona")
     val idPersona: Long = 0,
     val nombre: String,
@@ -13,7 +13,7 @@ data class Persona (
     @SerializedName("a_materno")
     val aMaterno: String,
     @SerializedName("id_ipn")
-    val idIpn: String?="",
+    val idIpn: String? = null,
     @SerializedName("ruta_identificacion")
     val rutaIdentificacion: String,
     @SerializedName("ruta_fotografia")
