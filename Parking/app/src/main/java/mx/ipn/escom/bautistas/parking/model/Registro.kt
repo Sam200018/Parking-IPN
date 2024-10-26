@@ -7,8 +7,11 @@ import kotlinx.serialization.Serializable
 data class Registro(
     @SerializedName("id_registro")
     val idRegistro: Long,
-    @SerializedName("id_tarjeta_acceso")
-    val idTarjetaAcceso: Long? = null,
-    @SerializedName("id_cuenta")
-    val idCuenta: Long
+    @SerializedName("id_token")
+    val idToken: Any? = null,
+    val cuenta: Cuenta,
+    @SerializedName("tarjeta_acceso")
+    val tarjetaAcceso: AccessCard? = null,
+    val visita: Visit? = null
+
 )

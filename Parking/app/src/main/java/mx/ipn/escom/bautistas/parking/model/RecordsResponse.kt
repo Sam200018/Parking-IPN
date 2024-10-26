@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RecordsResponse(
-    @SerializedName("registros")
-    val records: List<Registro>
+    @SerializedName("transactions")
+    val transactions: List<AccessControlTransaction>
 )

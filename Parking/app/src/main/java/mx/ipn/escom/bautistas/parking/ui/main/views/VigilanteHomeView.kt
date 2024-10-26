@@ -36,7 +36,13 @@ import mx.ipn.escom.bautistas.parking.ui.reader.ReaderActivity
 
 
 @Composable
-fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit, navToManualRegistration: ()-> Unit) {
+fun VigilanteHomeView(
+    modifier: Modifier = Modifier,
+    logout: () -> Unit,
+    navToManualRegistration: () -> Unit,
+    navToNewIncident: () -> Unit,
+    navToIncidentDetail: (String) -> Unit
+) {
     val vigilanteViewModel: VigilanteViewModel = hiltViewModel()
     val vigilanteUiState by vigilanteViewModel.vigilanteUiState.collectAsStateWithLifecycle()
 
@@ -73,10 +79,14 @@ fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit, navToMa
             }
         },
         floatingActionButton = {
-            CompactFloatingActionButton (
+            CompactFloatingActionButton(
                 icon = Icons.Filled.Add
-            ){
-                navToManualRegistration()
+            ) {
+                when (currentSection) {
+                    VigilantNavState.Home -> navToManualRegistration()
+                    VigilantNavState.Incidents -> navToNewIncident()
+                    VigilantNavState.Scanner -> TODO()
+                }
             }
         },
         topBar = {
@@ -94,9 +104,13 @@ fun VigilanteHomeView(modifier: Modifier = Modifier, logout: () -> Unit, navToMa
         }
     ) {
         Box(modifier.padding(it), contentAlignment = Alignment.Center) {
-            when(currentSection){
+            when (currentSection) {
                 VigilantNavState.Home -> RecordsView(vigilanteUiState = vigilanteUiState)
-                VigilantNavState.Incidents -> TODO()
+                VigilantNavState.Incidents -> IncidentesVigilanteView(
+                    vigilanteUiState = vigilanteUiState,
+                    navToNewIncident = navToNewIncident,
+                    navToIncidentDetail = navToIncidentDetail
+                )
 //                NOTE: This parte was moved to reader activity
                 VigilantNavState.Scanner -> TODO()
             }

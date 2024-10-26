@@ -29,4 +29,8 @@ sealed class Routes(
     data object ManualRegistrationSelect : Routes(route = "/manual_registration_select")
     data object ManualRegistrationVehicle : Routes(route = "/manual_registration_vehicle")
     data object ManualRegistrationResult : Routes(route = "/manual_registration_result")
+
+    //    Incidents
+    data object NewIncident : Routes(route = "/new_incident")
+    data object IncidentDetail : Routes(route = "/incident_detail")
 }
