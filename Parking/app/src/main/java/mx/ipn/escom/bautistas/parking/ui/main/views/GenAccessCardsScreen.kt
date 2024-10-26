@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,13 +32,16 @@ import mx.ipn.escom.bautistas.parking.ui.components.PersonaCard
 import mx.ipn.escom.bautistas.parking.ui.components.SearchListComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 import mx.ipn.escom.bautistas.parking.ui.components.VehicleCard
+import mx.ipn.escom.bautistas.parking.ui.main.MainActivity
 import mx.ipn.escom.bautistas.parking.ui.main.Routes
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.GenAccessCardState
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.GenAccessCardViewModel
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun GenAccessCardScreen(
     modifier: Modifier = Modifier,
+    mainActivity: MainActivity,
     navToNewUser: () -> Unit,
     navToNewVehicle: () -> Unit,
     backAction: () -> Unit
@@ -68,7 +72,7 @@ fun GenAccessCardScreen(
             arguments = listOf(navArgument("id_persona") { type = NavType.LongType })
         ) { backStackEntry ->
 
-            NewAccountUserScreen(
+            NewAccountUserScreen(mainActivity = mainActivity,
                 idPersona = backStackEntry.arguments?.getLong("id_persona")
             ) {
                 navHostGenAccessCard.popBackStack()

@@ -26,6 +26,9 @@ fun HomeScreen(
     authState: AuthState,
     hasNFC: Boolean,
     navToManualRegistration: () -> Unit,
+    navToNewIncident: () -> Unit,
+    navToIncidentDetail: (String) -> Unit,
+    navToCreateAccount: () -> Unit,
     logout: () -> Unit,
     navSelectUser: () -> Unit,
 ) {
@@ -35,18 +38,25 @@ fun HomeScreen(
             windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium -> compactHome(
                 hasNFC = hasNFC,
                 authState = authState,
-                logout = logout, navToManualRegistration = navToManualRegistration
+                logout = logout, navToManualRegistration = navToManualRegistration,
+                navToNewIncident = navToNewIncident,
+                navToIncidentDetail = navToIncidentDetail
             )
 
             windowSizeClass.widthSizeClass >= WindowWidthSizeClass.Expanded -> ExpandedHome(
-                navSelectUser = navSelectUser, logout = logout
+                navSelectUser = navSelectUser,
+                authState = authState,
+                logout = logout,
+                navToCreateAccount = navToCreateAccount
             )
 
             else -> compactHome(
                 hasNFC = hasNFC,
                 authState = authState,
                 logout = logout,
-                navToManualRegistration = navToManualRegistration
+                navToManualRegistration = navToManualRegistration,
+                navToNewIncident = navToNewIncident,
+                navToIncidentDetail = navToIncidentDetail
             )
         }
     } else {
@@ -54,7 +64,9 @@ fun HomeScreen(
             hasNFC = hasNFC,
             authState = authState,
             logout = logout,
-            navToManualRegistration = navToManualRegistration
+            navToManualRegistration = navToManualRegistration,
+            navToNewIncident = navToNewIncident,
+            navToIncidentDetail = navToIncidentDetail
         )
     }
 
@@ -65,7 +77,9 @@ fun HomeScreen(
 @Composable
 fun ExpandedHome(
     modifier: Modifier = Modifier,
+    authState: AuthState,
     navSelectUser: () -> Unit,
+    navToCreateAccount: () -> Unit,
     logout: () -> Unit
 ) {
 
@@ -80,6 +94,7 @@ fun ExpandedHome(
     Row(modifier.fillMaxSize()) {
         AdminNavRail(
             adminNavState = currentSection,
+            authState = authState,
             changeContent = {
                 currentSection = it
             },
@@ -88,11 +103,20 @@ fun ExpandedHome(
             when (currentSection) {
                 AdminNavState.Prerecord -> AccessCardsView(
                     navSelectUser = navSelectUser,
-                    logout = logout
+                    logout = logout,
+                    adminUiState = adminUiState
                 )
 
-                AdminNavState.Accounts -> AccountsView()
-                AdminNavState.Incidents -> IncidentsView()
+                AdminNavState.Accounts -> AccountsView(
+                    logout = logout,
+                    adminUiState = adminUiState,
+                    navToCreateAccount = navToCreateAccount
+                )
+
+                AdminNavState.Incidents -> IncidentsView(
+                    adminUiState = adminUiState,
+                    logout = logout
+                )
             }
         }
     }
@@ -105,11 +129,17 @@ fun compactHome(
     logout: () -> Unit,
     hasNFC: Boolean,
     navToManualRegistration: () -> Unit,
+    navToNewIncident: () -> Unit,
+    navToIncidentDetail: (String) -> Unit,
     authState: AuthState
 ) {
     authState.account?.let { cuenta ->
         if (cuenta.idRol == 6.toLong()) {
-            VigilanteHomeView(logout = logout, navToManualRegistration = navToManualRegistration)
+            VigilanteHomeView(
+                logout = logout, navToManualRegistration = navToManualRegistration,
+                navToNewIncident = navToNewIncident,
+                navToIncidentDetail = navToIncidentDetail
+            )
         } else {
             UEHomeView(logout = logout)
         }

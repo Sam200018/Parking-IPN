@@ -1,6 +1,9 @@
 package mx.ipn.escom.bautistas.parking.ui.main.viewmodels
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +24,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.IOException
+import java.io.InputStream
 import javax.inject.Inject
 
 
@@ -102,13 +106,29 @@ class NewVehicleViewModel @Inject constructor(
     }
 
 
-    fun onDocumentPhotoChange(photo: Bitmap?) {
-        documentPhoto = photo
-        documentPhoto?.let {
-            _newVehicleUIState.update {
-                it.copy(isDocumentTaken = true, isError = false)
+    fun onDocumentPhotoChange(photo: Uri?, context: Context) {
+        _newVehicleUIState.update {
+            it.copy(isLoading = true)
+        }
+        viewModelScope.launch {
+            var inputStream: InputStream? = null
+            try {
+                inputStream = context.contentResolver.openInputStream(photo!!)
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                documentPhoto = bitmap
+                documentPhoto?.let {
+                    _newVehicleUIState.update {
+                        it.copy(isDocumentTaken = true, isError = false)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                inputStream?.close()
             }
         }
+
+
     }
 
     private suspend fun createVehicle(

@@ -113,7 +113,8 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(Routes.NewVehicle.route) {
                         NewVehicleScreen(
-                            windowSizeClass = windowSizeClass
+                            windowSizeClass = windowSizeClass,
+                            mainActivity = this@MainActivity,
                         ) {
                             navController.popBackStack()
                         }

@@ -18,12 +18,12 @@ import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -39,6 +39,7 @@ import mx.ipn.escom.bautistas.parking.R
 import mx.ipn.escom.bautistas.parking.ui.components.BalanceUI
 import mx.ipn.escom.bautistas.parking.ui.components.ButtonComponent
 import mx.ipn.escom.bautistas.parking.ui.components.DialogComponent
+import mx.ipn.escom.bautistas.parking.ui.components.DocPhotoButton
 import mx.ipn.escom.bautistas.parking.ui.components.DropDownComponent
 import mx.ipn.escom.bautistas.parking.ui.components.LoadingDialogComponent
 import mx.ipn.escom.bautistas.parking.ui.components.PhotoButton
@@ -46,13 +47,16 @@ import mx.ipn.escom.bautistas.parking.ui.components.TextFieldComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 import mx.ipn.escom.bautistas.parking.ui.components.academProgOption
 import mx.ipn.escom.bautistas.parking.ui.components.typeUserOptions
+import mx.ipn.escom.bautistas.parking.ui.main.MainActivity
 import mx.ipn.escom.bautistas.parking.ui.main.Routes
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.NewAccountUserState
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewAccountUserViewModel
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun NewAccountUserScreen(
     modifier: Modifier = Modifier,
+    mainActivity: MainActivity,
     idPersona: Long? = null,
     backAction: () -> Unit,
 ) {
@@ -76,6 +80,7 @@ fun NewAccountUserScreen(
             MainContent(
                 idPersona = idPersona,
                 navController = navControllerNewUser,
+                mainActivity = mainActivity,
                 newAccountUserViewModel = newAccountUserViewModel,
                 newUserState = newUserUiState
             ) {
@@ -88,17 +93,12 @@ fun NewAccountUserScreen(
                 navControllerNewUser.popBackStack()
             }
         }
-        composable(Routes.NewUserCamaraI.route) {
-            CamaraScreen(photo = newAccountUserViewModel.identificationPhoto) {
-                newAccountUserViewModel.onIdentificationPhotoChange(it)
-                navControllerNewUser.popBackStack()
-            }
-        }
     }
 
 }
 
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MainContent(
     modifier: Modifier = Modifier,
@@ -106,6 +106,7 @@ fun MainContent(
     navController: NavController,
     newAccountUserViewModel: NewAccountUserViewModel,
     newUserState: NewAccountUserState,
+    mainActivity: MainActivity,
     backAction: () -> Unit,
 ) {
     val scrollStateNU = rememberScrollState()
@@ -234,21 +235,20 @@ fun MainContent(
                         if (idPersona != null) {
                             PhotoButton(
                                 modifier = modifier.height(250.dp),
+                                value = newAccountUserViewModel.personPhoto,
                                 label = stringResource(id = R.string.photo_person_label),
                                 icon = Icons.Filled.AddAPhoto,
                                 filename = newAccountUserViewModel.personPhotoRoute
                             ) {
                                 navController.navigate(Routes.NewUserCamaraP.route)
                             }
-                            PhotoButton(
-                                modifier = modifier.height(250.dp),
+                            DocPhotoButton(
+                                value = newAccountUserViewModel.identificationPhoto,
                                 label = stringResource(id = R.string.photo_id_label),
-                                width = 380.dp,
-                                icon = Icons.Filled.AddAPhoto,
-                                filename = newAccountUserViewModel.identificationPhotoRoute,
-                                contentScale = ContentScale.FillWidth
-                            ) {
-                                navController.navigate(Routes.NewUserCamaraI.route)
+                                mainActivity = mainActivity,
+                                filename = newAccountUserViewModel.identificationPhotoRoute
+                            ) { uri, ctx ->
+                                newAccountUserViewModel.onIdentificationPhotoChange(uri, ctx)
                             }
                         } else {
                             PhotoButton(
@@ -259,15 +259,12 @@ fun MainContent(
                             ) {
                                 navController.navigate(Routes.NewUserCamaraP.route)
                             }
-                            PhotoButton(
-                                modifier = modifier.height(250.dp),
-                                label = stringResource(id = R.string.photo_id_label),
-                                width = 380.dp,
-                                icon = Icons.Filled.AddAPhoto,
+                            DocPhotoButton(
                                 value = newAccountUserViewModel.identificationPhoto,
-                                contentScale = ContentScale.FillWidth
-                            ) {
-                                navController.navigate(Routes.NewUserCamaraI.route)
+                                label = stringResource(id = R.string.photo_id_label),
+                                mainActivity = mainActivity,
+                            ) { uri, ctx ->
+                                newAccountUserViewModel.onIdentificationPhotoChange(uri, ctx)
                             }
                         }
                         if (newUserState.isError && newUserState.message.isNotEmpty()) {

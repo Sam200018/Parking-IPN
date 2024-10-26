@@ -1,6 +1,9 @@
 package mx.ipn.escom.bautistas.parking.ui.main.viewmodels
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
@@ -25,6 +28,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.HttpException
 import java.io.IOException
+import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -169,11 +173,29 @@ class NewAccountUserViewModel @Inject constructor(
         }
     }
 
-    fun onIdentificationPhotoChange(photo: Bitmap?) {
-        identificationPhoto = photo
-        identificationPhoto?.let {
-            _newAccountUserUIState.update {
-                it.copy(isError = false, isIdentificationPhotoTaken = true)
+    fun onIdentificationPhotoChange(photo: Uri?, context: Context) {
+        _newAccountUserUIState.update {
+            it.copy(isLoading = true)
+        }
+        viewModelScope.launch {
+            var inputStream: InputStream? = null
+            try {
+                inputStream = context.contentResolver.openInputStream(photo!!)
+                val bitmap = BitmapFactory.decodeStream(inputStream)
+                identificationPhoto = bitmap
+                identificationPhoto?.let {
+                    _newAccountUserUIState.update {
+                        it.copy(
+                            isError = false,
+                            isLoading = false,
+                            isIdentificationPhotoTaken = true
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                inputStream?.close()
             }
         }
     }

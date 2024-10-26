@@ -13,10 +13,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -41,20 +44,24 @@ import mx.ipn.escom.bautistas.parking.R
 import mx.ipn.escom.bautistas.parking.ui.components.BalanceUI
 import mx.ipn.escom.bautistas.parking.ui.components.ButtonComponent
 import mx.ipn.escom.bautistas.parking.ui.components.DialogComponent
+import mx.ipn.escom.bautistas.parking.ui.components.DocPhotoButton
 import mx.ipn.escom.bautistas.parking.ui.components.DropDownComponent
 import mx.ipn.escom.bautistas.parking.ui.components.LoadingDialogComponent
 import mx.ipn.escom.bautistas.parking.ui.components.PhotoButton
 import mx.ipn.escom.bautistas.parking.ui.components.TextFieldComponent
 import mx.ipn.escom.bautistas.parking.ui.components.TopBarComponent
 import mx.ipn.escom.bautistas.parking.ui.components.vehicleTypeOption
+import mx.ipn.escom.bautistas.parking.ui.main.MainActivity
 import mx.ipn.escom.bautistas.parking.ui.main.Routes
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.VehicleState
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.NewVehicleViewModel
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun NewVehicleScreen(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
+    mainActivity: MainActivity,
     backAction: () -> Unit
 ) {
 
@@ -73,14 +80,9 @@ fun NewVehicleScreen(
                 newVehicleViewModel = newVehicleViewModel,
                 vehicleState = newVehicleUiState,
                 windowSizeClass = windowSizeClass,
+                mainActivity = mainActivity,
             ) {
                 backAction()
-            }
-        }
-        composable(Routes.NewUserCamaraP.route) {
-            CamaraScreen(photo = newVehicleViewModel.documentPhoto) {
-                newVehicleViewModel.onDocumentPhotoChange(it)
-                navControllerNewVehicle.popBackStack()
             }
         }
     }
@@ -89,6 +91,7 @@ fun NewVehicleScreen(
 }
 
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun MainContentNewVehicle(
     modifier: Modifier = Modifier,
@@ -96,6 +99,7 @@ fun MainContentNewVehicle(
     newVehicleViewModel: NewVehicleViewModel,
     vehicleState: VehicleState,
     windowSizeClass: WindowSizeClass,
+    mainActivity: MainActivity,
     backAction: () -> Unit,
 ) {
     Scaffold(topBar = {
@@ -109,6 +113,7 @@ fun MainContentNewVehicle(
                     newVehicleViewModel = newVehicleViewModel,
                     vehicleState = vehicleState,
                     navController = navController,
+                    mainActivity = mainActivity,
                     backAction = backAction
                 )
 
@@ -116,7 +121,7 @@ fun MainContentNewVehicle(
                     modifier = modifier,
                     newVehicleViewModel = newVehicleViewModel,
                     vehicleState = vehicleState,
-                    navController = navController,
+                    mainActivity = mainActivity,
                     backAction = backAction
                 )
 
@@ -124,6 +129,7 @@ fun MainContentNewVehicle(
                     newVehicleViewModel = newVehicleViewModel,
                     vehicleState = vehicleState,
                     navController = navController,
+                    mainActivity = mainActivity,
                     backAction = backAction
                 )
             }
@@ -140,12 +146,13 @@ fun MainContentNewVehicle(
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 private fun NewVehicleExpandedView(
     modifier: Modifier,
     newVehicleViewModel: NewVehicleViewModel,
     vehicleState: VehicleState,
-    navController: NavController,
+    mainActivity: MainActivity,
     backAction: () -> Unit
 ) {
     BalanceUI(
@@ -213,16 +220,13 @@ private fun NewVehicleExpandedView(
                 modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PhotoButton(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .height(400.dp),
-                    label = stringResource(id = R.string.document_label),
-                    icon = Icons.Filled.Description,
+                DocPhotoButton(
                     value = newVehicleViewModel.documentPhoto,
-                    contentScale = ContentScale.FillHeight
-                ) {
-                    navController.navigate(Routes.NewUserCamaraP.route)
+                    mainActivity = mainActivity,
+                    label = stringResource(id = R.string.document_label),
+                    icon = Icons.Filled.DocumentScanner,
+                ) { uri, ctx ->
+                    newVehicleViewModel.onDocumentPhotoChange(uri, ctx)
                 }
                 if (vehicleState.isError && vehicleState.message.isNotEmpty()) {
                     Text(text = vehicleState.message, color = Color.Red, fontSize = 20.sp)
@@ -258,6 +262,7 @@ private fun NewVehicleExpandedView(
     )
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun NewVehicleCompactView(
     modifier: Modifier = Modifier,
@@ -265,6 +270,7 @@ fun NewVehicleCompactView(
     newVehicleViewModel: NewVehicleViewModel,
     vehicleState: VehicleState,
     navController: NavController,
+    mainActivity: MainActivity,
     backAction: () -> Unit,
 ) {
     Column(
@@ -325,16 +331,13 @@ fun NewVehicleCompactView(
         ) {
             newVehicleViewModel.onColorChange(it)
         }
-        PhotoButton(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(400.dp),
-            label = stringResource(id = R.string.document_label),
-            icon = Icons.Filled.Description,
+        DocPhotoButton(
             value = newVehicleViewModel.documentPhoto,
-            contentScale = ContentScale.FillHeight
-        ) {
-            navController.navigate(Routes.NewUserCamaraP.route)
+            mainActivity = mainActivity,
+            label = stringResource(id = R.string.document_label),
+            icon = Icons.Filled.DocumentScanner,
+        ) { uri, ctx ->
+            newVehicleViewModel.onDocumentPhotoChange(uri, ctx)
         }
         if (vehicleState.isError && vehicleState.message.isNotEmpty()) {
             Text(text = vehicleState.message, color = Color.Red, fontSize = 20.sp)
