@@ -1,5 +1,6 @@
 package mx.ipn.escom.bautistas.parking.model
 
+
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
@@ -11,7 +12,9 @@ data class AccessCard(
     val idCuenta: Long,
     @SerializedName("id_vehiculo")
     val idVehiculo: Long,
+    @SerializedName("cuenta")
     val cuenta: Cuenta,
+    @SerializedName("vehiculo")
     val vehiculo: Vehicle,
     val token: String,
 )

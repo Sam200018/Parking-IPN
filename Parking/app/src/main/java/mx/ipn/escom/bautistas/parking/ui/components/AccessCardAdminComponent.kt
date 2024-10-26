@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mx.ipn.escom.bautistas.parking.R
@@ -32,7 +33,7 @@ import mx.ipn.escom.bautistas.parking.model.AccessCard
 
 @Composable
 fun AccessCardAdminComponent(modifier: Modifier = Modifier, accessCard: AccessCard) {
-    Card(modifier.padding(10.dp),shape = RoundedCornerShape(10.dp)) {
+    Card(modifier.padding(10.dp), shape = RoundedCornerShape(10.dp)) {
         Row(
             modifier
                 .padding(16.dp)
@@ -87,7 +88,7 @@ fun AccessCardAdminComponent(modifier: Modifier = Modifier, accessCard: AccessCa
                     ) {
                         ActionButton(icon = Icons.Default.CarRental, text = "Vehiculo") {}
                         ActionButton(icon = Icons.Default.Add, text = "Mas") {}
-                        ActionButton(icon = Icons.Default.DisabledByDefault, text = "Desactivar") {}
+                        ActionButton(icon = Icons.Default.DisabledByDefault, text = "Eliminar") {}
                     }
                 }
             }
@@ -96,28 +97,26 @@ fun AccessCardAdminComponent(modifier: Modifier = Modifier, accessCard: AccessCa
 }
 
 @Composable
-private fun ActionButton(
+fun ActionButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     text: String,
     onAction: () -> Unit
 ) {
-    IconButton(
-        onClick = {
-            onAction()
-        },
-        modifier
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .height(100.dp)
             .width(100.dp)
-            .height(80.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        IconButton(onClick = {
+            onAction()
+        }) {
             Icon(
-                icon, "", modifier.size(50.dp), tint = colorResource(
-                    R
-                        .color.guinda
-                )
+                icon, "", modifier.size(50.dp),
+                tint = colorResource(R.color.guinda)
             )
-            Text(text, color = colorResource(R.color.guinda))
         }
+        Text(text, color = colorResource(R.color.guinda), textAlign = TextAlign.Center)
     }
 }

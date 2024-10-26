@@ -9,9 +9,11 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AuthStatus
 import mx.ipn.escom.bautistas.parking.ui.main.viewmodels.AuthViewModel
@@ -20,6 +22,7 @@ import mx.ipn.escom.bautistas.parking.ui.main.views.HomeScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.LoginScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.ManualRegistrationScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.NewAccountUserScreen
+import mx.ipn.escom.bautistas.parking.ui.main.views.NewIncidentScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.NewUserScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.NewVehicleScreen
 import mx.ipn.escom.bautistas.parking.ui.main.views.SplashScreen
@@ -80,41 +83,63 @@ class MainActivity : ComponentActivity() {
                             },
                             navToManualRegistration = {
                                 navController.navigate(Routes.ManualRegistration.route)
+                            },
+                            navToNewIncident = {
+                                navController.navigate(Routes.NewIncident.route)
+                            },
+                            navToIncidentDetail = {
+                                navController.navigate(Routes.IncidentDetail.route)
+                            },
+                            navToCreateAccount = {
+                                navController.navigate(Routes.NewAccountUser.route)
                             }
                         )
                     }
 
                     composable(Routes.GenerateAccessCard.route) {
-                        GenAccessCardScreen(
+                        GenAccessCardScreen(mainActivity = this@MainActivity,
                             navToNewUser = { navController.navigate(Routes.NewAccountUser.route) },
                             navToNewVehicle = { navController.navigate(Routes.NewVehicle.route) },
-                        ){
+                        ) {
                             navController.popBackStack()
                         }
                     }
                     composable(Routes.NewAccountUser.route) {
-                        NewAccountUserScreen() {
+                        NewAccountUserScreen(
+                            mainActivity = this@MainActivity,
+                        ) {
                             navController.popBackStack()
                         }
                     }
                     composable(Routes.NewVehicle.route) {
-                        NewVehicleScreen(){
+                        NewVehicleScreen(
+                            windowSizeClass = windowSizeClass
+                        ) {
                             navController.popBackStack()
                         }
                     }
                     composable(Routes.NewUser.route) {
-                        NewUserScreen(){
+                        NewUserScreen() {
                             navController.popBackStack()
                         }
                     }
-                    composable(Routes.ManualRegistration.route){
+                    composable(Routes.ManualRegistration.route) {
                         ManualRegistrationScreen(
                             navToNewUser = { navController.navigate(Routes.NewUser.route) },
-                        ){
+                            navToNewVehicle = { navController.navigate(Routes.NewVehicle.route) }
+                        ) {
                             navController.popBackStack()
                         }
                     }
-
+                    composable(Routes.NewIncident.route) {
+                        NewIncidentScreen()
+                    }
+                    composable(
+                        "${Routes.CompleteUserInfo.route}/{id_incident}",
+                        listOf(navArgument("id_incident") { type = NavType.LongType })
+                    ) { backStackEntry ->
+                        NewIncidentScreen()
+                    }
                 }
             }
         }

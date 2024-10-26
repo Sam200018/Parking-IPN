@@ -1,47 +1,68 @@
 package mx.ipn.escom.bautistas.parking.ui.main.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepository
-import mx.ipn.escom.bautistas.parking.model.AccessCard
+import mx.ipn.escom.bautistas.parking.data.incidents.IncidentsRepository
+import mx.ipn.escom.bautistas.parking.data.user.UserRepository
 import mx.ipn.escom.bautistas.parking.ui.main.interactions.AdminUiState
 import javax.inject.Inject
 
 @HiltViewModel
 class AdminViewModel @Inject constructor(
     private val accessCardRepository: AccessCardRepository,
-
-    ) : ViewModel() {
+    private val incidentsRepository: IncidentsRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     private val _adminUiState = MutableStateFlow(AdminUiState())
     val adminUiState = _adminUiState
 
+
     init {
-        connectPusher()
+        getAllAccessCards()
+        getAllIncidents()
+        getAllAccounts()
     }
 
-    private fun connectPusher() {
-        accessCardRepository.getAccessCardsConnect(
-            "accessCards",
-            "App\\Events\\AccessCardCreated"
-        ) {
-            Log.i("Pusher X", "Received event with data: $it")
-            val accessCard = parseAccessCard(it)
-            Log.i("Pusher X", "Received event with data transformed: $accessCard")
+    private fun getAllAccounts() {
+        viewModelScope.launch {
+            val resp = userRepository.getAllAccounts()
+            _adminUiState.update {
+                it.copy(accountsList = resp.accounts, isLoading = false)
+            }
+
+        }
+    }
+
+    private fun getAllIncidents() {
+        viewModelScope.launch {
+            val resp = incidentsRepository.getAllIncidents()
+            _adminUiState.update {
+                it.copy(incidentsList = resp.incidentes)
+            }
+        }
+    }
+
+
+    private fun getAllAccessCards() {
+        _adminUiState.update {
+            it.copy(isLoading = true)
         }
 
+        viewModelScope.launch {
+            val resp = accessCardRepository.getAllCards(null)
+            _adminUiState.update {
+                it.copy(accessCardsList = resp.accessCards)
+            }
+        }
     }
 
-    private fun parseAccessCard(data: String): List<AccessCard> {
-        val gson = Gson()
-        val type = object : TypeToken<Map<String, List<AccessCard>>>() {}.type
-        val accessCardsMap: Map<String, List<AccessCard>> = gson.fromJson(data, type)
-        return accessCardsMap["accessCards"] ?: emptyList()
-    }
+
 
     override fun onCleared() {
         super.onCleared()

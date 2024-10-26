@@ -1,6 +1,5 @@
 package mx.ipn.escom.bautistas.parking.data.card
 
-import mx.ipn.escom.bautistas.parking.model.AccessCard
 import mx.ipn.escom.bautistas.parking.model.AccessCardResponse
 import mx.ipn.escom.bautistas.parking.model.CardInfoTokeResponse
 import mx.ipn.escom.bautistas.parking.model.GenAccessCardRequest

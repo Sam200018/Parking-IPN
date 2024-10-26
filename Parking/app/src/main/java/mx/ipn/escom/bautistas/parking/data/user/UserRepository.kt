@@ -5,6 +5,7 @@ import mx.ipn.escom.bautistas.parking.model.CheckAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateAccountRequest
 import mx.ipn.escom.bautistas.parking.model.CreateAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateUserResponse
+import mx.ipn.escom.bautistas.parking.model.GetAccountsResponse
 import mx.ipn.escom.bautistas.parking.model.GetPeopleResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -28,6 +29,8 @@ interface UserRepository {
     suspend fun checkAccountByPersona(idPersona: Long): CheckAccountResponse
 
     suspend fun getPersonaById(idPersona: Long): CreateUserResponse
+
+    suspend fun getAllAccounts(): GetAccountsResponse
 }
 
 class UserRepositoryImpl @Inject constructor(
@@ -66,4 +69,5 @@ class UserRepositoryImpl @Inject constructor(
             idPersona
         )
 
+    override suspend fun getAllAccounts(): GetAccountsResponse = userDataSource.getAllAccounts()
 }

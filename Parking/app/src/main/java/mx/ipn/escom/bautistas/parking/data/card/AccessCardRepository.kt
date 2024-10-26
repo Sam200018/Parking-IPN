@@ -22,6 +22,7 @@ interface AccessCardRepository {
     fun getAccessCardsConnect(channelName: String, eventName: String, onEvent: (String) -> Unit)
     fun disconnect()
 
+    fun onConnected(onAction: () -> Unit)
 
 }
 
@@ -51,6 +52,7 @@ class AccessCardRepositoryImpl @Inject constructor(
     )
 
     override fun disconnect() = pusherManager.disconnect()
+    override fun onConnected(onAction: () -> Unit) = pusherManager.onConnected(onAction)
 
 
 }

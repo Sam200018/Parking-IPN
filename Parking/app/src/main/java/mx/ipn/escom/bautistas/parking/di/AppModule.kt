@@ -16,6 +16,9 @@ import mx.ipn.escom.bautistas.parking.data.card.AccessCardDataSource
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepository
 import mx.ipn.escom.bautistas.parking.data.card.AccessCardRepositoryImpl
 import mx.ipn.escom.bautistas.parking.data.card.CardLocalSource
+import mx.ipn.escom.bautistas.parking.data.incidents.IncidentsDataSource
+import mx.ipn.escom.bautistas.parking.data.incidents.IncidentsRepository
+import mx.ipn.escom.bautistas.parking.data.incidents.IncidentsRepositoryImpl
 import mx.ipn.escom.bautistas.parking.data.pusher.PusherManager
 import mx.ipn.escom.bautistas.parking.data.records.RecordsDataSource
 import mx.ipn.escom.bautistas.parking.data.records.RecordsRepository
@@ -83,6 +86,11 @@ object AppModule {
     fun providesRecordsDataSource(retrofit: Retrofit): RecordsDataSource =
         retrofit.create(RecordsDataSource::class.java)
 
+    @Provides
+    @Singleton
+    fun providesIncidentsDataSource(retrofit: Retrofit): IncidentsDataSource =
+        retrofit.create(IncidentsDataSource::class.java)
+
     //Repos
     @Provides
     @Singleton
@@ -115,6 +123,16 @@ object AppModule {
         recordsDataSource: RecordsDataSource,
         pusherManager: PusherManager
     ): RecordsRepository = RecordsRepositoryImpl(recordsDataSource, pusherManager)
+
+    @Provides
+    @Singleton
+    fun providesIncidentsRepository(
+        incidentsDataSource: IncidentsDataSource,
+        pusherManager: PusherManager
+    ): IncidentsRepository = IncidentsRepositoryImpl(
+        incidentsDataSource,
+        pusherManager
+    )
 
 // Room
 

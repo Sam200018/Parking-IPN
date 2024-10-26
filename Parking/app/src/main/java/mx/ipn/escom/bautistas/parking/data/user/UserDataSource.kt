@@ -5,6 +5,7 @@ import mx.ipn.escom.bautistas.parking.model.CheckAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateAccountRequest
 import mx.ipn.escom.bautistas.parking.model.CreateAccountResponse
 import mx.ipn.escom.bautistas.parking.model.CreateUserResponse
+import mx.ipn.escom.bautistas.parking.model.GetAccountsResponse
 import mx.ipn.escom.bautistas.parking.model.GetPeopleResponse
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -43,6 +44,9 @@ interface UserDataSource {
 
     @GET("get_persona_by_id/{id_persona}")
     suspend fun getPersonaById(@Path("id_persona") idPersonaLong: Long): CreateUserResponse
+
+    @GET("get_all_accounts")
+    suspend fun getAllAccounts(): GetAccountsResponse
 
 }
 
