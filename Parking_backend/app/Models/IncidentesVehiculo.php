@@ -25,7 +25,7 @@ class IncidentesVehiculo extends Model
         'cerrado'
     ];
 
-    public $timestamp = false;
+    public $timestamps = false;
 
     public function tarjetaAcceso()
     {

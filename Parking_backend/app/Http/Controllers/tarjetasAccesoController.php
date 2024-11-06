@@ -148,9 +148,22 @@ class tarjetasAccesoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function deleteAccessCard(string $id)
     {
-        //
+        $tarjetaAccesso = Tarjetas_Acceso::where('id_tarjeta_acceso',$id)->first();
+
+        if($tarjetaAcceso){
+            $tarjetaAcceso->token = null;
+            $tarjetaAcceso->save();
+
+            return response()->json([
+                'message' => "Tarjeta de acceso dada de baja correctamente",
+            ],200);
+        }else{
+            return response()->json([
+                'error'=>'Tarjeta de acceso no encontrada'
+            ],404);
+        }
     }
 
     public function newHash(String $id)
