@@ -89,7 +89,7 @@ class IncidentesVehiculoController extends Controller
 
     public function showIncident($id)
     {
-        $incidente = Incidente::with([
+        $incidente = IncidentesVehiculo::with([
             'tarjetaAcceso.cuenta.persona',
             'tarjetaAcceso.cuenta.id_rol',
             'tarjetaAcceso.vehiculo'])
