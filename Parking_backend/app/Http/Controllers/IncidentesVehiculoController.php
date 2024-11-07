@@ -91,7 +91,7 @@ class IncidentesVehiculoController extends Controller
     {
         $incidente = IncidentesVehiculo::with([
             'tarjetaAcceso.cuenta.persona',
-            'tarjetaAcceso.cuenta.id_rol',
+            'tarjetaAcceso.cuenta.rol',
             'tarjetaAcceso.vehiculo'])
                               ->where('id_incidente', $id)
                               ->first();
