@@ -65,8 +65,8 @@ Route::post('/manual_registration',[registrosController::class,'manualRegistrati
 Route::get('/get_all_incidents_sync',[IncidentesVehiculoController::class,'getAllIncidentsSync']);
 Route::get('/get_all_incidents',[IncidentesVehiculoController::class,'getAllIncidents']);
 Route::post('/creat_incident',[IncidentesVehiculoController::class,'postIncident']);
-Route::get('/show_incident',[IncidentesVehiculoController::class,'showIncident']);
-Route::post('/update_incident',[IncidentesVehiculoController::class,'updateIncident']);
+Route::get('/show_incident/{id}',[IncidentesVehiculoController::class,'showIncident']);
+Route::post('/update_incident/{id}',[IncidentesVehiculoController::class,'updateIncident']);
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/check-status', [authController::class, 'checkStatus']);
