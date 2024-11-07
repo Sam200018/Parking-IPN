@@ -75,6 +75,7 @@ class IncidentesVehiculoController extends Controller
         $incident = IncidentesVehiculo::where('id_incidente', $id)->first();
         if ($incident) {
             $incident->cerrado = true;
+            $incident->save();
 
             return response()->json([
                 'message' => 'Incidente actualizado',
