@@ -213,4 +213,20 @@ class tarjetasAccesoController extends Controller
             'message' => 'Actualizando tarjetas de acceso...'
         ], 200);
     }
+
+    public function getAccessCardById(String $id)
+    {
+        $tarjetaAccesso = Tarjetas_Acceso::with(['cuenta','vehiculo'])
+        ->where('id_tarjeta_acceso',$id)->first();
+
+        if($tarjetaAcceso){
+            return response()->json([
+                'accessCard' => $tarjetaAcceso,
+            ],200);
+        }else{
+            return response()->json([
+                'error'=>'Tarjeta de acceso no encontrada'
+            ],404);
+        }
+    }
 }

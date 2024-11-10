@@ -51,6 +51,7 @@ Route::get('/get_all_vehicles', [vehiculosController::class,'show']);
 // Tarjetas acceso
 Route::post('/gen_access_card',[tarjetasAccesoController::class,'store']);
 Route::get('/get_access_cards',[tarjetasAccesoController::class,'getAll']);
+Route::get('/access_card/{id_tarjeta_acceso}',[tarjetasAccesoController::class,'getAccessCardById']);
 Route::get('/get_access_cards_list',[tarjetasAccesoController::class,'getAllAccessCardList']);
 Route::delete('/delete_access_card/{id_tarjeta_acceso}', [tarjetasAccesoController::Class,'deleteAccessCard']);
 Route::get('/new_hash_by_id/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'newHash']);
@@ -58,12 +59,14 @@ Route::get('/get_info_card',[tarjetasAccesoController::class,'getCardInfo']);
 // Registros
 Route::post('/register_mov',[registrosController::class,'store']);
 Route::get('/get_all_records',[registrosController::class,'getAllRecordsList']);
+Route::get('/get_all_records_by_access_card/{id}',[registrosController::class,'getAllRecordsListByAccessCard']);
 Route::get('/get_all_records_sync',[registrosController::class,'getAllRecordsListSync']);
 Route::post('/get_info_to_record',[registrosController::class,'getInfoCardToRegistration']);
 Route::post('/manual_registration',[registrosController::class,'manualRegistration']);
 // Incidentes
 Route::get('/get_all_incidents_sync',[IncidentesVehiculoController::class,'getAllIncidentsSync']);
 Route::get('/get_all_incidents',[IncidentesVehiculoController::class,'getAllIncidents']);
+Route::get('/get_all_incidents_by_access_card/{id}',[IncidentesVehiculoController::class,'getAllIncidentsByAccesCard']);
 Route::post('/creat_incident',[IncidentesVehiculoController::class,'postIncident']);
 Route::get('/show_incident/{id}',[IncidentesVehiculoController::class,'showIncident']);
 Route::post('/update_incident/{id}',[IncidentesVehiculoController::class,'updateIncident']);

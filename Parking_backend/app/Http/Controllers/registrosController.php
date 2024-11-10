@@ -195,6 +195,40 @@ class registrosController extends Controller
         ],200);
     }
 
+    public function getAllRecordsListByAccessCard(String $id)
+{
+    $tarjetaAcceso = Tarjetas_Acceso::with('cuenta.persona')->where('id_tarjeta_acceso', $id)->first();
+
+    if ($tarjetaAcceso && $tarjetaAcceso->cuenta && $tarjetaAcceso->cuenta->persona) {
+        $idPersona = $tarjetaAcceso->cuenta->persona->id_persona;
+
+        $entradas = Entrada::with([
+            'registro.tarjetaAcceso',
+            'registro.visita'
+        ])->whereHas('registro.tarjetaAcceso.cuenta.persona', function ($query) use ($idPersona) {
+            $query->where('id_persona', $idPersona);
+        })->orderBy('check', 'desc')->get();
+
+        $salidas = Salida::with([
+            'registro.tarjetaAcceso',
+            'registro.visita'
+        ])->whereHas('registro.tarjetaAcceso.cuenta.persona', function ($query) use ($idPersona) {
+            $query->where('id_persona', $idPersona);
+        })->orderBy('check', 'desc')->get();
+
+        $resultados = $entradas->concat($salidas);
+
+        $registros = $resultados->sortBy('check')->values();
+
+        return response()->json([
+            'transactions' => $registros
+        ], 200);
+    } else {
+        return response()->json([
+            'error' => 'Tarjeta de acceso no encontrada o persona no asociada'
+        ], 404);
+    }
+}
 
     public function getInfoCardToRegistration(Request $request)
     {

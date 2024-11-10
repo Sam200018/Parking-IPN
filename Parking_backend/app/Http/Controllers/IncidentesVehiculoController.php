@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Events\IncidentCreated;
 use Illuminate\Validation\ValidationException;
 use App\Models\IncidentesVehiculo;
+use App\Models\Tarjetas_Acceso;
 
 class IncidentesVehiculoController extends Controller
 {
@@ -116,5 +117,31 @@ class IncidentesVehiculoController extends Controller
         return response()->json([
             'incidentes'=> $incidentesVeh
         ],200);
+    }
+
+    public function getAllIncidentsByAccesCard(String $id)
+    {
+        $tarjetaAccesso = Tarjetas_Acceso::where('id_tarjeta_acceso',$id)->first();
+
+        if($tarjetaAcceso){
+            $idTarjetaAcceso = $tarjetaAcceso->id_tarjeta_acceso;
+            
+            $incidentesVeh = IncidentesVehiculo::when($idTarjetaAcceso, function($query, $idTarjetaAcceso) {
+                return $query->whereHas('tarjetaAcceso', function($q) use ($idTarjetaAcceso) {
+                    $q->where('id_tarjeta_acceso', $idTarjetaAcceso);
+                });
+            })
+            ->orderBy('id_incidente', 'desc')
+            ->get();
+        
+            return response()->json([
+                'incidentes' => $incidentesVeh
+            ], 200);  
+
+        }else{
+            return response()->json([
+                'error'=>'Tarjeta de acceso no encontrada'
+            ],404);
+        }
     }
 }
