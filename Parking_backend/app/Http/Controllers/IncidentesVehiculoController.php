@@ -121,7 +121,7 @@ class IncidentesVehiculoController extends Controller
 
     public function getAllIncidentsByAccesCard(String $id)
     {
-        $tarjetaAccesso = Tarjetas_Acceso::where('id_tarjeta_acceso',$id)->first();
+        $tarjetaAcceso = Tarjetas_Acceso::where('id_tarjeta_acceso',$id)->first();
 
         if($tarjetaAcceso){
             $idTarjetaAcceso = $tarjetaAcceso->id_tarjeta_acceso;
