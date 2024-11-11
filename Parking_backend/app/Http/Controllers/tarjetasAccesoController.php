@@ -216,7 +216,7 @@ class tarjetasAccesoController extends Controller
 
     public function getAccessCardById(String $id)
     {
-        $tarjetaAcceso = Tarjetas_Acceso::with(['cuenta','vehiculo'])
+        $tarjetaAcceso = Tarjetas_Acceso::with(['cuenta.pesona','vehiculo'])
         ->where('id_tarjeta_acceso',$id)->first();
 
         if($tarjetaAcceso){

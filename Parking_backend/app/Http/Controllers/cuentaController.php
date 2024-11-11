@@ -109,4 +109,22 @@ class cuentaController extends Controller
         ], 200);
     }
 
+    public function changeAccountState(String $id)
+    {
+        $cuenta = Cuentas::where('id_cuenta',$id)->first();
+        
+        if($cuenta){
+            $cuenta->activo = !$cuenta->activo;
+            $cuenta->save();
+
+            return response()->json([
+                'message' => "Cuenta actualizada",
+            ],200);
+        }else{
+            return response()->json([
+                'error'=>'Cuenta de acceso no encontrada'
+            ],404);
+        }
+    }
+
 }

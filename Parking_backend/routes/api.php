@@ -43,6 +43,7 @@ Route::post('/create_account', [cuentaController::class,'store']);
 Route::get('/get_account/{id_cuenta}',[cuentaController::class,'getCuenta']);
 Route::get('/get_all_accounts',[cuentaController::class,'getAllAccounts']);
 Route::get('/check_account_by_person/{id_persona}',[cuentaController::class,'isVerifiedPersona']);
+Route::get('/change_account_state/{id_cuenta}',[cuentaController::class,'changeAccountState']);
 // Auth
 Route::post('/login',[authController::class,'login']);
 // Vehiculo
