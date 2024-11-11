@@ -49,13 +49,16 @@ class usuarioController extends Controller
             'numero_contacto'=>'required']
         ,$messages);
 
-        $personas = Personas::where('id_ipn',$request->id_ipn)->get();
-        
-        foreach($personas as $persona){
-            if($persona->cuenta){
-                return response()->json([
-                    'error'=>"Boleta con cuenta verificada"
-                ],401);
+        if($request->id_ipn){
+            $personas = Personas::where('id_ipn',$request->id_ipn)->get();
+            
+    
+            foreach($personas as $persona){
+                if($persona->cuenta){
+                    return response()->json([
+                        'error'=>"Boleta con cuenta verificada"
+                    ],401);
+                }
             }
         }
         
