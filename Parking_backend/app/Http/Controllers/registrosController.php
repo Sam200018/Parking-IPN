@@ -268,9 +268,13 @@ class registrosController extends Controller
             ->first();
         
         if($tarjetaAcceso){
-            $isCardInUse = Registros::where('id_tarjeta_acceso', $tarjetaAcceso->id_tarjeta_acceso)
-                                    ->where('id_token', 1)
-                                    ->exists();
+
+            $ultimoRegistro = Registros::where('id_tarjeta_acceso', $tarjetaAcceso->id_tarjeta_acceso)
+            ->orderBy('id_registro', 'desc')
+            ->first();
+
+            $isCardInUse = Tokens::where('id_token', $ultimoRegistro->id_token)->exists();
+           
             if(!$isCardInUse){
                 return response()->json([
                     'tarjeta_acceso' => $tarjetaAcceso,
@@ -295,9 +299,11 @@ class registrosController extends Controller
                             ->first();
 
         if($visita){
-            $isVisitActive = Registros::where('id_visita', $visita->id_visita)
-                                    ->where('id_token', 1)
-                                    ->exists();
+            $lastVisit = Registro::where('id_visita', $visita->id_visita)
+            ->orderBy('id_registro','desc')
+            -first();
+
+            $isVisitActive = Token::where('id_token',$lastVisit->id_visita)->exist();
 
             // Falta obtener veces ingresadas
 
