@@ -16,6 +16,7 @@ use App\Models\Vehiculo;
 use App\Models\Visita;
 use App\Models\Entrada;
 use App\Models\Salida;
+use App\Models\Personas;
 use Carbon\Carbon;
 
 class registrosController extends Controller
@@ -299,11 +300,11 @@ class registrosController extends Controller
                             ->first();
 
         if($visita){
-            $lastVisit = Registro::where('id_visita', $visita->id_visita)
+            $lastVisit = Registros::where('id_visita', $visita->id_visita)
             ->orderBy('id_registro','desc')
-            -first();
+            ->first();
 
-            $isVisitActive = Token::where('id_token',$lastVisit->id_visita)->exist();
+            $isVisitActive = Tokens::where('id_token',$lastVisit->id_visita)->exist();
 
             // Falta obtener veces ingresadas
 
