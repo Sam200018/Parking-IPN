@@ -22,13 +22,13 @@ class Visita extends Model
 
     public $timestamps = false;
 
-    public function persona(): BelongsTo
+    public function persona()
     {
         return $this->belongsTo(Personas::class, 'id_persona');
     }
 
    
-    public function vehiculo(): BelongsTo
+    public function vehiculo()
     {
         return $this->belongsTo(vehiculo::class, 'id_vehiculo');
     }
@@ -38,7 +38,7 @@ class Visita extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function registros(): HasMany
+    public function registros()
     {
         return $this->hasMany(Registros::class, 'id_registro');
     }

@@ -35,7 +35,7 @@ class Registros extends Model
 
     public function token()
     {
-        return $this->belongsTo(Token::class,'id_token');
+        return $this->belongsTo(Tokens::class,'id_token');
     }
 
     /**

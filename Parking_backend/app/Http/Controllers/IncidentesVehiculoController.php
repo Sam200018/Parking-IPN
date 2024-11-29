@@ -49,6 +49,8 @@ class IncidentesVehiculoController extends Controller
             'cerrado' => false,
         ]);
 
+        event(new IncidentCreated($incident));
+
         return response()->json([
             'message' => 'Incidente creado exitosamente',
         ], 200);

@@ -291,7 +291,7 @@ class registrosController extends Controller
             ], 200);
         }
 
-
+        // Pensar desde aqui 
         $visita = Visita::with(['persona', 'vehiculo'])
                             ->where([
                                 ['id_persona', '=', $persona],
@@ -304,32 +304,41 @@ class registrosController extends Controller
             ->orderBy('id_registro','desc')
             ->first();
 
-            $isVisitActive = Tokens::where('id_token',$lastVisit->id_visita)->exist();
+            if($lastVisit){
 
-            // Falta obtener veces ingresadas
+                $isVisitActive = Tokens::where('id_token',$lastVisit->id_visita)->exist();
+                
+                if(!$isVisitActive){
+                    return response()->json([
+                        'visita' => $visita,
+                        'movimiento' => 1,
+                        'nota' => ''
+                    ], 200);
+                }
 
-            if(!$isVisitActive){
                 return response()->json([
                     'visita' => $visita,
-                    'movimiento' => 1,
+                    'movimiento' => 0,
                     'nota' => ''
                 ], 200);
             }
+
             
             return response()->json([
                 'visita' => $visita,
-                'movimiento' => 0,
+                'movimiento' => 1,
                 'nota' => ''
             ], 200);
         }    
 
         // buscar vehiculo
-        $vehicleQuery = Vehiculo::where('id_vehiculo',$vehiculo)->get();
+        $vehicleQuery = Vehiculo::where('id_vehiculo',$vehiculo)->get()->first();
         // buscar persona
-        $pesonQuery = Personas::where('id_persona',$persona)->get();
+        $personQuery = Personas::where('id_persona',$persona)->get()->first();
+
 
         $visita = Visita::create([
-            'id_persona' => $pesonQuery->id_persona,
+            'id_persona' => $personQuery->id_persona,
             'id_vehiculo' => $vehicleQuery->id_vehiculo,
             'veces_ingresadas' => 0,
         ]);

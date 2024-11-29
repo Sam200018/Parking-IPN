@@ -150,7 +150,7 @@ class tarjetasAccesoController extends Controller
      */
     public function deleteAccessCard(string $id)
     {
-        $tarjetaAccesso = Tarjetas_Acceso::where('id_tarjeta_acceso',$id)->first();
+        $tarjetaAcceso = Tarjetas_Acceso::where('id_tarjeta_acceso',$id)->first();
 
         if($tarjetaAcceso){
             $tarjetaAcceso->token = null;
