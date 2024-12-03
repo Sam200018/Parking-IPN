@@ -129,18 +129,18 @@ class registrosController extends Controller
 
                 $now = Carbon::now();
 
-                if($movimiento == 0){
+                if($movimiento == 1){
                     $entrada = Entrada::create([
                         'id_registro' => $registro->id_registro,
                         'id_cuenta' => $visita->persona->id_persona,
-                        'check_in' => $now,
+                        'check' => $now,
                         'observaciones' => $request->observaciones
                     ]);
                 }else{
                     $salida = Salida::create([
                         'id_registro' => $registro->id_registro,
                         'id_cuenta' => $visita->persona->id_persona,
-                        'check_out' => $now,
+                        'check' => $now,
                         'observaciones' => $request->observaciones
                     ]);
                 }
