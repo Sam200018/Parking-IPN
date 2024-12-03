@@ -177,7 +177,7 @@ class registrosController extends Controller
             'registro.tarjetaAcceso.cuenta.persona',
             'registro.tarjetaAcceso.vehiculo',
             'registro.visita.vehiculo',
-            ])->orderBy('check','desc')->get();
+            ])->orderBy('check','asc')->get();
 
         $salidas = Salida::with([
             'cuenta.persona',
@@ -185,11 +185,14 @@ class registrosController extends Controller
             'registro.tarjetaAcceso.cuenta.persona',
             'registro.tarjetaAcceso.vehiculo',
             'registro.visita.vehiculo',
-            ])->orderBy('check','desc')->get();
+            ])->orderBy('check','asc')->get();
 
         $resultados = $entradas->concat($salidas);
 
-        $registros = $resultados->sortBy('check')->values();
+        $registros = $resultados->sortBy(function ($item) {
+            return is_null($item->registro->id_token) ? 1 : 0;
+        })->sortBy('check')->values();
+        
 
         return response()->json([
             'transactions' => $registros
