@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('Entradas', function (Blueprint $table) {
             $table->id('id_entrada');
             $table->foreignId('id_registro')->constrained('Registros', 'id_registro')->onDelete('cascade');
-            $table->foreignId('id_cuenta')->nullable()->constrained('Cuentas', 'id_cuenta')->onDelete('cascade');
+            $table->foreignId('id_cuenta')->nullable()->constrained('Cuentas', 'id_cuenta')->onDelete('cascade')->change();
             $table->timestamp('check');
             $table->string('observaciones')->nullable();
         });
