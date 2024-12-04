@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use App\Events\MoveRegistered;
 use App\Models\Tarjetas_Acceso;
@@ -18,6 +16,8 @@ use App\Models\Entrada;
 use App\Models\Salida;
 use App\Models\Personas;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class registrosController extends Controller
 {
@@ -113,23 +113,20 @@ class registrosController extends Controller
             try{
                 $cuenta = Cuentas::findOrFail($request->id_cuenta);
                 $visita = Visita::findOrFail($idVisita);
-                $tokenValue = $this->createCompositeHash($cuenta->id_cuenta,$visita->id_visita,"");
-
-                $token= Tokens::create([
-                    'token' => $tokenValue,
-                ]);
-
-                $registro = Registros::create([
-                    'id_visita' => $visita->id_vista,
-                    'id_token' => $token->id_token,
-                    'id_cuenta' => $cuenta->id_cuenta,
-                ]);
-
-                $registros = Registros::all();
-
                 $now = Carbon::now();
 
                 if($movimiento == 1){
+                    $tokenValue = $this->createCompositeHash($cuenta->id_cuenta,$visita->id_visita,"");
+
+                    $token= Tokens::create([
+                        'token' => $tokenValue,
+                    ]);
+                    $registro = Registros::create([
+                        'id_visita' => $visita->id_visita,
+                        'id_token' => $token->id_token,
+                        'id_cuenta' => $cuenta->id_cuenta,
+                    ]);
+    
                     $entrada = Entrada::create([
                         'id_registro' => $registro->id_registro,
                         'id_cuenta' => null,
@@ -137,13 +134,35 @@ class registrosController extends Controller
                         'observaciones' => $request->observaciones
                     ]);
                 }else{
+                    $ultimoRegistro = Registros::where('id_visita', $visita->id_visita)
+                    ->orderBy('id_registro', 'desc')
+                    ->first();
+                    
+                    if(!$ultimoRegistro){
+                        throw new Exception("Movimiento no valido");
+                    }
+                    
+                    
+                    $token = Tokens::where('id_token', $ultimoRegistro->id_token)->first();
+                    
+                    $ultimoRegistro->id_token = null; 
+                    $ultimoRegistro->save();
+                    
+                    if ($token) {
+                    } else {
+                        throw new Exception("Token no encontrado y no pudo ser eliminado.");
+                    }
+                    
+                    $token->delete();
+
                     $salida = Salida::create([
-                        'id_registro' => $registro->id_registro,
+                        'id_registro' => $ultimoRegistro->id_registro,
                         'id_cuenta' => null,
                         'check' => $now,
                         'observaciones' => $request->observaciones
                     ]);
                 }
+                $registros = Registros::all();
 
                 event(new MoveRegistered($registros));
 
@@ -177,6 +196,7 @@ class registrosController extends Controller
             'registro.tarjetaAcceso.cuenta.persona',
             'registro.tarjetaAcceso.vehiculo',
             'registro.visita.vehiculo',
+            'registro.visita.persona',
             ])->orderBy('check','asc')->get();
 
         $salidas = Salida::with([
@@ -185,6 +205,7 @@ class registrosController extends Controller
             'registro.tarjetaAcceso.cuenta.persona',
             'registro.tarjetaAcceso.vehiculo',
             'registro.visita.vehiculo',
+            'registro.visita.persona',
             ])->orderBy('check','asc')->get();
 
         $resultados = $entradas->concat($salidas);
@@ -306,26 +327,26 @@ class registrosController extends Controller
             $lastVisit = Registros::where('id_visita', $visita->id_visita)
             ->orderBy('id_registro','desc')
             ->first();
-
+            
             if($lastVisit){
-
+                
                 $isVisitActive = Tokens::where('id_token',$lastVisit->id_visita)->exist();
                 
-                if(!$isVisitActive){
+                if($isVisitActive){
                     return response()->json([
                         'visita' => $visita,
-                        'movimiento' => 1,
+                        'movimiento' => 0,
                         'nota' => ''
                     ], 200);
                 }
-
+                
                 return response()->json([
                     'visita' => $visita,
-                    'movimiento' => 0,
+                    'movimiento' => 1,
                     'nota' => ''
                 ], 200);
             }
-
+            
             
             return response()->json([
                 'visita' => $visita,
@@ -347,18 +368,23 @@ class registrosController extends Controller
         ]);
 
         $visita = Visita::with(['persona', 'vehiculo'])
-                ->where('id', $visita->id)
+                ->where('id_visita', $visita->id_visita)
                 ->first();
 
-        if($vehicleQuery->asignado){
+        if ($vehicleQuery->asignado) {
             $note = 'El vehículo ya cuenta con tarjeta de acceso';
-        }else{
-            $note = 'Solo el vehículo es nuevo en el sistema';
+        } else {
+            if(!empty($personQuery->id_ipn) == 1){
+                $note = 'Solo el vehículo es nuevo en el sistema';
+            }else{
+                $note = 'El vehículo y la persona son nuevos en el sistema';
+            }
         }
+        
 
         return response()->json([
             'visita' => $visita,
-            'movimiento' => 0,
+            'movimiento' => 1,
             'note' => $note
         ], 200);
     }
