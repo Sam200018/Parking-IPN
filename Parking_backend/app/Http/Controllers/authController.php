@@ -19,6 +19,13 @@ class authController extends Controller
             return response()->json(['error' => 'Credenciales no validas'], 401);
         }        
             $cuenta = Cuentas::with(['rol','prog_academico','persona'])->where('correo',$request->correo)->first();
+
+            if(!$cuenta->activo){
+                return response()->json([
+                    'message'=> 'Cuenta no activa. Acercarse al administrador para más información'
+                ],401);
+            }
+            
             return response()->json([
                 'token'=>$token,
                 'cuenta'=>$cuenta

@@ -54,7 +54,7 @@ Route::post('/gen_access_card',[tarjetasAccesoController::class,'store']);
 Route::get('/get_access_cards',[tarjetasAccesoController::class,'getAll']);
 Route::get('/access_card/{id_tarjeta_acceso}',[tarjetasAccesoController::class,'getAccessCardById']);
 Route::get('/get_access_cards_list',[tarjetasAccesoController::class,'getAllAccessCardList']);
-Route::delete('/delete_access_card/{id_tarjeta_acceso}', [tarjetasAccesoController::Class,'deleteAccessCard']);
+Route::delete('/delete_access_card/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'deleteAccessCard']);
 Route::get('/new_hash_by_id/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'newHash']);
 Route::get('/get_info_card',[tarjetasAccesoController::class,'getCardInfo']);
 // Registros

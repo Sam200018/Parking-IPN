@@ -210,9 +210,13 @@ class registrosController extends Controller
 
         $resultados = $entradas->concat($salidas);
 
-        $registros = $resultados->sortBy(function ($item) {
+        $registros = $resultados
+        ->filter(function ($item) {
+            return !is_null($item->registro->visita) || !is_null($item->registro->tarjetaAcceso);
+        })
+        ->sortBy(function ($item) {
             return is_null($item->registro->id_token) ? 1 : 0;
-        })->sortBy('check')->values();
+        })->sortByDesc('check')->values();
         
 
         return response()->json([
@@ -330,7 +334,7 @@ class registrosController extends Controller
             
             if($lastVisit){
                 
-                $isVisitActive = Tokens::where('id_token',$lastVisit->id_visita)->exist();
+                $isVisitActive = Tokens::where('id_token',$lastVisit->id_visita)->exists();
                 
                 if($isVisitActive){
                     return response()->json([
