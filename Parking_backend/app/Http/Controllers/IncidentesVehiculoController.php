@@ -111,16 +111,23 @@ class IncidentesVehiculoController extends Controller
         ], 200);
     }
 
-    public function getAllIncidents()
+    public function getAllIncidents(Request $request)
     {
-        $incidentesVeh = IncidentesVehiculo::with([
+        $query = IncidentesVehiculo::with([
             'tarjetaAcceso.cuenta.persona',
             'tarjetaAcceso.vehiculo',
-        ])->orderBy('id_incidente', 'desc')->get();
-
+        ])->orderBy('id_incidente', 'desc');
+    
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where('titulo', 'like', "%$search%");
+        }
+    
+        $incidentesVeh = $query->get();
+    
         return response()->json([
-            'incidentes'=> $incidentesVeh
-        ],200);
+            'incidentes' => $incidentesVeh
+        ], 200);
     }
 
     public function getAllIncidentsByAccesCard(String $id)

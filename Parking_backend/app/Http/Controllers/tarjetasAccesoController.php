@@ -137,6 +137,19 @@ class tarjetasAccesoController extends Controller
             });
         }
 
+        if ($request->has('search')) {
+            $search = $request->search;
+        
+            $query->whereHas('cuenta.persona', function ($query) use ($search) {
+                $query->where('nombre', 'like', "%$search%")
+                      ->orWhere('a_paterno', 'like', "%$search%")
+                      ->orWhere('a_materno', 'like', "%$search%")
+                      ->orWhere('numero_contacto', 'like', "%$search%");
+            })->orWhereHas('vehiculo', function ($query) use ($search) {
+                $query->where('placa', 'like', "%$search%");
+            });
+        }
+
         $tarjetasAcceso = $query->get();
 
         return response()->json([
@@ -179,7 +192,7 @@ class tarjetasAccesoController extends Controller
             $tarjetaAcceso->save();
 
             event(new AccessCardCreated('hola'));
-            
+
             return response()->json([
                     'message'=>'Token actulizado correctamente',
                 'tarjeta_acceso'=>$tarjetaAcceso

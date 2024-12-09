@@ -91,7 +91,7 @@ class cuentaController extends Controller
         }
     }
 
-    public function getAllAccounts()
+    public function getAllAccounts(Request $request)
     {
         $cuentas = Cuentas::with([
             'rol',
@@ -103,6 +103,24 @@ class cuentaController extends Controller
         $cuentas->each(function($cuenta) {
             $cuenta->no_vehiculos = Tarjetas_Acceso::where('id_cuenta', $cuenta->id_cuenta)->count();
         });
+
+        if ($request->has('search')) {
+            $search = $request->search;
+        
+            $cuentas = Cuentas::with(['rol', 'prog_academico', 'persona'])
+                ->whereHas('persona', function ($query) use ($search) {
+                    $query->where('nombre', 'like', "%$search%")
+                          ->orWhere('a_paterno', 'like', "%$search%")
+                          ->orWhere('a_materno', 'like', "%$search%")
+                          ->orWhere('numero_contacto', 'like', "%$search%");
+                })
+                ->get();
+        
+            // Agregar la cuenta de tarjetas de acceso nuevamente
+            $cuentas->each(function($cuenta) {
+                $cuenta->no_vehiculos = Tarjetas_Acceso::where('id_cuenta', $cuenta->id_cuenta)->count();
+            });
+        }
     
         return response()->json([
             'cuentas' => $cuentas
