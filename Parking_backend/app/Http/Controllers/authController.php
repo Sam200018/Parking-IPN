@@ -22,7 +22,7 @@ class authController extends Controller
 
             if(!$cuenta->activo){
                 return response()->json([
-                    'message'=> 'Cuenta no activa. Acercarse al administrador para más información'
+                    'message'=> 'Cuenta no activa. Acercarse al administrador para mas informacion'
                 ],401);
             }
             

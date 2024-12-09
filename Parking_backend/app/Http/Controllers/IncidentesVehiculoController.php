@@ -80,6 +80,8 @@ class IncidentesVehiculoController extends Controller
             $incident->cerrado = true;
             $incident->save();
 
+            event(new IncidentCreated($incident));
+
             return response()->json([
                 'message' => 'Incidente actualizado',
                 'incident'=>$incident

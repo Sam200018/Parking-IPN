@@ -57,6 +57,7 @@ Route::get('/get_access_cards_list',[tarjetasAccesoController::class,'getAllAcce
 Route::delete('/delete_access_card/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'deleteAccessCard']);
 Route::get('/new_hash_by_id/{id_tarjeta_acceso}', [tarjetasAccesoController::class,'newHash']);
 Route::get('/get_info_card',[tarjetasAccesoController::class,'getCardInfo']);
+Route::get('/get_all_access_cards_sync',[tarjetasAccesoController::class,'getAllAccessCardsListSync']);
 // Registros
 Route::post('/register_mov',[registrosController::class,'store']);
 Route::get('/get_all_records',[registrosController::class,'getAllRecordsList']);

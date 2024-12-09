@@ -156,6 +156,8 @@ class tarjetasAccesoController extends Controller
             $tarjetaAcceso->token = null;
             $tarjetaAcceso->save();
 
+            event(new AccessCardCreated('hola'));
+
             return response()->json([
                 'message' => "Tarjeta de acceso dada de baja correctamente",
             ],200);
@@ -175,6 +177,9 @@ class tarjetasAccesoController extends Controller
 
             $tarjetaAcceso->token = $token;
             $tarjetaAcceso->save();
+
+            event(new AccessCardCreated('hola'));
+            
             return response()->json([
                     'message'=>'Token actulizado correctamente',
                 'tarjeta_acceso'=>$tarjetaAcceso
@@ -228,5 +233,13 @@ class tarjetasAccesoController extends Controller
                 'error'=>'Tarjeta de acceso no encontrada'
             ],404);
         }
+    }
+
+    function getAllAccessCardsListSync() {
+        event(new AccessCardCreated('hola'));
+
+        return response()->json([
+            'message' => "Sincronizando..."
+        ],200);
     }
 }

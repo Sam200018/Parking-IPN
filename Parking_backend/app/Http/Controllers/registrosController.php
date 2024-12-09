@@ -247,7 +247,7 @@ class registrosController extends Controller
 
         $resultados = $entradas->concat($salidas);
 
-        $registros = $resultados->sortBy('check')->values();
+        $registros = $resultados->sortByDesc('check')->values();
 
         return response()->json([
             'transactions' => $registros
