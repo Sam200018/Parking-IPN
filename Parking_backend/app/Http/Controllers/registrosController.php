@@ -187,7 +187,7 @@ class registrosController extends Controller
         return $hash;
     }
 
-    public function getAllRecordsList()
+    public function getAllRecordsList(Request $request)
     {   
 
         $entradas = Entrada::with([
@@ -197,8 +197,8 @@ class registrosController extends Controller
             'registro.tarjetaAcceso.vehiculo',
             'registro.visita.vehiculo',
             'registro.visita.persona',
-            ])->orderBy('check','asc')->get();
-
+        ])->orderBy('check', 'asc');
+    
         $salidas = Salida::with([
             'cuenta.persona',
             'registro.cuenta.persona',
@@ -206,22 +206,57 @@ class registrosController extends Controller
             'registro.tarjetaAcceso.vehiculo',
             'registro.visita.vehiculo',
             'registro.visita.persona',
-            ])->orderBy('check','asc')->get();
+        ])->orderBy('check', 'asc');
+    
 
+        if ($request->has('search')) {
+            $search = $request->search;
+    
+            $entradas->whereHas('registro.tarjetaAcceso.cuenta.persona', function ($query) use ($search) {
+                $query->where('nombre', 'like', "%$search%")
+                      ->orWhere('a_paterno', 'like', "%$search%")
+                      ->orWhere('a_materno', 'like', "%$search%")
+                      ->orWhere('numero_contacto', 'like', "%$search%");
+            })->orWhereHas('registro.tarjetaAcceso.vehiculo', function ($query) use ($search) {
+                $query->where('placa', 'like', "%$search%");
+            })->orWhereHas('registro.visita.vehiculo', function ($query) use ($search) {
+                $query->where('placa', 'like', "%$search%");
+            })->orWhereHas('registro.visita.persona', function ($query) use ($search) {
+                $query->where('nombre', 'like', "%$search%");
+            });
+    
+            $salidas->whereHas('registro.tarjetaAcceso.cuenta.persona', function ($query) use ($search) {
+                $query->where('nombre', 'like', "%$search%")
+                      ->orWhere('a_paterno', 'like', "%$search%")
+                      ->orWhere('a_materno', 'like', "%$search%")
+                      ->orWhere('numero_contacto', 'like', "%$search%");
+            })->orWhereHas('registro.tarjetaAcceso.vehiculo', function ($query) use ($search) {
+                $query->where('placa', 'like', "%$search%");
+            })->orWhereHas('registro.visita.vehiculo', function ($query) use ($search) {
+                $query->where('placa', 'like', "%$search%");
+            })->orWhereHas('registro.visita.persona', function ($query) use ($search) {
+                $query->where('nombre', 'like', "%$search%");
+            });
+        }
+    
+        $entradas = $entradas->get();
+        $salidas = $salidas->get();
+    
         $resultados = $entradas->concat($salidas);
-
+    
         $registros = $resultados
-        ->filter(function ($item) {
-            return !is_null($item->registro->visita) || !is_null($item->registro->tarjetaAcceso);
-        })
-        ->sortBy(function ($item) {
-            return is_null($item->registro->id_token) ? 1 : 0;
-        })->sortByDesc('check')->values();
-        
-
+            ->filter(function ($item) {
+                return !is_null($item->registro->visita) || !is_null($item->registro->tarjetaAcceso);
+            })
+            ->sortBy(function ($item) {
+                return is_null($item->registro->id_token) ? 1 : 0;
+            })
+            ->sortByDesc('check')
+            ->values();
+    
         return response()->json([
             'transactions' => $registros
-        ],200);
+        ], 200);
     }
 
     public function getAllRecordsListByAccessCard(String $id)
