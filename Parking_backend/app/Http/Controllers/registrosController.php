@@ -424,7 +424,7 @@ class registrosController extends Controller
         return response()->json([
             'visita' => $visita,
             'movimiento' => 1,
-            'note' => $note
+            'nota' => $note
         ], 200);
     }
 
