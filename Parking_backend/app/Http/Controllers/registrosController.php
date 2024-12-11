@@ -18,6 +18,7 @@ use App\Models\Personas;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 class registrosController extends Controller
 {
@@ -354,7 +355,6 @@ class registrosController extends Controller
             ], 200);
         }
 
-        // Pensar desde aqui 
         $visita = Visita::with(['persona', 'vehiculo'])
                             ->where([
                                 ['id_persona', '=', $persona],
@@ -369,7 +369,7 @@ class registrosController extends Controller
             
             if($lastVisit){
                 
-                $isVisitActive = Tokens::where('id_token',$lastVisit->id_visita)->exists();
+                $isVisitActive = Tokens::where('id_token',$lastVisit->id_token)->first();
                 
                 if($isVisitActive){
                     return response()->json([
