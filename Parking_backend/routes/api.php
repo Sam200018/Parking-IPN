@@ -65,6 +65,7 @@ Route::get('/get_all_records_by_access_card/{id}',[registrosController::class,'g
 Route::get('/get_all_records_sync',[registrosController::class,'getAllRecordsListSync']);
 Route::post('/get_info_to_record',[registrosController::class,'getInfoCardToRegistration']);
 Route::post('/manual_registration',[registrosController::class,'manualRegistration']);
+Route::get('/get_record_by_id/{id}',[registrosController::class,'getRecordById']);
 // Incidentes
 Route::get('/get_all_incidents_sync',[IncidentesVehiculoController::class,'getAllIncidentsSync']);
 Route::get('/get_all_incidents',[IncidentesVehiculoController::class,'getAllIncidents']);

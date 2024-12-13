@@ -47,24 +47,23 @@ class Registros extends Model
     {
         return $this->belongsTo(Visita::class, 'id_visita');
     }
-
     /**
      * Get the Entrada associated with the Registros
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function Entrada(){
-        return $this->hasOne(Entrada::class,'id_entrada');
+    public function entrada()
+    {
+        return $this->hasOne(Entrada::class, 'id_registro');
     }
-
+    
     /**
      * Get the Salida associated with the Registros
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function Salida()
+    public function salida()
     {
-        return $this->hasOne(Salida::class, 'id_salida');
+        return $this->hasOne(Salida::class, 'id_registro');
     }
-
 }

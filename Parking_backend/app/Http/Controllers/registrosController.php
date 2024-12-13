@@ -399,6 +399,21 @@ class registrosController extends Controller
         // buscar persona
         $personQuery = Personas::where('id_persona',$persona)->get()->first();
 
+        $registroConToken = Registros::whereHas('tarjetaAcceso', function ($query) use ($vehicleQuery) {
+            $query->where('id_vehiculo', $vehicleQuery->id_vehiculo);
+        })->orWhereHas('visita', function ($query) use ($vehicleQuery) {
+            $query->where('id_vehiculo', $vehicleQuery->id_vehiculo);
+        })->whereNotNull('id_token')->first();
+        
+        if ($registroConToken) {
+            Log::info('Vehículo encontrado en los registros con un token:', ['registro' => $registroConToken]);
+            return response()->json([
+                'error' => "La visita a generar contiene un vehículo activamente en el estacionamiento. Llamar al propietario del vehículo con placa: {$vehicleQuery->placa}"
+            ], 404);
+        } else {
+            Log::info('Vehículo no encontrado en registros con un token.');
+        }
+
 
         $visita = Visita::create([
             'id_persona' => $personQuery->id_persona,
@@ -435,5 +450,66 @@ class registrosController extends Controller
         return response()->json([
             'message' => "Sincronizando..."
         ],200);
+    }
+
+    function getRecordById(Request $request, String $id) {
+        try {
+            $recordType = $request->query('record_type');
+    
+            if (!in_array($recordType, [0, 1])) {
+                return response()->json([
+                    'error' => 'Movimiento inválido. El parámetro "record_type" debe ser 0 (entrada) o 1 (salida).'
+                ], 422);
+            }
+    
+            $entrada = Entrada::with([
+                'cuenta.persona',
+                'registro.cuenta.persona',
+                'registro.tarjetaAcceso.cuenta.persona',
+                'registro.tarjetaAcceso.vehiculo',
+                'registro.visita.vehiculo',
+                'registro.visita.persona',
+            ])->where('id_registro', $id)->first();
+    
+            $salida = Salida::with([
+                'cuenta.persona',
+                'registro.cuenta.persona',
+                'registro.tarjetaAcceso.cuenta.persona',
+                'registro.tarjetaAcceso.vehiculo',
+                'registro.visita.vehiculo',
+                'registro.visita.persona',
+            ])->where('id_registro', $id)->first();
+    
+            if (!$entrada && !$salida) {
+                return response()->json([
+                    'error' => 'No se encontró ninguna entrada o salida para el registro especificado.'
+                ], 404);
+            }
+    
+            if ($recordType == 1) {
+                if (!$entrada) {
+                    return response()->json([
+                        'error' => 'No se encontró entrada para el registro especificado.'
+                    ], 404);
+                }
+                return response()->json([
+                    'transaction' => $entrada
+                ], 200);
+            } elseif ($recordType == 0) {
+                if (!$salida) {
+                    return response()->json([
+                        'error' => 'No se encontró salida para el registro especificado.'
+                    ], 404);
+                }
+                return response()->json([
+                    'transaction' => $salida
+                ], 200);
+            }
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Ocurrió un error inesperado: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
